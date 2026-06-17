@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"/Users/krystal-mba4/Desktop/The Dimensional System/Claude/Psychological Report Dashboard\" && echo \"=== Current dir contents ===\" && ls -la && echo \"\" && echo \"=== Zip file info ===\" && ls -la \"/Users/krystal-mba4/Downloads/New GPAI/Psychological Report Dashboard \\(1\\).zip\")",
+      "Bash(unzip -l \"Psychological Report Dashboard \\(1\\).zip\")",
+      "Bash(unzip -q \"/Users/krystal-mba4/Downloads/New GPAI/Psychological Report Dashboard \\(1\\).zip\" -d .)",
+      "Bash(npm --version)",
+      "Bash(pnpm --version)"
+    ]
+  }
+}
