@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Flag, ArrowRight } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
-import dimensionalLogo from "../../imports/Dimensional_Symbol.svg";
-
 import lowFuture from "../../imports/10__Low_Future.svg";
 import lowOthers from "../../imports/10__Low_Others.svg";
 import lowPast from "../../imports/10__Low_Past.svg";
@@ -114,6 +112,7 @@ const flags = [
 
 export function YourDomains() {
   const [view, setView] = useState<'domains' | 'dimensions'>('domains');
+  const [activeDomain, setActiveDomain] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-16 relative z-0">
@@ -127,8 +126,9 @@ export function YourDomains() {
       </div>
 
       {/* Toggle */}
-      <div className="flex justify-center relative z-10 mb-14">
-        <div className="inline-flex bg-[#F5F4F0] p-1.5 rounded-full border border-[#E5E3DD] shadow-inner">
+      <div className="relative z-10 mb-14 grid max-w-4xl mx-auto lg:grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <div className="hidden lg:block" />
+        <div className="inline-flex justify-self-center bg-[#F5F4F0] p-1.5 rounded-full border border-[#E5E3DD] shadow-inner">
           <button
             onClick={() => setView('domains')}
             className={`relative px-8 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 ${
@@ -162,6 +162,22 @@ export function YourDomains() {
             <span className="relative z-10">6 dimensions</span>
           </button>
         </div>
+        <AnimatePresence mode="wait">
+          {view === 'dimensions' && (
+            <motion.div
+              key="dimension-note"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -8 }}
+              transition={{ duration: 0.25 }}
+              className="justify-self-center lg:justify-self-start rounded-2xl bg-[#F4F1EA] px-5 py-4 max-w-[280px]"
+            >
+              <p style={{ color: '#4D4945', fontSize: '13.5px', lineHeight: 1.6, fontWeight: 300, margin: 0 }}>
+                A dimension is a more specific reading inside a foundation. It shows where that foundation is supported, strained, expressed, or quietly compensated for.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Main Content */}
@@ -177,34 +193,43 @@ export function YourDomains() {
               className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-20 items-center max-w-6xl mx-auto w-full"
             >
               <div className="flex justify-center lg:justify-center px-8 lg:px-0">
-                <div className="relative w-full max-w-[260px] lg:max-w-[320px] mx-auto lg:mx-0 group mt-16 lg:mt-12 mb-16 lg:mb-0">
-                  <ImageWithFallback 
-                    src={dimensionalLogo} 
-                    alt="Dimensional Symbol" 
-                    className="w-full drop-shadow-2xl scale-x-[-1] group-hover:scale-x-[-1.05] group-hover:scale-y-[1.05] transition-transform duration-700" 
+                <div
+                  className="relative w-full max-w-[260px] lg:max-w-[320px] mx-auto lg:mx-0 group mt-16 lg:mt-12 mb-16 lg:mb-0"
+                  onMouseLeave={() => setActiveDomain(null)}
+                  style={{ perspective: '900px' }}
+                >
+                  <DomainSymbol
+                    activeDomain={activeDomain}
+                    onActivate={setActiveDomain}
+                    onClear={() => setActiveDomain(null)}
                   />
-                  {/* Clean Geometric Labels */}
-                  <div className="absolute -top-12 lg:-top-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 pointer-events-none transition-transform duration-700 group-hover:-translate-y-2">
-                    <span className="text-[#E8551D] font-semibold text-xl lg:text-2xl tracking-wide">Challenge</span>
-                    <svg className="w-6 h-8 lg:h-10 text-gray-800 shrink-0" viewBox="0 0 24 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 0 L 12 38" />
-                      <path d="M6 32 L 12 38 L 18 32" />
-                    </svg>
-                  </div>
-                  <div className="absolute top-[60%] -left-6 lg:-left-16 flex items-center gap-3 pointer-events-none transition-transform duration-700 group-hover:-translate-x-2 group-hover:translate-y-2">
-                    <span className="text-[#52C3A8] font-semibold text-xl lg:text-2xl tracking-wide">Safety</span>
-                    <svg className="w-8 h-8 lg:w-10 lg:h-10 text-gray-800 shrink-0" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 36 L 36 4" />
-                      <path d="M20 4 L 36 4 L 36 20" />
-                    </svg>
-                  </div>
-                  <div className="absolute top-[60%] -right-6 lg:-right-16 flex items-center gap-3 pointer-events-none transition-transform duration-700 group-hover:translate-x-2 group-hover:translate-y-2">
-                    <svg className="w-8 h-8 lg:w-10 lg:h-10 text-gray-800 shrink-0" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M36 36 L 4 4" />
-                      <path d="M20 4 L 4 4 L 4 20" />
-                    </svg>
-                    <span className="text-[#FFBB30] font-semibold text-xl lg:text-2xl tracking-wide">Play</span>
-                  </div>
+                  <DomainMarker
+                    label="Challenge"
+                    color={DC}
+                    active={activeDomain === 'Challenge'}
+                    delay={0}
+                    onEnter={() => setActiveDomain('Challenge')}
+                    onLeave={() => setActiveDomain(null)}
+                    className="absolute -top-12 left-1/2 -translate-x-1/2"
+                  />
+                  <DomainMarker
+                    label="Safety"
+                    color={DS}
+                    active={activeDomain === 'Safety'}
+                    delay={0.85}
+                    onEnter={() => setActiveDomain('Safety')}
+                    onLeave={() => setActiveDomain(null)}
+                    className="absolute top-[77%] -left-10 lg:-left-16"
+                  />
+                  <DomainMarker
+                    label="Play"
+                    color={DP}
+                    active={activeDomain === 'Play'}
+                    delay={1.7}
+                    onEnter={() => setActiveDomain('Play')}
+                    onLeave={() => setActiveDomain(null)}
+                    className="absolute top-[77%] -right-10 lg:-right-16"
+                  />
                 </div>
               </div>
               <div className="space-y-6">
@@ -220,60 +245,59 @@ export function YourDomains() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto w-full"
+              className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full items-start"
             >
-              {(() => {
-                // Columnar layout — Safety | Play | Challenge, top→bottom inside each column.
-                // The grid is row-major, so we interleave: row1 = top of each column, row2 = bottom.
-                const find = (domainKey: string, dimName: string) => {
-                  const d = domainData.find(x => x.key === domainKey)!;
-                  return { dim: d.dimensions.find(x => x.name === dimName)!, domainColor: d.color, parentLabel: d.label };
-                };
-                const ordered = [
-                  find('Safety', 'Self'),
-                  find('Play', 'Senses'),
-                  find('Challenge', 'Past'),
-                  find('Safety', 'Others'),
-                  find('Play', 'Perception'),
-                  find('Challenge', 'Future'),
-                ];
-                return ordered.map(({ dim, domainColor, parentLabel }, i) => (
-                  <DimensionCard
-                    key={dim.name}
-                    dimension={dim}
-                    domainColor={domainColor}
-                    parentLabel={parentLabel}
-                    index={i}
-                  />
-                ));
-              })()}
+              {domainData.map((domain, domainIndex) => (
+                <DimensionColumn key={domain.key} domain={domain} index={domainIndex} />
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Attention layer — flagged, but quiet */}
+      {/* Attention layer — flagged, but refined */}
       <div
-        className="mt-20 max-w-4xl mx-auto rounded-2xl p-8 lg:p-10 relative"
+        className="mt-20 max-w-4xl mx-auto relative overflow-hidden rounded-[1.5rem] p-7 lg:p-9"
         style={{
-          backgroundColor: '#F8F3EA',
-          borderLeft: '2px solid #DC4C0C',
+          backgroundColor: '#F1EFEB',
+          boxShadow: '0 18px 48px -42px rgba(26, 22, 20, 0.42)',
         }}
       >
-        {/* Header — small flag, small kicker, serif heading */}
-        <div className="mb-7">
-          <div className="flex items-center gap-2.5 mb-3" style={{ color: '#DC4C0C' }}>
-            <Flag size={15} strokeWidth={2.25} />
-            <span style={{ fontSize: '10.5px', letterSpacing: '0.22em', fontWeight: 700 }}>
-              FLAGGED FOR YOUR ATTENTION
-            </span>
-          </div>
-          <h3 style={{ fontFamily: SERIF, fontSize: '26px', fontWeight: 600, color: '#1A1614', letterSpacing: '-0.02em', margin: 0 }}>
-            Four things worth a closer look
-          </h3>
+        <div className="absolute right-7 top-0 h-14 w-8" style={{ backgroundColor: '#DC4C0C' }}>
+          <div
+            className="absolute bottom-0 left-0 h-0 w-0"
+            style={{
+              borderLeft: '16px solid transparent',
+              borderRight: '16px solid transparent',
+              borderBottom: '14px solid #F1EFEB',
+            }}
+          />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="mb-8 flex items-start justify-between gap-8 pr-12">
+          <div className="flex items-center gap-3">
+            <div
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full"
+              style={{ backgroundColor: '#1A1614', color: '#FDFCFA' }}
+            >
+              <Flag size={16} strokeWidth={2.25} />
+            </div>
+            <p
+              style={{
+                color: '#9B3B14',
+                fontSize: '11px',
+                fontWeight: 800,
+                letterSpacing: '0.2em',
+                lineHeight: 1.6,
+                margin: 0,
+              }}
+            >
+              FLAGGED FOR YOUR ATTENTION
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
           {flags.map((f) => (
             <FlagItem
               key={f.number}
@@ -331,31 +355,230 @@ function DomainCard({ domain: d, index }: { domain: DomainEntry; index: number }
   );
 }
 
-function DimensionCard({ dimension: dim, domainColor, parentLabel, index }: { dimension: DimEntry; domainColor: string; parentLabel: string; index: number }) {
+function DomainSymbol({
+  activeDomain,
+  onActivate,
+  onClear,
+}: {
+  activeDomain: string | null;
+  onActivate: (domain: string) => void;
+  onClear: () => void;
+}) {
+  const symbolTransform =
+    activeDomain === 'Safety'
+      ? 'rotateY(18deg) rotateX(5deg) rotateZ(-1deg) translateX(-6px) scale(1.04)'
+      : activeDomain === 'Play'
+        ? 'rotateY(-18deg) rotateX(5deg) rotateZ(1deg) translateX(6px) scale(1.04)'
+        : activeDomain === 'Challenge'
+          ? 'rotateX(16deg) translateY(8px) scale(1.055)'
+          : 'rotateX(0deg) rotateY(0deg) scale(1)';
+
+  const groupStyle = (domain: 'Safety' | 'Play' | 'Challenge') => {
+    const active = activeDomain === domain;
+
+    return {
+      transformBox: 'fill-box' as const,
+      transformOrigin: 'center',
+      transition: 'filter 650ms ease, opacity 650ms ease',
+      filter: active ? 'brightness(1.08) saturate(1.12) drop-shadow(0 12px 10px rgba(26,22,20,0.14))' : undefined,
+      opacity: activeDomain && !active ? 0.72 : 1,
+      cursor: 'pointer',
+    };
+  };
+
+  return (
+    <div style={{ perspective: '900px' }}>
+      <svg
+        viewBox="0 0 998 862"
+        className="w-full drop-shadow-2xl overflow-visible"
+        aria-label="Dimensional Symbol"
+        role="img"
+        style={{
+          transform: symbolTransform,
+          transformStyle: 'preserve-3d',
+          transition: 'transform 700ms cubic-bezier(0.22, 1, 0.36, 1), filter 700ms ease',
+          filter: activeDomain ? 'drop-shadow(0 26px 28px rgba(26,22,20,0.16))' : undefined,
+        }}
+      >
+        <g transform="translate(998,0) scale(-1,1)">
+        <g
+          style={groupStyle('Safety')}
+          onMouseEnter={() => onActivate('Safety')}
+          onMouseLeave={onClear}
+          onFocus={() => onActivate('Safety')}
+          onBlur={onClear}
+          tabIndex={0}
+          role="button"
+          aria-label="Highlight Safety section"
+        >
+          <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill="#42A68E" />
+          <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill="#52C3A8" />
+          <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill="#52C3A8" />
+        </g>
+        <g
+          style={groupStyle('Challenge')}
+          onMouseEnter={() => onActivate('Challenge')}
+          onMouseLeave={onClear}
+          onFocus={() => onActivate('Challenge')}
+          onBlur={onClear}
+          tabIndex={0}
+          role="button"
+          aria-label="Highlight Challenge section"
+        >
+          <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z" fill="#F7601D" />
+          <path d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z" fill="#DC4C0C" />
+        </g>
+        <g
+          style={groupStyle('Play')}
+          onMouseEnter={() => onActivate('Play')}
+          onMouseLeave={onClear}
+          onFocus={() => onActivate('Play')}
+          onBlur={onClear}
+          tabIndex={0}
+          role="button"
+          aria-label="Highlight Play section"
+        >
+          <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#FFBB30" />
+          <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#FFAB00" />
+        </g>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function DimensionColumn({ domain, index }: { domain: DomainEntry; index: number }) {
+  const dimensionOrder: Record<string, string[]> = {
+    Safety: ['Self', 'Others'],
+    Play: ['Senses', 'Perception'],
+    Challenge: ['Past', 'Future'],
+  };
+  const orderedDimensions = dimensionOrder[domain.key]
+    .map(name => domain.dimensions.find(dim => dim.name === name))
+    .filter(Boolean) as DimEntry[];
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3 px-1">
+        <div className="h-px flex-1" style={{ backgroundColor: `${domain.color}55` }} />
+        <p
+          style={{
+            color: domain.color,
+            fontSize: '11px',
+            fontWeight: 800,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            margin: 0,
+          }}
+        >
+          {domain.label}
+        </p>
+        <div className="h-px flex-1" style={{ backgroundColor: `${domain.color}55` }} />
+      </div>
+      <div className="space-y-6">
+        {orderedDimensions.map((dim, i) => (
+          <DimensionCard
+            key={dim.name}
+            dimension={dim}
+            domainColor={domain.color}
+            index={index * 2 + i}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DomainMarker({
+  label,
+  color,
+  active,
+  delay,
+  onEnter,
+  onLeave,
+  className,
+}: {
+  label: string;
+  color: string;
+  active: boolean;
+  delay: number;
+  onEnter: () => void;
+  onLeave: () => void;
+  className: string;
+}) {
+  return (
+    <button
+      type="button"
+      className={`${className} pointer-events-auto px-1 py-1 transition-all duration-500 focus-visible:outline-none ${
+        active ? '-translate-y-1' : 'hover:-translate-y-0.5'
+      }`}
+      style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onClick={onEnter}
+      onFocus={onEnter}
+      onBlur={onLeave}
+      aria-label={`Highlight ${label} domain`}
+    >
+      <span
+        className="relative block rounded-full px-2 py-1"
+        style={{
+          animation: active
+            ? 'none'
+            : `domain-label-bounce 2.8s ease-in-out ${delay}s infinite, domain-word-radiate 2.8s ease-in-out ${delay}s infinite`,
+          ['--domain-glow' as string]: `${color}55`,
+          ['--domain-glow-soft' as string]: `${color}24`,
+          color,
+          fontFamily: SERIF,
+          fontSize: '22px',
+          fontWeight: active ? 700 : 600,
+          letterSpacing: '-0.02em',
+          lineHeight: 1,
+          transform: active ? 'scale(1.09)' : 'scale(1)',
+          transformOrigin: 'center',
+          transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1), text-shadow 500ms ease, font-weight 500ms ease',
+          textShadow: active
+            ? '0 1px 0 #FDFCFA, 0 8px 22px rgba(26,22,20,0.18)'
+            : '0 1px 0 #FDFCFA, 0 0 10px rgba(253,252,250,0.85)',
+        }}
+      >
+        {label}
+      </span>
+    </button>
+  );
+}
+
+function DimensionCard({ dimension: dim, domainColor, index }: { dimension: DimEntry; domainColor: string; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay: index * 0.08, duration: 0.4 }}
-      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col shadow-sm hover:shadow-lg transition-all duration-300 group relative overflow-hidden"
+      whileHover={{
+        y: -3,
+        scale: 1.012,
+        backgroundColor: `${domainColor}08`,
+        borderColor: `${domainColor}40`,
+        transition: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
+      }}
+      transition={{
+        opacity: { delay: index * 0.08, duration: 0.4 },
+        scale: { delay: index * 0.08, duration: 0.4 },
+        y: { delay: index * 0.08, duration: 0.4 },
+      }}
+      style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E3DD' }}
+      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-lg hover:z-20 transition-shadow duration-500 group relative overflow-hidden transform-gpu"
     >
       {/* Domain accent — the colour means "this dimension belongs to this domain" */}
       <div className="h-1 w-full" style={{ backgroundColor: domainColor }} />
 
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] transition-opacity duration-300 pointer-events-none"
+        className="absolute inset-0 opacity-0 group-hover:opacity-[0.045] transition-opacity duration-200 pointer-events-none"
         style={{ backgroundColor: domainColor }}
       />
 
       <div className="p-7 flex flex-col flex-1">
-        <div className="flex justify-between items-start mb-6 relative z-10">
+        <div className="flex justify-between items-start mb-6 min-h-[78px] relative z-10">
           <div className="flex-1 min-w-0">
-            <span
-              className="text-[10.5px] font-bold tracking-[0.2em] uppercase"
-              style={{ color: domainColor }}
-            >
-              {parentLabel}
-            </span>
             <h3
               style={{
                 fontFamily: SERIF,
@@ -364,7 +587,7 @@ function DimensionCard({ dimension: dim, domainColor, parentLabel, index }: { di
                 color: '#0F0F0F',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.05,
-                margin: '6px 0 0',
+                margin: 0,
               }}
             >
               {dim.name}
@@ -385,15 +608,15 @@ function DimensionCard({ dimension: dim, domainColor, parentLabel, index }: { di
           </div>
         </div>
       
-      <div className="flex-1 flex justify-center items-center py-8 relative z-10">
+      <div className="h-[150px] flex justify-center items-center py-6 relative z-10">
         <ImageWithFallback 
           src={dimIcons[dim.name as keyof typeof dimIcons]} 
           alt={dim.name} 
-          className="h-36 object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-md" 
+          className="h-36 object-contain group-hover:scale-[1.04] transition-transform duration-500 ease-out drop-shadow-md" 
         />
       </div>
       
-        <p className="text-[14px] text-[#6A6764] leading-[1.6] relative z-10 font-light border-t border-[#E5E3DD] pt-5 mt-2">
+        <p className="min-h-[92px] text-[14px] text-[#6A6764] leading-[1.6] relative z-10 font-light border-t border-[#E5E3DD] pt-5 mt-2">
           {dim.oneliner}
         </p>
       </div>
@@ -410,33 +633,38 @@ interface FlagItemProps {
 
 function FlagItem({ number, text, linkLabel, targetId }: FlagItemProps) {
   return (
-    <div className="group flex gap-4 p-5 bg-white rounded-xl border border-[#EAE5D9] transition-colors hover:border-[#DC4C0C]/35">
+    <button
+      type="button"
+      onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' })}
+      className="group grid w-full gap-4 rounded-2xl p-3 text-left transition-colors hover:bg-[#FDFCFA]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/35 md:grid-cols-[48px_1fr]"
+      aria-label={`Go to ${linkLabel}`}
+    >
       <div
+        className="-mt-1"
         style={{
-          flexShrink: 0, width: '26px', height: '26px', borderRadius: '50%',
-          backgroundColor: '#FFFFFF',
-          border: '1.5px solid #DC4C0C',
+          fontFamily: SERIF,
           color: '#DC4C0C',
-          fontSize: '12px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700,
-          fontFamily: '"Neue Haas Grotesk Display Pro", "Helvetica Neue", Helvetica, Arial, sans-serif',
+          fontSize: '36px',
+          lineHeight: 1,
+          fontWeight: 500,
+          letterSpacing: '-0.04em',
         }}
       >
         {number}
       </div>
-      <div>
-        <p style={{ fontSize: '14px', color: '#1A1614', lineHeight: 1.6, fontWeight: 300, margin: 0 }}>
+      <div className="min-w-0">
+        <p style={{ fontSize: '14.5px', color: '#1A1614', lineHeight: 1.65, fontWeight: 300, margin: 0 }}>
           {text}
         </p>
-        <button
-          className="inline-flex items-center gap-1 text-[#DC4C0C] hover:text-[#B83E0A] transition-colors"
-          style={{ fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.03em', marginTop: '12px', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-          onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' })}
+        <span
+          className="inline-flex items-center gap-1 text-[#B64A18] hover:text-[#8E3510] transition-colors"
+          style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '0.06em', marginTop: '12px', background: 'none', border: 'none', padding: 0, cursor: 'pointer', pointerEvents: 'none' }}
+          aria-hidden="true"
         >
           {linkLabel}
           <ArrowRight size={12} strokeWidth={2.5} className="group-hover:translate-x-0.5 transition-transform" />
-        </button>
+        </span>
       </div>
-    </div>
+    </button>
   );
 }

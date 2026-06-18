@@ -83,7 +83,7 @@ export function YourShape() {
             letterSpacing: '-0.035em',
             lineHeight: 1.05,
           }}>
-            A Sharp Peak
+            Sharp Peak
           </h2>
           <p style={{ fontSize: '17px', color: '#1A1614', lineHeight: 1.7, fontWeight: 300 }}>
             Challenge rises clearly above Safety and Play — a profile built for reach and direction, carried by a narrower base than it deserves.
