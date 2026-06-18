@@ -22,15 +22,15 @@ export default function App() {
             <Orientation />
           </div>
 
-          <div id="your-domains" className="mt-24">
+          <div id="your-domains" className="mt-28">
             <YourDomains />
           </div>
 
-          <div id="your-shape" className="mt-24">
+          <div id="your-shape" className="mt-28">
             <YourShape />
           </div>
 
-          <div id="safety" className="mt-24">
+          <div id="safety" className="mt-28">
             <DomainSection
               domain="Safety"
               score={27}
@@ -41,7 +41,7 @@ export default function App() {
             />
           </div>
 
-          <div id="play" className="mt-24">
+          <div id="play" className="mt-28">
             <DomainSection
               domain="Play"
               score={41}
@@ -52,7 +52,7 @@ export default function App() {
             />
           </div>
 
-          <div id="challenge" className="mt-24">
+          <div id="challenge" className="mt-28">
             <DomainSection
               domain="Challenge"
               score={78}
@@ -63,15 +63,15 @@ export default function App() {
             />
           </div>
 
-          <div id="foundations-together" className="mt-24">
+          <div id="foundations-together" className="mt-28">
             <HowFoundationsWork />
           </div>
 
-          <div id="direction" className="mt-24">
+          <div id="direction" className="mt-28">
             <FoundationDirection />
           </div>
 
-          <div id="when-ready" className="mt-24">
+          <div id="when-ready" className="mt-28">
             <WhenReady />
           </div>
         </div>
