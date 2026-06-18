@@ -139,44 +139,36 @@ export function DomainSection({ domain, score, band, felt, expressed, color }: D
 
   return (
     <div className="space-y-0">
-      {/* ── HEADER BAR ── */}
-      <div id={`${domain.toLowerCase()}-overview`} className="rounded-2xl overflow-hidden border border-[#E5E3DD] bg-white mb-8">
-        {/* Colour accent strip */}
-        <div className="h-1 w-full" style={{ backgroundColor: color }} />
+      {/* ── HEADER — matches Sections 1-3: free-floating kicker / title / rule ── */}
+      <div id={`${domain.toLowerCase()}-overview`}>
+        <p style={{ color: '#DC4C0C', fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>
+          {domain === 'Safety' ? '04' : domain === 'Play' ? '05' : '06'}
+        </p>
+        <h1 style={{ fontFamily: '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif', fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', margin: 0 }}>
+          {domain}
+        </h1>
+        <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px', marginBottom: '32px' }} />
+      </div>
 
-        <div className="px-8 py-7 flex flex-col md:flex-row md:items-end gap-6 justify-between">
-          <div>
-            <p style={{ color: '#DC4C0C', fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>
-              {domain === 'Safety' ? '04' : domain === 'Play' ? '05' : '06'}
-            </p>
-            <h1 style={{ fontFamily: '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif', fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', margin: 0 }}>
-              {domain}
-            </h1>
-            <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px' }} />
-          </div>
-
-          <div className="flex items-end gap-8">
-            <div className="text-right">
-              <p className="text-xs tracking-widest uppercase text-[#8B8682] mb-1">Score</p>
-              <p className="text-5xl tabular-nums" style={{ color, fontWeight: 300, letterSpacing: '-0.03em' }}>
-                {score}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-xs tracking-widest uppercase text-[#8B8682] mb-1">Band</p>
-              <p className="text-xl text-[#1A1614]" style={{ fontWeight: 400 }}>{band}</p>
-            </div>
-            <div className="flex gap-6">
-              <div className="text-center">
-                <p className="text-xs tracking-widest uppercase text-[#8B8682] mb-1">Felt</p>
-                <p className="text-2xl tabular-nums text-[#1A1614]" style={{ fontWeight: 300 }}>{felt}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs tracking-widest uppercase text-[#8B8682] mb-1">Expressed</p>
-                <p className="text-2xl tabular-nums text-[#1A1614]" style={{ fontWeight: 300 }}>{expressed}</p>
-              </div>
-            </div>
-          </div>
+      {/* ── STAT STRIP — score / band / felt / expressed in their own breathable row ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-7 border-y border-[#E5E3DD] mb-10">
+        <div>
+          <p className="text-[11px] tracking-[0.15em] uppercase text-[#8B8682] mb-2 font-semibold">Score</p>
+          <p className="text-5xl tabular-nums" style={{ color, fontWeight: 300, letterSpacing: '-0.03em', lineHeight: 1 }}>
+            {score}
+          </p>
+        </div>
+        <div>
+          <p className="text-[11px] tracking-[0.15em] uppercase text-[#8B8682] mb-2 font-semibold">Band</p>
+          <p className="text-xl text-[#1A1614]" style={{ fontWeight: 400, marginTop: '10px' }}>{band}</p>
+        </div>
+        <div>
+          <p className="text-[11px] tracking-[0.15em] uppercase text-[#8B8682] mb-2 font-semibold">Felt</p>
+          <p className="text-3xl tabular-nums text-[#1A1614]" style={{ fontWeight: 300, lineHeight: 1, marginTop: '6px' }}>{felt}</p>
+        </div>
+        <div>
+          <p className="text-[11px] tracking-[0.15em] uppercase text-[#8B8682] mb-2 font-semibold">Expressed</p>
+          <p className="text-3xl tabular-nums text-[#1A1614]" style={{ fontWeight: 300, lineHeight: 1, marginTop: '6px' }}>{expressed}</p>
         </div>
       </div>
 
