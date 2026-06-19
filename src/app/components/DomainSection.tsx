@@ -13,6 +13,7 @@ import {
   History,
   MapPin,
   Scale,
+  Fingerprint,
   UserRound,
   UsersRound,
 } from 'lucide-react';
@@ -31,7 +32,8 @@ import lowOthersNew from '../../imports/10_Low_Others_new.svg';
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const FLAG_COLOR = '#B21E4B';
 const SAFETY_DARK = '#064238';
-const EXPRESSED_COLOR = '#2F67A3';
+const FELT_COLOR = '#2D2924';
+const EXPRESSED_COLOR = '#55708D';
 
 const dimIcons: Record<string, string> = {
   Self: lowSelf,
@@ -46,6 +48,15 @@ const safetyDimIcons: Record<string, string> = {
   Self: lowSelfNew,
   Others: lowOthersNew,
 };
+
+const allDimensionScores = [
+  { name: 'Self', score: 38 },
+  { name: 'Others', score: 24 },
+  { name: 'Past', score: 51 },
+  { name: 'Future', score: 82 },
+  { name: 'Senses', score: 39 },
+  { name: 'Perception', score: 43 },
+];
 
 interface DomainSectionProps {
   domain: 'Safety' | 'Play' | 'Challenge';
@@ -313,6 +324,7 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
               <p className="mt-5 max-w-sm text-[#4D4945] leading-relaxed" style={{ fontWeight: 300 }}>
                 Alignment compares what is felt inside with what is expressed outside, then shows the distance between the two.
               </p>
+              <AlignmentMeaningStrip domain={domain} felt={felt} expressed={expressed} />
             </div>
           </div>
 
@@ -326,6 +338,8 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
           feltText={content.feltText}
           expressedText={content.expressedText}
           alignmentExtended={content.alignmentExtended}
+          felt={felt}
+          expressed={expressed}
         />
       </motion.div>
 
@@ -378,53 +392,60 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
             animate={{ y: [0, -5, 0], rotate: [0, -1.2, 0.8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <SafetyNeutralSymbol color={color} size={250} />
+            <SafetyFocusSymbol color={color} size={250} />
           </motion.div>
 
           <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 560 390" preserveAspectRatio="none">
             <motion.path
-              d="M280 158 C205 214, 160 235, 110 298"
+              d="M232 184 C190 214, 162 238, 116 286"
               fill="none"
               stroke={color}
-              strokeWidth="2.4"
+              strokeWidth="2.2"
               strokeLinecap="round"
+              strokeLinejoin="round"
               initial={{ pathLength: 0, opacity: 0 }}
-              whileInView={{ pathLength: 1, opacity: 0.32 }}
+              whileInView={{ pathLength: 1, opacity: 0.42 }}
               viewport={{ once: true, amount: 0.45 }}
               transition={{ duration: 0.9, delay: 0.2 }}
             />
             <motion.path
-              d="M280 158 C355 214, 400 235, 450 298"
+              d="M232 184 C288 228, 352 245, 438 286"
               fill="none"
               stroke={color}
-              strokeWidth="2.4"
+              strokeWidth="2.2"
               strokeLinecap="round"
+              strokeLinejoin="round"
               initial={{ pathLength: 0, opacity: 0 }}
-              whileInView={{ pathLength: 1, opacity: 0.32 }}
+              whileInView={{ pathLength: 1, opacity: 0.42 }}
               viewport={{ once: true, amount: 0.45 }}
               transition={{ duration: 0.9, delay: 0.32 }}
             />
+            <circle cx="232" cy="184" r="4.5" fill={color} opacity="0.75" />
+            <circle cx="116" cy="286" r="3.5" fill={color} opacity="0.55" />
+            <circle cx="438" cy="286" r="3.5" fill={color} opacity="0.55" />
           </svg>
 
           {dimensions.map((dim, index) => {
             const isActive = active === dim.name;
             const side = index === 0 ? 'left-0 bottom-6' : 'right-0 bottom-6';
+            const Icon = dim.name === 'Self' ? Fingerprint : UsersRound;
             return (
               <motion.button
                 key={dim.name}
                 type="button"
+                onClick={() => document.getElementById(`safety-${dim.name.toLowerCase()}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                 onMouseEnter={() => onActive(dim.name)}
                 onFocus={() => onActive(dim.name)}
                 onMouseLeave={() => onActive(null)}
                 onBlur={() => onActive(null)}
-                className={`absolute ${side} w-[46%] rounded-[24px] border bg-white/88 p-5 text-left cursor-default backdrop-blur-sm`}
-                style={{ borderColor: isActive ? `${color}70` : `${color}22` }}
-                animate={{ y: isActive ? -8 : 0, scale: isActive ? 1.04 : 1 }}
+                className={`absolute ${side} w-[46%] rounded-[24px] bg-white/88 p-5 text-left cursor-pointer backdrop-blur-sm shadow-[0_22px_50px_-44px_rgba(0,0,0,0.55)]`}
+                style={{ border: `1px solid ${isActive ? `${color}52` : 'transparent'}` }}
+                animate={{ y: isActive ? -8 : 0, scale: isActive ? 1.035 : 1 }}
                 transition={{ type: 'spring', stiffness: 420, damping: 32 }}
               >
                 <div className="flex items-center gap-3">
                   <span className="grid h-12 w-12 place-items-center rounded-full" style={{ backgroundColor: `${color}14`, color }}>
-                    {dim.name === 'Self' ? <UserRound size={24} strokeWidth={2.2} /> : <UsersRound size={25} strokeWidth={2.2} />}
+                    <Icon size={dim.name === 'Self' ? 23 : 25} strokeWidth={2.1} />
                   </span>
                   <div>
                     <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>{dim.name}</p>
@@ -444,7 +465,7 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
 function SafetyScoreCard({ score, band, color }: { score: number; band: string; color: string }) {
   return (
     <motion.div
-      className="relative mt-10 overflow-hidden rounded-[26px] px-7 py-6 text-white shadow-[0_24px_56px_-36px_rgba(0,0,0,0.75)]"
+      className="relative mt-8 max-w-[470px] overflow-hidden rounded-[24px] px-6 py-5 text-white shadow-[0_22px_48px_-34px_rgba(0,0,0,0.72)]"
       style={{ backgroundColor: SAFETY_DARK }}
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -452,39 +473,29 @@ function SafetyScoreCard({ score, band, color }: { score: number; band: string; 
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
     >
       <div
-        className="absolute inset-0 pointer-events-none opacity-35"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `repeating-linear-gradient(135deg, transparent 0 13px, ${color}33 14px, transparent 16px)`,
+          background: `radial-gradient(circle at 22% 50%, ${color}30 0%, transparent 42%), radial-gradient(circle at 88% 20%, rgba(255,255,255,0.09) 0%, transparent 36%)`,
         }}
       />
-      <div className="relative flex items-center gap-7">
-        <div className="relative grid h-32 w-32 shrink-0 place-items-center">
-          <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 128 128">
-            <circle cx="64" cy="64" r="54" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.88)" strokeWidth="9" />
-            <motion.circle
-              cx="64"
-              cy="64"
-              r="54"
-              fill="none"
-              stroke={color}
-              strokeWidth="9"
-              strokeLinecap="round"
-              pathLength="1"
-              strokeDasharray="1"
-              initial={{ strokeDashoffset: 1 }}
-              whileInView={{ strokeDashoffset: 1 - score / 100 }}
+      <div className="relative flex items-center gap-5">
+        <div className="relative shrink-0 rounded-[20px] bg-white/8 px-5 py-4">
+          <p className="text-[9px] uppercase tracking-[0.16em] font-bold text-white/55">Score</p>
+          <CountUp to={score} className="tabular-nums block" style={{ color, fontSize: 50, lineHeight: 0.95, fontWeight: 400 }} />
+          <div className="mt-3 h-1.5 w-24 overflow-hidden rounded-full bg-white/18">
+            <motion.div
+              className="h-full rounded-full"
+              style={{ backgroundColor: color }}
+              initial={{ width: 0 }}
+              whileInView={{ width: `${score}%` }}
               viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
             />
-          </svg>
-          <div className="relative text-center">
-            <CountUp to={score} className="tabular-nums block" style={{ color, fontSize: 42, lineHeight: 1, fontWeight: 500 }} />
-            <span className="text-lg leading-none" style={{ color }}>%</span>
           </div>
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-[13px] uppercase tracking-[0.18em] font-bold" style={{ color }}>Overall Safety</p>
-          <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: 0.95, letterSpacing: '-0.045em', margin: '12px 0 0', color: '#FFFFFF' }}>
+          <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2.5rem, 4vw, 3.65rem)', lineHeight: 0.95, letterSpacing: '-0.045em', margin: '10px 0 0', color: '#FFFFFF', whiteSpace: 'nowrap' }}>
             {band}
           </h2>
         </div>
@@ -493,69 +504,25 @@ function SafetyScoreCard({ score, band, color }: { score: number; band: string; 
   );
 }
 
-function SafetyNeutralSymbol({ color, size = 250 }: { color: string; size?: number }) {
+function SafetyFocusSymbol({ color, size = 250 }: { color: string; size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 240 240" aria-hidden="true" className="drop-shadow-[0_26px_42px_rgba(66,166,142,0.12)]">
+    <svg width={size} height={size} viewBox="0 0 998 862" aria-hidden="true" className="drop-shadow-[0_26px_42px_rgba(66,166,142,0.12)] overflow-visible">
       <defs>
         <linearGradient id="safetyNeutralFade" x1="0" x2="1" y1="0" y2="1">
           <stop offset="0%" stopColor="#F8F5EF" />
           <stop offset="100%" stopColor="#E7E1D8" />
         </linearGradient>
       </defs>
-      <motion.polygon
-        points="120,18 178,116 120,98"
-        fill="url(#safetyNeutralFade)"
-        stroke="#CFC8BE"
-        strokeWidth="1.4"
-        opacity="0.5"
-        initial={{ opacity: 0, y: -8 }}
-        whileInView={{ opacity: 0.5, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.7 }}
-      />
-      <motion.polygon
-        points="120,98 178,116 120,132"
-        fill={color}
-        opacity="0.92"
-        initial={{ scale: 0.86, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 0.92 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.65, delay: 0.15 }}
-      />
-      <motion.polygon
-        points="120,98 62,116 120,132"
-        fill="#F8F5EF"
-        stroke="#CFC8BE"
-        strokeWidth="1.4"
-        opacity="0.72"
-        initial={{ opacity: 0, x: -8 }}
-        whileInView={{ opacity: 0.72, x: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.7, delay: 0.05 }}
-      />
-      <motion.polygon
-        points="120,132 178,116 202,174 120,174"
-        fill="#F4F1EA"
-        stroke="#D5CEC4"
-        strokeWidth="1.4"
-        opacity="0.72"
-        initial={{ opacity: 0, x: 8 }}
-        whileInView={{ opacity: 0.72, x: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.7, delay: 0.1 }}
-      />
-      <motion.polygon
-        points="120,132 120,174 38,174 62,116"
-        fill={color}
-        opacity="0.34"
-        stroke={color}
-        strokeWidth="1.4"
-        initial={{ opacity: 0, y: 8 }}
-        whileInView={{ opacity: 0.34, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.7, delay: 0.18 }}
-      />
-      <circle cx="120" cy="132" r="4.5" fill={color} opacity="0.7" />
+      <g transform="translate(998,0) scale(-1,1)">
+        <motion.path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={color} opacity="0.82" initial={{ opacity: 0 }} whileInView={{ opacity: 0.82 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7 }} />
+        <motion.path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={color} opacity="0.54" initial={{ opacity: 0 }} whileInView={{ opacity: 0.54 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7, delay: 0.08 }} />
+        <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={color} opacity="0.54" />
+
+        <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z" fill="url(#safetyNeutralFade)" stroke="#CCC5BA" strokeWidth="5" opacity="0.5" />
+        <path d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z" fill="url(#safetyNeutralFade)" stroke="#CCC5BA" strokeWidth="5" opacity="0.44" />
+        <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F5F1E9" stroke="#D2CBC1" strokeWidth="5" opacity="0.62" />
+        <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F7F4EE" stroke="#D2CBC1" strokeWidth="5" opacity="0.58" />
+      </g>
     </svg>
   );
 }
@@ -597,10 +564,14 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
   tint: string;
   levels: any;
 }) {
-  const steps = ['Very Low', 'Low', 'Almost Balanced', 'Balanced', 'Excess'];
-  const activeIndex = score < 30 ? 0 : score < 40 ? 1 : score < 55 ? 2 : score < 70 ? 3 : 4;
+  const steps = [
+    { label: 'Depleted', x: 68, y: 124 },
+    { label: 'Balanced', x: 548, y: 48 },
+    { label: 'Excess', x: 768, y: 84 },
+  ];
+  const activeIndex = score < 45 ? 0 : score < 70 ? 1 : 2;
   const marker = Math.min(96, Math.max(4, score));
-  const activeBody = activeIndex === 4 ? levels.excess.text : activeIndex >= 2 ? levels.balanced.text : levels.low.text;
+  const activeBody = activeIndex === 2 ? levels.excess.text : activeIndex === 1 ? levels.balanced.text : levels.low.text;
   const cards = [
     { label: 'Where you are', title: band, body: activeBody, Icon: MapPin },
     { label: 'Where you could be', title: 'Balanced', body: levels.balanced.text, Icon: Scale },
@@ -608,11 +579,11 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
 
   return (
     <div className="rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${color}28` }}>
-      <div className="relative pb-9 pt-3">
-        <svg className="h-40 w-full overflow-visible" viewBox="0 0 820 160" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M28 126 C180 126, 225 104, 330 92 C455 78, 500 42, 610 44 C700 46, 750 28, 792 18" fill="none" stroke="#EDEAE3" strokeWidth="10" strokeLinecap="round" />
+      <div className="relative pb-10 pt-3">
+        <svg className="h-44 w-full overflow-visible" viewBox="0 0 820 176" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50 C662 52, 690 36, 730 56 C758 70, 770 94, 792 86" fill="none" stroke="#EDEAE3" strokeWidth="10" strokeLinecap="round" />
           <motion.path
-            d="M28 126 C180 126, 225 104, 330 92 C455 78, 500 42, 610 44 C700 46, 750 28, 792 18"
+            d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50"
             fill="none"
             stroke={color}
             strokeWidth="10"
@@ -623,15 +594,37 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
             viewport={{ once: true, amount: 0.45 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
           />
-          {[0, 1, 2, 3, 4].map((dot) => (
-            <circle key={dot} cx={28 + dot * 191} cy={[126, 105, 76, 44, 18][dot]} r="3.5" fill={dot === activeIndex ? color : '#D8D3CA'} />
+          <motion.path
+            d="M596 50 C638 48, 668 36, 700 50 L724 42 L748 72 L770 58 L792 86"
+            fill="none"
+            stroke="#D8D3CA"
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0 }}
+            whileInView={{ pathLength: 1 }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          />
+          <motion.ellipse
+            cx="548"
+            cy="50"
+            rx="86"
+            ry="34"
+            fill={color}
+            opacity="0.08"
+            animate={{ opacity: [0.08, 0.14, 0.08], scale: [1, 1.03, 1] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          {steps.map((step, dot) => (
+            <circle key={step.label} cx={step.x} cy={step.y} r={dot === activeIndex ? 5 : 3.5} fill={dot === activeIndex ? color : '#CFC8BE'} />
           ))}
         </svg>
         <motion.div
           className="absolute grid h-14 w-14 place-items-center rounded-full bg-white shadow-[0_18px_38px_-28px_rgba(0,0,0,0.6)]"
           style={{
             left: `calc(${marker}% - 28px)`,
-            top: `${112 - Math.min(86, score * 0.86)}px`,
+            top: `${118 - Math.min(72, score * 0.72)}px`,
             color,
             border: `2px solid ${color}`,
           }}
@@ -642,13 +635,16 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
         >
           <span className="text-sm font-semibold">{score}</span>
         </motion.div>
-        <div className="relative grid grid-cols-5 gap-2">
+        <div className="relative grid grid-cols-3 gap-8">
           {steps.map((step, index) => (
-            <div key={step} className="text-center">
+            <div key={step.label} className="text-center">
               <div className="mx-auto mb-3 h-3 w-px" style={{ backgroundColor: index === activeIndex ? color : '#D8D3CA' }} />
               <p className="text-[10px] uppercase tracking-[0.12em] font-bold" style={{ color: index === activeIndex ? color : '#9A948D' }}>
-                {step}
+                {step.label}
               </p>
+              {step.label === 'Balanced' && (
+                <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-[#A49D94]">Ideal range</p>
+              )}
             </div>
           ))}
         </div>
@@ -809,53 +805,64 @@ function DomainAlignmentBridge({ domain, overall, felt, expressed, color }: {
         style={{ background: `radial-gradient(circle, ${FLAG_COLOR}12 0%, transparent 70%)` }}
       />
       <div className="relative">
-        <div className="grid md:grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
-          <AlignmentMeaningCard
-            label={`Felt ${domain}`}
-            body="What's available inside your system."
-            value={felt}
-            color={color}
-          />
-          <div className="hidden md:grid place-items-center text-[10px] uppercase tracking-[0.14em] font-bold text-[#8B8682]">vs</div>
-          <AlignmentMeaningCard
-            label={`Expressed ${domain}`}
-            body="What others can see from the outside."
-            value={expressed}
-            color={EXPRESSED_COLOR}
-          />
-        </div>
-
-        <div className="mt-8 grid grid-cols-[1fr_auto_1fr_auto] gap-5 items-end">
+        <p className="mb-6 text-[11px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">The alignment picture</p>
+        <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-5 items-end">
           <VolumeColumn label="Overall" value={overall} color="#6F6A64" />
-          <VolumeColumn label="Felt" value={felt} color={color} />
-          <GapColumn value={absoluteGap} label={alignmentLabel} direction={direction} />
+          <VolumeColumn label="Felt" value={felt} color={FELT_COLOR} />
           <VolumeColumn label="Expressed" value={expressed} color={EXPRESSED_COLOR} />
+          <GapColumn value={absoluteGap} label={alignmentLabel} direction={direction} />
         </div>
       </div>
     </div>
   );
 }
 
-function AlignmentMeaningCard({ label, body, value, color }: {
+function AlignmentMeaningStrip({ domain, felt, expressed }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
+  felt: number;
+  expressed: number;
+}) {
+  return (
+    <div className="mt-7 grid gap-3">
+      <AlignmentMeaningCard
+        label={`Felt ${domain}`}
+        body="The inside reading: what is actually available in your system."
+        value={felt}
+        color={FELT_COLOR}
+        mode="felt"
+      />
+      <AlignmentMeaningCard
+        label={`Expressed ${domain}`}
+        body="The outside reading: what other people can see, receive, or infer."
+        value={expressed}
+        color={EXPRESSED_COLOR}
+        mode="expressed"
+      />
+    </div>
+  );
+}
+
+function AlignmentMeaningCard({ label, body, value, color, mode = 'felt' }: {
   value: number;
   color: string;
   label: string;
   body: string;
+  mode?: 'felt' | 'expressed';
 }) {
   return (
-    <div className="relative overflow-hidden rounded-[22px] border bg-white p-5" style={{ borderColor: `${color}24` }}>
+    <div className="relative overflow-hidden rounded-[20px] border bg-white/82 p-4 shadow-[0_18px_42px_-38px_rgba(0,0,0,0.45)]" style={{ borderColor: `${color}22` }}>
       <div className="flex items-center gap-4">
-        <div className="grid h-16 w-16 place-items-center rounded-full" style={{ backgroundColor: `${color}10` }}>
-          <div className="grid h-10 w-10 place-items-center rounded-full border" style={{ borderColor: `${color}33` }}>
-            <div className="h-5 w-5 rounded-full" style={{ backgroundColor: color }} />
+        <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full" style={{ backgroundColor: mode === 'felt' ? '#F1EFE9' : '#EEF3F7' }}>
+          <div className="grid h-10 w-10 place-items-center rounded-full border" style={{ borderColor: `${color}30` }}>
+            <div className={mode === 'felt' ? 'h-4 w-4 rounded-full' : 'h-5 w-5 rounded-full border-[6px] bg-transparent'} style={{ backgroundColor: mode === 'felt' ? color : 'transparent', borderColor: color }} />
           </div>
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
           <p className="mt-1 text-sm leading-snug text-[#4D4945]" style={{ fontWeight: 300 }}>{body}</p>
         </div>
       </div>
-      <div className="mt-5 h-2 rounded-full bg-[#EDEAE3] overflow-hidden">
+      <div className="mt-4 h-1.5 rounded-full bg-[#EDEAE3] overflow-hidden">
         <motion.div
           className="h-full rounded-full"
           style={{ backgroundColor: color }}
@@ -926,7 +933,7 @@ function GapColumn({ value, label, direction }: { value: number; label: string; 
   );
 }
 
-function AlignmentInsights({ domain, color, tint, alignmentText, feltText, expressedText, alignmentExtended }: {
+function AlignmentInsights({ domain, color, tint, alignmentText, feltText, expressedText, alignmentExtended, felt, expressed }: {
   domain: 'Safety' | 'Play' | 'Challenge';
   color: string;
   tint: string;
@@ -934,7 +941,15 @@ function AlignmentInsights({ domain, color, tint, alignmentText, feltText, expre
   feltText: string;
   expressedText: string;
   alignmentExtended: string | null;
+  felt: number;
+  expressed: number;
 }) {
+  const gap = expressed - felt;
+  const absoluteGap = Math.abs(gap);
+  const alignmentLabel = absoluteGap <= 4 ? 'Very aligned' : absoluteGap <= 9 ? 'Slightly misaligned' : absoluteGap <= 14 ? 'Misaligned' : 'Very misaligned';
+  const statement = gap >= 0
+    ? `${alignmentLabel}: expressed ${domain} is running ahead of felt ${domain}.`
+    : `${alignmentLabel}: felt ${domain} is stronger than what others can see.`;
   const items = [
     {
       label: 'What this means',
@@ -954,39 +969,61 @@ function AlignmentInsights({ domain, color, tint, alignmentText, feltText, expre
   ];
 
   return (
-    <div className="mt-10 space-y-4 border-t pt-8" style={{ borderColor: `${color}24` }}>
-      {items.map(({ label, body, Icon }, index) => (
+    <div className="mt-10 border-t pt-8" style={{ borderColor: `${color}24` }}>
+      <div className="mb-6">
+        <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: absoluteGap > 9 ? FLAG_COLOR : color }}>Your alignment state</p>
+        <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3.4rem)', lineHeight: 1.02, letterSpacing: '-0.04em', margin: '8px 0 0', color: '#15110F' }}>
+          {statement}
+        </h3>
+      </div>
+      <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.45 }}
+          whileHover={{ y: -4 }}
+          className="relative overflow-hidden rounded-[24px] border bg-white p-7 lg:p-8 cursor-default"
+          style={{ borderColor: `${color}22`, background: `linear-gradient(135deg, ${tint} 0%, #FFFFFF 64%)` }}
+        >
+          <p className="text-[17px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{items[0].body}</p>
+        </motion.div>
+
+        <div className="grid gap-5">
+          {items.slice(1).map(({ label, body, Icon }, index) => (
         <motion.div
           key={label}
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.45, delay: index * 0.08 }}
+              transition={{ duration: 0.45, delay: (index + 1) * 0.08 }}
           whileHover={{ y: -4 }}
-          className="group/insight relative grid overflow-hidden rounded-[24px] border bg-white cursor-default sm:grid-cols-[150px_1fr]"
+              className="group/insight relative grid overflow-hidden rounded-[24px] border bg-white cursor-default sm:grid-cols-[118px_1fr]"
           style={{ borderColor: `${color}22` }}
         >
-          <div className="relative grid min-h-[132px] place-items-center overflow-hidden" style={{ backgroundColor: index === 0 ? `${color}12` : index === 1 ? '#EEF8F4' : '#F3F7FB', color: index === 2 ? FLAG_COLOR : color }}>
+              <div className="relative grid min-h-[128px] place-items-center overflow-hidden" style={{ backgroundColor: index === 0 ? '#EEF8F4' : '#F3F7FB', color: index === 1 ? FLAG_COLOR : color }}>
             <motion.div
-              className="absolute h-24 w-24 rounded-[42%]"
-              style={{ backgroundColor: index === 2 ? `${FLAG_COLOR}14` : `${color}18` }}
+                  className="absolute h-20 w-20 rounded-[42%]"
+                  style={{ backgroundColor: index === 1 ? `${FLAG_COLOR}14` : `${color}18` }}
               animate={{ rotate: [0, 8, -6, 0], scale: [1, 1.06, 1] }}
               transition={{ duration: 6 + index, repeat: Infinity, ease: 'easeInOut' }}
             />
             <motion.div
-              className="relative grid h-20 w-20 place-items-center rounded-full bg-white/70 shadow-[0_18px_40px_-32px_rgba(0,0,0,0.45)]"
+                  className="relative grid h-16 w-16 place-items-center rounded-full bg-white/70 shadow-[0_18px_40px_-32px_rgba(0,0,0,0.45)]"
               whileHover={{ scale: 1.08 }}
               transition={{ type: 'spring', stiffness: 360, damping: 24 }}
             >
-              <Icon size={48} strokeWidth={1.7} />
+                  <Icon size={38} strokeWidth={1.7} />
             </motion.div>
           </div>
           <div className="p-6">
-            <p className="text-[12px] uppercase tracking-[0.15em] font-bold" style={{ color: index === 2 ? FLAG_COLOR : color }}>{label}</p>
+                <p className="text-[12px] uppercase tracking-[0.15em] font-bold" style={{ color: index === 1 ? FLAG_COLOR : color }}>{label}</p>
             <p className="mt-3 text-[15px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{body}</p>
           </div>
         </motion.div>
       ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -1142,77 +1179,128 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
         className="absolute -right-20 -bottom-24 h-80 w-80 rounded-full pointer-events-none"
         style={{ background: `radial-gradient(circle, ${color}12 0%, transparent 70%)` }}
       />
-      <div className="relative grid lg:grid-cols-[0.48fr_0.52fr] gap-8 lg:gap-12 items-center">
+      <div className="relative grid lg:grid-cols-[0.44fr_0.56fr] gap-8 lg:gap-14 items-start">
         <div>
-          <div className="relative h-64">
-            <motion.div
-              className="absolute left-4 top-4 h-52 w-52 rounded-[45%]"
-              style={{ backgroundColor: `${color}0F` }}
-              animate={{ rotate: [0, 5, -4, 0], scale: [1, 1.03, 1] }}
-              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <img
-              src={safetyDimIcons[dim.name]}
-              alt=""
-              aria-hidden="true"
-              className="absolute left-2 top-0 h-48 w-48 object-contain transition-transform duration-700 group-hover/safety-dim:scale-105"
-            />
-            <div className="absolute bottom-2 right-2 rounded-[28px] bg-white px-6 py-5 shadow-[0_24px_56px_-36px_rgba(0,0,0,0.55)]">
-              <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>Score</p>
-              <div className="mt-1 flex items-end gap-1">
-                <CountUp to={dim.score} className="tabular-nums" style={{ color, fontSize: 58, lineHeight: 0.86, fontWeight: 300 }} />
-                <span className="mb-1 text-sm" style={{ color }}>%</span>
-              </div>
-              <DimensionFlow value={dim.score} color={color} />
-            </div>
+          <p className="text-[11px] uppercase tracking-[0.18em] font-bold" style={{ color }}>Safety dimension</p>
+          <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(3.5rem, 7vw, 6.2rem)', fontWeight: 600, color: '#0F0F0F', letterSpacing: '-0.06em', lineHeight: 0.88, margin: '10px 0 0' }}>
+            {dim.name}
+          </h3>
+
+          <div className="relative mt-10 h-72">
+            <SafetyDimensionSymbol selected={dim.name} value={dim.score} color={color} />
           </div>
         </div>
 
         <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>Safety dimension</p>
-          <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(3rem, 6vw, 5.2rem)', fontWeight: 600, color: '#0F0F0F', letterSpacing: '-0.055em', lineHeight: 0.92, margin: '12px 0 0' }}>
-            {dim.name}
-          </h3>
-          <p className="mt-3 text-lg text-[#6F6A64]">{dim.band}</p>
-          <p className="mt-7 text-[#1A1614] leading-relaxed text-[16px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
-
-          <div className="grid md:grid-cols-2 gap-5 mt-7">
-            <InsightPanel
-              kind="working"
-              label="What's working"
-              body={dim.working}
-              accent={color}
-              bg={tint}
-              border={`${color}24`}
-              Icon={Check}
-            />
-            <InsightPanel
-              kind="note"
-              label="Take note"
-              body={dim.takeNote}
-              accent="#A96A28"
-              bg="#FBF6EE"
-              border="#EBDFCB"
-              Icon={AlertCircle}
-            />
+          <div className="inline-flex items-end gap-5 rounded-[24px] bg-[#F7F5EF] px-5 py-4">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.15em] font-bold text-[#8B8682]">Your level</p>
+              <p className="mt-1 text-[#15110F]" style={{ fontFamily: SERIF, fontSize: 34, lineHeight: 1 }}>{dim.band}</p>
+            </div>
+            <div className="h-12 w-px bg-[#E3DED4]" />
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color }}>Score</p>
+              <CountUp to={dim.score} className="tabular-nums" style={{ color, fontSize: 34, lineHeight: 1, fontWeight: 400 }} />
+            </div>
           </div>
+          <p className="mt-7 text-[#1A1614] leading-relaxed text-[16px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
+        </div>
+      </div>
+
+      <div className="relative mt-9 grid gap-5 lg:grid-cols-[1.18fr_0.82fr]">
+        <SixDimensionScale active={dim.name} color={color} />
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-1">
+          <InsightPanel
+            kind="working"
+            label="What's working"
+            body={dim.working}
+            accent={color}
+            bg={tint}
+            border={`${color}24`}
+            Icon={Check}
+          />
+          <InsightPanel
+            kind="note"
+            label="Take note"
+            body={dim.takeNote}
+            accent="#A96A28"
+            bg="#FBF6EE"
+            border="#EBDFCB"
+            Icon={AlertCircle}
+          />
         </div>
       </div>
     </motion.div>
   );
 }
 
-function DimensionFlow({ value, color }: { value: number; color: string }) {
+function SafetyDimensionSymbol({ selected, value, color }: { selected: string; value: number; color: string }) {
+  const isSelf = selected === 'Self';
   return (
-    <div className="mt-4 h-3 w-36 overflow-hidden rounded-full bg-[#EFECE6]">
-      <motion.div
-        className="h-full rounded-full"
-        style={{ backgroundColor: color }}
-        initial={{ width: 0 }}
-        whileInView={{ width: `${value}%` }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-      />
+    <div className="absolute inset-0">
+      <svg viewBox="0 0 320 280" className="h-full w-full overflow-visible" aria-hidden="true">
+        <motion.circle
+          cx="125"
+          cy="152"
+          r="95"
+          fill="none"
+          stroke={color}
+          strokeWidth="34"
+          strokeLinecap="round"
+          pathLength="1"
+          strokeDasharray="1"
+          initial={{ strokeDashoffset: 1 }}
+          whileInView={{ strokeDashoffset: 1 - value / 100 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          opacity="0.16"
+          transform="rotate(-108 125 152)"
+        />
+        <g transform="translate(22 18) scale(0.24)" opacity="0.92">
+          <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={isSelf ? color : '#F4F1EA'} opacity={isSelf ? 0.86 : 0.42} stroke="#BDB6AB" strokeWidth="5" />
+          <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={!isSelf ? color : '#F4F1EA'} opacity={!isSelf ? 0.82 : 0.42} stroke="#BDB6AB" strokeWidth="5" />
+          <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={color} opacity="0.42" />
+          <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z" fill="#F8F5EF" stroke="#BDB6AB" strokeWidth="5" opacity="0.28" />
+          <path d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z" fill="#F8F5EF" stroke="#BDB6AB" strokeWidth="5" opacity="0.28" />
+          <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F8F5EF" stroke="#BDB6AB" strokeWidth="5" opacity="0.28" />
+          <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F8F5EF" stroke="#BDB6AB" strokeWidth="5" opacity="0.28" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function SixDimensionScale({ active, color }: { active: string; color: string }) {
+  return (
+    <div className="relative overflow-hidden rounded-[24px] border bg-white p-6" style={{ borderColor: `${color}22` }}>
+      <div className="mb-7 flex items-center justify-between gap-4">
+        <p className="text-[12px] uppercase tracking-[0.16em] font-bold text-[#1A1614]">Your six dimensions</p>
+        <p className="text-[10px] uppercase tracking-[0.13em] font-bold text-[#A09A91]">Balance line</p>
+      </div>
+      <div className="relative h-52">
+        <div className="absolute left-0 right-0 top-1/2 border-t border-dashed border-[#CFC8BE]" />
+        <div className="absolute inset-0 grid grid-cols-6 gap-4 items-end">
+          {allDimensionScores.map((item) => {
+            const selected = item.name === active;
+            return (
+              <div key={item.name} className="flex h-full flex-col items-center justify-end gap-3">
+                <div className="relative flex h-36 w-full items-end justify-center">
+                  <div className="absolute bottom-0 h-full w-5 rounded-full bg-[#F1EEE8]" />
+                  <motion.div
+                    className="relative z-10 w-5 rounded-full"
+                    style={{ backgroundColor: selected ? color : '#D6D0C8' }}
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${item.score}%` }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                  />
+                </div>
+                <p className="text-center text-[10px] uppercase tracking-[0.08em] font-bold" style={{ color: selected ? color : '#9A948D' }}>{item.name}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

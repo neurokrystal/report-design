@@ -92,7 +92,7 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
 
       {/* ── Branding ── */}
       <div className="py-7 px-5 flex flex-col items-center text-center flex-shrink-0">
-        <img src={DimensionalLogo} alt="Dimensional" className="w-14 h-14 mb-4" />
+        <img src={DimensionalLogo} alt="Dimensional" className="w-14 h-14 mb-4 scale-x-[-1]" />
         <p style={{
           fontFamily: '"Neue Haas Grotesk Display Pro", "Neue Haas Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif',
           fontWeight: 700,
