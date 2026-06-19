@@ -4,11 +4,18 @@ import {
   AlertCircle,
   ArrowDownRight,
   ArrowUpRight,
+  Activity,
   Check,
+  Compass,
+  Eye,
   Flag,
+  Gauge,
+  History,
+  Mountain,
   ShieldCheck,
   UserRound,
   UsersRound,
+  Waves,
 } from 'lucide-react';
 
 import lowSelf from '../../imports/10__Low_Self.svg';
@@ -174,183 +181,18 @@ export function DomainSection({ domain, score, band, felt, expressed, color }: D
   const alignmentGap = Math.abs(felt - expressed);
   const tint = domainTints[domain];
 
-  if (domain === 'Safety') {
-    return (
-      <SafetyImmersiveSection
-        content={content}
-        score={score}
-        band={band}
-        felt={felt}
-        expressed={expressed}
-        color={color}
-        tint={tint}
-        alignmentGap={alignmentGap}
-      />
-    );
-  }
-
   return (
-    <div className="space-y-14">
-      {/* ── HEADER ── */}
-      <div id={`${domain.toLowerCase()}-overview`}>
-        <p style={{ color: '#DC4C0C', fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>
-          {domain === 'Safety' ? '04' : domain === 'Play' ? '05' : '06'}
-        </p>
-        <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', margin: 0 }}>
-          {domain}
-        </h1>
-        <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px' }} />
-      </div>
-
-      {/* ── ROW 1: description (left) + score / band / bar (right) ── */}
-      <motion.div className="grid lg:grid-cols-[1.45fr_1fr] gap-8 lg:gap-12 items-center" {...reveal}>
-        <p style={{ fontSize: '18px', color: '#1A1614', lineHeight: 1.7, fontWeight: 300 }}>
-          {content.what}
-        </p>
-
-        <div
-          className="relative overflow-hidden rounded-2xl border p-7"
-          style={{ borderColor: `${color}33`, backgroundColor: tint }}
-        >
-          <div
-            className="absolute -right-7 -top-7 w-28 h-28 rounded-full pointer-events-none"
-            style={{ backgroundColor: color, opacity: 0.1 }}
-          />
-          <div className="relative">
-            <p className="text-[11px] tracking-[0.18em] uppercase font-semibold mb-3" style={{ color }}>
-              Overall {domain}
-            </p>
-            <div className="flex items-baseline gap-2 mb-1">
-              <CountUp to={score} className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '64px', lineHeight: 1, letterSpacing: '-0.03em' }} />
-              <span className="text-[#8B8682] text-lg">/ 100</span>
-            </div>
-            <p className="text-[#1A1614] mb-5" style={{ fontWeight: 400, fontSize: '18px' }}>{band}</p>
-            <AnimatedBar value={score} color={color} />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ── ROW 2: what your level means ── */}
-      <motion.div {...reveal}>
-        <p className="text-xs tracking-[0.15em] uppercase text-[#8B8682] mb-6 font-semibold">What your level means</p>
-        <div className="grid md:grid-cols-3 gap-5">
-          {(['low', 'balanced', 'excess'] as const).map((key, i) => {
-            const level = content.levels[key];
-            const isActive = key === 'low'
-              ? score < 35
-              : key === 'balanced'
-              ? score >= 35 && score <= 65
-              : score > 65;
-            return (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className={`relative rounded-2xl p-6 transition-shadow ${isActive ? 'shadow-sm' : 'border border-[#E5E3DD]'}`}
-                style={isActive ? { backgroundColor: tint, border: `1px solid ${color}40` } : {}}
-              >
-                {isActive && <div className="absolute left-0 top-5 bottom-5 w-1 rounded-r" style={{ backgroundColor: color }} />}
-                <p className="text-[11px] tracking-[0.15em] uppercase mb-3 font-semibold" style={{ color: isActive ? color : '#8B8682' }}>
-                  {level.label}
-                </p>
-                <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{level.text}</p>
-                {isActive && (
-                  <p className="mt-4 text-[11px] tracking-wide font-semibold inline-flex items-center gap-1.5" style={{ color }}>
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: color, display: 'inline-block' }} />
-                    Your reading
-                  </p>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      </motion.div>
-
-      {/* ── ROW 3: felt vs expressed (left) + alignment gap (right) ── */}
-      <motion.div id={`${domain.toLowerCase()}-alignment`} className="grid lg:grid-cols-2 gap-6" {...reveal}>
-        {/* Left: the graph + the felt / expressed detail */}
-        <div className="rounded-2xl border border-[#E5E3DD] bg-white p-8">
-          <p className="text-xs tracking-[0.15em] uppercase text-[#8B8682] mb-6 font-semibold">Felt vs Expressed</p>
-          <AlignmentTrack felt={felt} expressed={expressed} color={color} />
-          <div className="mt-7 space-y-5 border-t border-[#E5E3DD] pt-6">
-            <div>
-              <p className="text-[11px] tracking-[0.14em] uppercase mb-2 font-semibold" style={{ color }}>How it feels inside</p>
-              <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{content.feltText}</p>
-            </div>
-            <div>
-              <p className="text-[11px] tracking-[0.14em] uppercase text-[#8B8682] mb-2 font-semibold">How others see it</p>
-              <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{content.expressedText}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: the alignment gap highlight */}
-        <div
-          className="relative overflow-hidden rounded-2xl border p-8"
-          style={{ backgroundColor: tint, borderColor: `${color}40` }}
-        >
-          <div
-            className="absolute -right-10 -bottom-10 w-40 h-40 rounded-full pointer-events-none"
-            style={{ backgroundColor: color, opacity: 0.08 }}
-          />
-          <div className="relative">
-            <div className="flex items-center gap-2.5 mb-5">
-              {content.isAlignmentFlagged && (
-                <span className="text-[10px] tracking-[0.12em] uppercase px-2 py-1 rounded-full text-white font-semibold"
-                  style={{ backgroundColor: color }}>
-                  Flagged
-                </span>
-              )}
-              <p className="text-[11px] tracking-[0.16em] uppercase text-[#8B8682] font-semibold">The alignment gap</p>
-            </div>
-
-            <div className="flex items-end gap-3 mb-1">
-              <CountUp to={alignmentGap} className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '72px', lineHeight: 0.9, letterSpacing: '-0.03em' }} />
-              <span className="mb-2.5 text-sm uppercase tracking-[0.12em] text-[#8B8682]">point gap</span>
-            </div>
-            {/* animated underline */}
-            <motion.div
-              className="h-[3px] rounded-full mb-5"
-              style={{ backgroundColor: color, opacity: 0.5 }}
-              initial={{ width: 0 }}
-              whileInView={{ width: 96 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            <p className="text-sm text-[#1A1614] leading-relaxed mb-4" style={{ fontWeight: 300 }}>
-              Alignment is the distance between how much {domain} you feel on the inside and how much you express on the outside. Most people sense a gap exists. What is harder to see is how wide it runs, and what it quietly costs to hold in place.
-            </p>
-            <p className="text-sm text-[#1A1614] leading-relaxed border-t pt-4" style={{ fontWeight: 300, borderColor: `${color}30` }}>
-              {content.alignmentText}
-            </p>
-            {content.alignmentExtended && (
-              <p className="text-sm text-[#1A1614] leading-relaxed mt-4" style={{ fontWeight: 300 }}>
-                {content.alignmentExtended}
-              </p>
-            )}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ── ROW 4: dimensions, each with what's working / take note ── */}
-      <div className="space-y-6">
-        <p className="text-xs tracking-[0.15em] uppercase text-[#8B8682] font-semibold">Your {domain} dimensions</p>
-        {content.dimensions.map((dim, i) => (
-          <DimensionBlock
-            key={dim.name}
-            id={`${domain.toLowerCase()}-${dim.name.toLowerCase()}`}
-            dim={dim}
-            domain={domain}
-            color={color}
-            tint={tint}
-            index={i}
-          />
-        ))}
-      </div>
-    </div>
+    <DomainImmersiveSection
+      domain={domain}
+      content={content}
+      score={score}
+      band={band}
+      felt={felt}
+      expressed={expressed}
+      color={color}
+      tint={tint}
+      alignmentGap={alignmentGap}
+    />
   );
 }
 
@@ -370,7 +212,8 @@ function SectionHeader({ domain }: { domain: 'Safety' | 'Play' | 'Challenge' }) 
   );
 }
 
-function SafetyImmersiveSection({ content, score, band, felt, expressed, color, tint, alignmentGap }: {
+function DomainImmersiveSection({ domain, content, score, band, felt, expressed, color, tint, alignmentGap }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
   content: any;
   score: number;
   band: string;
@@ -380,16 +223,16 @@ function SafetyImmersiveSection({ content, score, band, felt, expressed, color, 
   tint: string;
   alignmentGap: number;
 }) {
-  const [activeDimension, setActiveDimension] = useState<'Self' | 'Others' | null>(null);
-  const self = content.dimensions.find((dim: any) => dim.name === 'Self');
-  const others = content.dimensions.find((dim: any) => dim.name === 'Others');
+  const [activeDimension, setActiveDimension] = useState<string | null>(null);
+  const dimensions = content.dimensions;
+  const DomainIcon = getDomainIcon(domain);
 
   return (
-    <div className="space-y-12">
-      <SectionHeader domain="Safety" />
+    <div className="space-y-16">
+      <SectionHeader domain={domain} />
 
       <motion.div
-        className="relative overflow-hidden rounded-[28px] border bg-[#F8FCF9] p-6 md:p-8 lg:p-10"
+        className="relative overflow-hidden rounded-[28px] border p-6 md:p-8 lg:p-10"
         style={{ borderColor: `${color}2E` }}
         {...reveal}
       >
@@ -411,8 +254,8 @@ function SafetyImmersiveSection({ content, score, band, felt, expressed, color, 
         <div className="relative grid lg:grid-cols-[0.92fr_1.08fr] gap-8 lg:gap-12 items-center">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-[11px] uppercase tracking-[0.14em] font-bold shadow-[0_14px_34px_-28px_rgba(0,0,0,0.45)]" style={{ color }}>
-              <ShieldCheck size={14} strokeWidth={2.8} />
-              Overall Safety
+              <DomainIcon size={14} strokeWidth={2.8} />
+              Overall {domain}
             </div>
             <div className="mt-7 flex items-end gap-3">
               <CountUp to={score} className="tabular-nums" style={{ color, fontWeight: 300, fontSize: 'clamp(5rem, 11vw, 7.5rem)', lineHeight: 0.85, letterSpacing: '-0.06em' }} />
@@ -426,120 +269,97 @@ function SafetyImmersiveSection({ content, score, band, felt, expressed, color, 
             </p>
           </div>
 
-          <SafetyArchitectureGraphic
+          <DomainArchitectureGraphic
+            domain={domain}
             color={color}
             score={score}
-            selfScore={self.score}
-            othersScore={others.score}
+            dimensions={dimensions}
             active={activeDimension}
             onActive={setActiveDimension}
           />
         </div>
       </motion.div>
 
-      <motion.div {...reveal}>
+      <motion.div className="relative" {...reveal}>
         <p className="text-xs tracking-[0.15em] uppercase text-[#8B8682] mb-6 font-semibold">What your level means</p>
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-6">
           {(['low', 'balanced', 'excess'] as const).map((key, i) => {
             const level = content.levels[key];
-            const isActive = key === 'low';
+            const isActive = key === 'low'
+              ? score < 35
+              : key === 'balanced'
+              ? score >= 35 && score <= 65
+              : score > 65;
             return (
-              <motion.div
+              <LevelMeaningPanel
                 key={key}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -4, backgroundColor: isActive ? '#EAF8F3' : '#FBFAF7' }}
-                className="relative rounded-2xl p-6 border bg-white cursor-default"
-                style={{ borderColor: isActive ? `${color}45` : '#E5E3DD' }}
-              >
-                {isActive && <div className="absolute left-0 top-5 bottom-5 w-1 rounded-r" style={{ backgroundColor: color }} />}
-                <p className="text-[11px] tracking-[0.15em] uppercase mb-3 font-semibold" style={{ color: isActive ? color : '#8B8682' }}>
-                  {level.label}
-                </p>
-                <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{level.text}</p>
-              </motion.div>
+                label={level.label}
+                text={level.text}
+                color={color}
+                active={isActive}
+                index={i}
+              />
             );
           })}
         </div>
       </motion.div>
 
-      <motion.div id="safety-alignment" className="relative overflow-hidden rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${color}30` }} {...reveal}>
-        <div className="relative grid lg:grid-cols-[0.95fr_1.05fr] gap-8 lg:gap-12 items-center">
+      <motion.div id={`${domain.toLowerCase()}-alignment`} className="relative overflow-hidden rounded-[28px] py-2" {...reveal}>
+        <div className="relative grid lg:grid-cols-[0.88fr_1.12fr] gap-8 lg:gap-12 items-center">
           <div className="flex flex-col justify-between">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-[11px] uppercase tracking-[0.14em] font-bold text-white" style={{ backgroundColor: color }}>
                 <Flag size={14} fill="currentColor" />
-                Flagged alignment
+                {content.isAlignmentFlagged ? 'Flagged alignment' : 'Alignment reading'}
               </div>
               <div className="mt-7 flex items-end gap-3">
                 <CountUp to={alignmentGap} className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '88px', lineHeight: 0.85, letterSpacing: '-0.05em' }} />
                 <span className="mb-3 text-sm uppercase tracking-[0.14em] text-[#8B8682] font-semibold">point gap</span>
               </div>
-              <p className="mt-5 text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>
-                {content.alignmentText}
-              </p>
             </div>
-            {content.alignmentExtended && (
-              <p className="mt-6 rounded-2xl p-5 text-sm leading-relaxed" style={{ backgroundColor: tint, color: '#1A1614', fontWeight: 300 }}>
-                {content.alignmentExtended}
-              </p>
-            )}
           </div>
 
-          <SafetyAlignmentBridge felt={felt} expressed={expressed} color={color} />
+          <DomainAlignmentBridge felt={felt} expressed={expressed} color={color} />
         </div>
+        <AlignmentInsights
+          domain={domain}
+          color={color}
+          tint={tint}
+          alignmentText={content.alignmentText}
+          feltText={content.feltText}
+          expressedText={content.expressedText}
+          alignmentExtended={content.alignmentExtended}
+        />
       </motion.div>
 
-      <div className="space-y-6">
-        <div className="flex items-end justify-between gap-4">
-          <p className="text-xs tracking-[0.15em] uppercase text-[#8B8682] font-semibold">Your Safety dimensions</p>
-          <div className="hidden sm:flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-[#8B8682]">
-            <span className="h-px w-12" style={{ backgroundColor: `${color}4A` }} />
-            Inner relationship / relational field
-          </div>
-        </div>
-        <div className="grid lg:grid-cols-2 gap-6">
-          <SafetyDimensionCard
-            dim={self}
-            domain="Safety"
+      <div className="space-y-8">
+        <p className="text-xs tracking-[0.15em] uppercase text-[#8B8682] font-semibold">Your {domain} dimensions</p>
+        {dimensions.map((dim: any, index: number) => (
+          <DomainDimensionCard
+            key={dim.name}
+            dim={dim}
+            domain={domain}
             color={color}
             tint={tint}
-            icon={lowSelf}
-            Icon={UserRound}
-            active={activeDimension === 'Self'}
-            onActive={() => setActiveDimension('Self')}
+            index={index}
+            active={activeDimension === dim.name}
+            onActive={() => setActiveDimension(dim.name)}
             onClear={() => setActiveDimension(null)}
           />
-          <SafetyDimensionCard
-            dim={others}
-            domain="Safety"
-            color={color}
-            tint={tint}
-            icon={lowOthers}
-            Icon={UsersRound}
-            active={activeDimension === 'Others'}
-            onActive={() => setActiveDimension('Others')}
-            onClear={() => setActiveDimension(null)}
-          />
-        </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function SafetyArchitectureGraphic({ color, score, selfScore, othersScore, active, onActive }: {
+function DomainArchitectureGraphic({ domain, color, score, dimensions, active, onActive }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
   color: string;
   score: number;
-  selfScore: number;
-  othersScore: number;
-  active: 'Self' | 'Others' | null;
-  onActive: (dim: 'Self' | 'Others' | null) => void;
+  dimensions: any[];
+  active: string | null;
+  onActive: (dim: string | null) => void;
 }) {
-  const selfScale = active === 'Self' ? 1.08 : active === 'Others' ? 0.96 : 1;
-  const othersScale = active === 'Others' ? 1.08 : active === 'Self' ? 0.96 : 1;
-
   return (
     <div className="relative min-h-[360px] rounded-[24px] bg-white/80 p-6 shadow-[0_24px_70px_-58px_rgba(0,0,0,0.45)]">
       <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 520 360" preserveAspectRatio="none">
@@ -570,49 +390,43 @@ function SafetyArchitectureGraphic({ color, score, selfScore, othersScore, activ
         animate={{ y: [0, -4, 0] }}
         transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>Safety</p>
+        <DomainGlyph domain={domain} color={color} size={50} />
+        <p className="mt-2 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>{domain}</p>
         <CountUp to={score} className="tabular-nums block" style={{ color, fontSize: 38, lineHeight: 1, fontWeight: 300 }} />
       </motion.div>
 
-      <motion.button
-        type="button"
-        onMouseEnter={() => onActive('Self')}
-        onFocus={() => onActive('Self')}
-        onMouseLeave={() => onActive(null)}
-        onBlur={() => onActive(null)}
-        className="absolute left-[7%] bottom-8 w-[42%] rounded-[22px] border bg-white p-5 text-left cursor-default"
-        style={{ borderColor: active === 'Self' ? `${color}70` : `${color}24` }}
-        animate={{ scale: selfScale, y: active === 'Self' ? -7 : 0 }}
-        transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-      >
-        <UserRound size={18} style={{ color }} />
-        <p className="mt-3 text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>Self</p>
-        <p className="mt-1 text-[#1A1614]" style={{ fontFamily: SERIF, fontSize: 26, lineHeight: 1 }}>Inner safety</p>
-        <MiniBar value={selfScore} color={color} />
-      </motion.button>
-
-      <motion.button
-        type="button"
-        onMouseEnter={() => onActive('Others')}
-        onFocus={() => onActive('Others')}
-        onMouseLeave={() => onActive(null)}
-        onBlur={() => onActive(null)}
-        className="absolute right-[7%] bottom-8 w-[42%] rounded-[22px] border bg-white p-5 text-left cursor-default"
-        style={{ borderColor: active === 'Others' ? `${color}70` : `${color}24` }}
-        animate={{ scale: othersScale, y: active === 'Others' ? -7 : 0 }}
-        transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-      >
-        <UsersRound size={18} style={{ color }} />
-        <p className="mt-3 text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>Others</p>
-        <p className="mt-1 text-[#1A1614]" style={{ fontFamily: SERIF, fontSize: 26, lineHeight: 1 }}>Relational safety</p>
-        <MiniBar value={othersScore} color={color} />
-      </motion.button>
+      {dimensions.map((dim, index) => {
+        const isActive = active === dim.name;
+        const xClass = index === 0 ? 'left-[7%]' : 'right-[7%]';
+        const DimIcon = getDimensionIcon(dim.name);
+        const scale = isActive ? 1.08 : active ? 0.96 : 1;
+        return (
+          <motion.button
+            key={dim.name}
+            type="button"
+            onMouseEnter={() => onActive(dim.name)}
+            onFocus={() => onActive(dim.name)}
+            onMouseLeave={() => onActive(null)}
+            onBlur={() => onActive(null)}
+            className={`absolute ${xClass} bottom-8 w-[42%] rounded-[22px] border bg-white p-5 text-left cursor-default`}
+            style={{ borderColor: isActive ? `${color}70` : `${color}24` }}
+            animate={{ scale, y: isActive ? -7 : 0 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+          >
+            <DimIcon size={18} style={{ color }} />
+            <p className="mt-3 text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>{dim.name}</p>
+            <p className="mt-1 text-[#1A1614]" style={{ fontFamily: SERIF, fontSize: 26, lineHeight: 1 }}>{dim.band}</p>
+            <MiniBar value={dim.score} color={color} />
+          </motion.button>
+        );
+      })}
     </div>
   );
 }
 
-function SafetyAlignmentBridge({ felt, expressed, color }: { felt: number; expressed: number; color: string }) {
+function DomainAlignmentBridge({ felt, expressed, color }: { felt: number; expressed: number; color: string }) {
   const gap = expressed - felt;
+  const direction = gap >= 0 ? 'Upward display' : 'Downward display';
 
   return (
     <div className="relative overflow-hidden rounded-[24px] p-6" style={{ backgroundColor: '#F6FAF7' }}>
@@ -661,8 +475,8 @@ function SafetyAlignmentBridge({ felt, expressed, color }: { felt: number; expre
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>Upward display</p>
-            <p className="text-[#1A1614] leading-none" style={{ fontFamily: SERIF, fontSize: 30 }}>+{gap}</p>
+            <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>{direction}</p>
+            <p className="text-[#1A1614] leading-none" style={{ fontFamily: SERIF, fontSize: 30 }}>{gap > 0 ? '+' : ''}{gap}</p>
           </motion.div>
         </motion.div>
         <GapLane label="Expressed outside" value={expressed} color={color} align="right" />
@@ -695,6 +509,285 @@ function GapLane({ label, value, color, align }: {
       </div>
     </div>
   );
+}
+
+function LevelMeaningPanel({ label, text, color, active, index }: {
+  label: string;
+  text: string;
+  color: string;
+  active: boolean;
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -5 }}
+      className="group/level relative overflow-hidden rounded-[24px] border bg-white p-6 cursor-default"
+      style={{ borderColor: active ? `${color}55` : '#E5E3DD' }}
+    >
+      <LevelGraphic color={color} active={active} index={index} />
+      <p className="mt-5 text-[11px] tracking-[0.15em] uppercase font-semibold" style={{ color: active ? color : '#8B8682' }}>
+        {label}
+      </p>
+      <p className="mt-3 text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{text}</p>
+    </motion.div>
+  );
+}
+
+function LevelGraphic({ color, active, index }: { color: string; active: boolean; index: number }) {
+  const paths = [
+    'M16 56 C46 52, 54 40, 88 42 C116 44, 126 24, 152 20',
+    'M16 42 C46 26, 72 58, 102 42 C122 32, 138 34, 152 42',
+    'M16 56 C48 58, 66 16, 92 18 C126 20, 126 56, 152 60',
+  ];
+
+  return (
+    <div className="relative h-20">
+      <svg viewBox="0 0 168 76" className="h-full w-full">
+        <path d="M14 62 H154" stroke="#EDEAE3" strokeWidth="2" strokeLinecap="round" />
+        <motion.path
+          d={paths[index]}
+          fill="none"
+          stroke={color}
+          strokeWidth={active ? 5 : 3}
+          strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          whileInView={{ pathLength: 1, opacity: active ? 0.9 : 0.45 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.8, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+        />
+        <motion.circle
+          cx={index === 0 ? 152 : index === 1 ? 102 : 92}
+          cy={index === 0 ? 20 : index === 1 ? 42 : 18}
+          r={active ? 7 : 4}
+          fill={color}
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ type: 'spring', stiffness: 360, damping: 22, delay: 0.5 + index * 0.08 }}
+        />
+      </svg>
+    </div>
+  );
+}
+
+function AlignmentInsights({ domain, color, tint, alignmentText, feltText, expressedText, alignmentExtended }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
+  color: string;
+  tint: string;
+  alignmentText: string;
+  feltText: string;
+  expressedText: string;
+  alignmentExtended: string | null;
+}) {
+  const items = [
+    {
+      label: 'What this means',
+      body: alignmentText,
+      Icon: Gauge,
+    },
+    {
+      label: 'How this shows up',
+      body: `Inside: ${firstSentence(feltText)} Outside: ${firstSentence(expressedText)}`,
+      Icon: Eye,
+    },
+    {
+      label: 'The impact',
+      body: alignmentExtended || fallbackImpact(domain),
+      Icon: Activity,
+    },
+  ];
+
+  return (
+    <div className="mt-10 grid lg:grid-cols-3 gap-8 border-t pt-8" style={{ borderColor: `${color}24` }}>
+      {items.map(({ label, body, Icon }, index) => (
+        <motion.div
+          key={label}
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.45, delay: index * 0.08 }}
+          whileHover={{ y: -4 }}
+          className="relative cursor-default"
+        >
+          <div className="mb-4 inline-grid h-10 w-10 place-items-center rounded-full" style={{ backgroundColor: `${color}14`, color }}>
+            <Icon size={18} strokeWidth={2.4} />
+          </div>
+          <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
+          <p className="mt-3 text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{body}</p>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+function firstSentence(text: string) {
+  const match = text.match(/.*?[.!?](\s|$)/);
+  return (match ? match[0] : text).trim();
+}
+
+function DomainDimensionCard({ dim, domain, color, tint, index, active, onActive, onClear }: {
+  dim: any;
+  domain: 'Safety' | 'Play' | 'Challenge';
+  color: string;
+  tint: string;
+  index: number;
+  active: boolean;
+  onActive: () => void;
+  onClear: () => void;
+}) {
+  const DimIcon = getDimensionIcon(dim.name);
+  const icon = dimIcons[dim.name];
+  const hasColumns = dim.working && dim.takeNote;
+  const paragraphs = dim.text ? dim.text.split('\n\n') : [];
+
+  return (
+    <motion.div
+      id={`${domain.toLowerCase()}-${dim.name.toLowerCase()}`}
+      onMouseEnter={onActive}
+      onFocus={onActive}
+      onMouseLeave={onClear}
+      onBlur={onClear}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.16 }}
+      whileHover={{ y: -5, backgroundColor: '#FCFDFB' }}
+      transition={{ type: 'spring', stiffness: 360, damping: 34, delay: index * 0.04 }}
+      className="group/domain-dim relative overflow-hidden rounded-[28px] border bg-white p-7 md:p-9 cursor-default"
+      style={{ borderColor: active ? `${color}66` : '#E5E3DD' }}
+    >
+      {dim.flagged && <div className="absolute left-0 top-0 h-full w-1.5" style={{ backgroundColor: color }} />}
+      {icon && (
+        <img
+          src={icon}
+          alt=""
+          aria-hidden="true"
+          className="absolute -right-12 -bottom-14 h-72 w-72 pointer-events-none select-none transition-transform duration-700 group-hover/domain-dim:scale-110 group-hover/domain-dim:-rotate-6"
+          style={{ opacity: active ? 0.1 : 0.052 }}
+        />
+      )}
+
+      <div className="relative grid lg:grid-cols-[0.78fr_1.22fr] gap-8 lg:gap-12 items-start">
+        <div className="lg:sticky lg:top-8">
+          <div className="flex items-start justify-between gap-5">
+            <div>
+              <div className="inline-grid h-11 w-11 place-items-center rounded-full" style={{ backgroundColor: `${color}18`, color }}>
+                <DimIcon size={19} strokeWidth={2.5} />
+              </div>
+              {dim.flagged && (
+                <span className="ml-3 inline-flex rounded-full px-2 py-1 text-[10px] uppercase tracking-[0.12em] font-bold text-white" style={{ backgroundColor: color }}>
+                  Flagged
+                </span>
+              )}
+              <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(2.3rem, 5vw, 4.6rem)', fontWeight: 600, color: '#0F0F0F', letterSpacing: '-0.045em', lineHeight: 0.95, margin: '24px 0 0' }}>
+                {dim.name}
+              </h3>
+              <p className="mt-3 text-base text-[#6F6A64]">{dim.band}</p>
+            </div>
+            <RadialScore value={dim.score} color={color} size={112} />
+          </div>
+
+          <div className="mt-8 hidden lg:block">
+            <DomainGlyph domain={domain} color={color} size={132} muted />
+          </div>
+        </div>
+
+        <div>
+          {hasColumns ? (
+            <>
+              <p className="text-[#1A1614] leading-relaxed text-[16px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
+              <div className="grid md:grid-cols-2 gap-5 mt-7">
+                <InsightPanel
+                  kind="working"
+                  label="What's working"
+                  body={dim.working}
+                  accent={color}
+                  bg={tint}
+                  border={`${color}24`}
+                  Icon={Check}
+                />
+                <InsightPanel
+                  kind="note"
+                  label="Take note"
+                  body={dim.takeNote}
+                  accent="#A96A28"
+                  bg="#FBF6EE"
+                  border="#EBDFCB"
+                  Icon={AlertCircle}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="space-y-5">
+              {paragraphs.map((para: string, i: number) => (
+                <p key={i} className="text-[#1A1614] leading-relaxed text-[16px]" style={{ fontWeight: 300 }}>{para}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function DomainGlyph({ domain, color, size = 96, muted = false }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
+  color: string;
+  size?: number;
+  muted?: boolean;
+}) {
+  const active = muted ? 0.2 : 0.9;
+  const quiet = muted ? 0.08 : 0.14;
+  return (
+    <svg width={size} height={size} viewBox="0 0 120 120" aria-hidden="true">
+      <motion.polygon
+        points="60,12 105,92 15,92"
+        fill="none"
+        stroke={color}
+        strokeWidth="2"
+        opacity={muted ? 0.16 : 0.32}
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.8 }}
+      />
+      <polygon points="60,12 105,92 60,74" fill={color} opacity={domain === 'Challenge' ? active : quiet} />
+      <polygon points="60,74 105,92 15,92" fill={color} opacity={domain === 'Safety' ? active : quiet} />
+      <polygon points="60,12 60,74 15,92" fill={color} opacity={domain === 'Play' ? active : quiet} />
+      <circle cx="60" cy="74" r="4" fill={color} opacity={muted ? 0.28 : 0.55} />
+    </svg>
+  );
+}
+
+function getDomainIcon(domain: 'Safety' | 'Play' | 'Challenge') {
+  if (domain === 'Safety') return ShieldCheck;
+  if (domain === 'Play') return Waves;
+  return Mountain;
+}
+
+function getDimensionIcon(name: string) {
+  const icons: Record<string, typeof UserRound> = {
+    Self: UserRound,
+    Others: UsersRound,
+    Senses: Activity,
+    Perception: Eye,
+    Past: History,
+    Future: Compass,
+  };
+  return icons[name] || Gauge;
+}
+
+function fallbackImpact(domain: 'Safety' | 'Play' | 'Challenge') {
+  if (domain === 'Safety') {
+    return 'The cost is carried as effort: the system looks steadier than it feels, and the people around you may not know where support is actually needed.';
+  }
+  if (domain === 'Play') {
+    return 'The cost is subtle but cumulative: life can contain the appearance of enjoyment while the felt aliveness underneath stays quieter than it should.';
+  }
+  return 'The impact is mostly stabilising here: what you show and what you feel are closely matched, giving this domain unusually clean signal in the profile.';
 }
 
 function MiniBar({ value, color }: { value: number; color: string }) {
