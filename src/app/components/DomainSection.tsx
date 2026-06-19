@@ -1,7 +1,24 @@
-import { motion } from 'motion/react';
-import { Check, AlertCircle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'motion/react';
+import { Check, AlertCircle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+
+import lowSelf from '../../imports/10__Low_Self.svg';
+import lowOthers from '../../imports/10__Low_Others.svg';
+import lowPerception from '../../imports/10__Low_Perception.svg';
+import highPerception from '../../imports/50__Perception.svg';
+import highFuture from '../../imports/50__Future.svg';
+import highPast from '../../imports/50__Past.svg';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
+
+const dimIcons: Record<string, string> = {
+  Self: lowSelf,
+  Others: lowOthers,
+  Perception: highPerception,
+  Senses: lowPerception,
+  Future: highFuture,
+  Past: highPast,
+};
 
 interface DomainSectionProps {
   domain: 'Safety' | 'Play' | 'Challenge';
@@ -180,9 +197,7 @@ export function DomainSection({ domain, score, band, felt, expressed, color }: D
               Overall {domain}
             </p>
             <div className="flex items-baseline gap-2 mb-1">
-              <span className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '64px', lineHeight: 1, letterSpacing: '-0.03em' }}>
-                {score}
-              </span>
+              <CountUp to={score} className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '64px', lineHeight: 1, letterSpacing: '-0.03em' }} />
               <span className="text-[#8B8682] text-lg">/ 100</span>
             </div>
             <p className="text-[#1A1614] mb-5" style={{ fontWeight: 400, fontSize: '18px' }}>{band}</p>
@@ -267,12 +282,19 @@ export function DomainSection({ domain, score, band, felt, expressed, color }: D
               <p className="text-[11px] tracking-[0.16em] uppercase text-[#8B8682] font-semibold">The alignment gap</p>
             </div>
 
-            <div className="flex items-end gap-3 mb-5">
-              <span className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '72px', lineHeight: 0.9, letterSpacing: '-0.03em' }}>
-                {alignmentGap}
-              </span>
+            <div className="flex items-end gap-3 mb-1">
+              <CountUp to={alignmentGap} className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '72px', lineHeight: 0.9, letterSpacing: '-0.03em' }} />
               <span className="mb-2.5 text-sm uppercase tracking-[0.12em] text-[#8B8682]">point gap</span>
             </div>
+            {/* animated underline */}
+            <motion.div
+              className="h-[3px] rounded-full mb-5"
+              style={{ backgroundColor: color, opacity: 0.5 }}
+              initial={{ width: 0 }}
+              whileInView={{ width: 96 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            />
 
             <p className="text-sm text-[#1A1614] leading-relaxed mb-4" style={{ fontWeight: 300 }}>
               Alignment is the distance between how much {domain} you feel on the inside and how much you express on the outside. Most people sense a gap exists. What is harder to see is how wide it runs, and what it quietly costs to hold in place.
@@ -319,6 +341,7 @@ function DimensionBlock({ id, dim, domain, color, tint, index }: {
   index: number;
 }) {
   const hasColumns = dim.working && dim.takeNote;
+  const icon = dimIcons[dim.name];
   return (
     <motion.div
       id={id}
@@ -326,11 +349,24 @@ function DimensionBlock({ id, dim, domain, color, tint, index }: {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.55, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-2xl border overflow-hidden bg-white"
+      whileHover={{ y: -3 }}
+      className="group/dim relative rounded-2xl border overflow-hidden bg-white transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(0,0,0,0.25)]"
       style={dim.flagged ? { borderColor: `${color}50` } : { borderColor: '#E5E3DD' }}
     >
       {dim.flagged && <div className="h-1 w-full" style={{ backgroundColor: color }} />}
-      <div className="p-8">
+
+      {/* faint dimensional glyph for immersion */}
+      {icon && (
+        <img
+          src={icon}
+          alt=""
+          aria-hidden="true"
+          className="absolute -right-8 -bottom-10 w-52 h-52 pointer-events-none select-none transition-transform duration-700 group-hover/dim:scale-105 group-hover/dim:-rotate-3"
+          style={{ opacity: 0.06 }}
+        />
+      )}
+
+      <div className="relative p-8">
         {dim.flagged && (
           <span className="inline-block text-[10px] tracking-[0.12em] uppercase px-2 py-1 rounded-full text-white mb-4 font-semibold"
             style={{ backgroundColor: color }}>
@@ -338,46 +374,44 @@ function DimensionBlock({ id, dim, domain, color, tint, index }: {
           </span>
         )}
 
-        {/* heading row */}
-        <div className="flex items-end justify-between gap-4 mb-4">
+        {/* heading row: name + radial score */}
+        <div className="flex items-center justify-between gap-6 mb-6">
           <div>
             <p className="text-[10.5px] tracking-[0.2em] uppercase font-bold mb-1.5" style={{ color }}>{domain}</p>
             <h3 style={{ fontFamily: SERIF, fontSize: '34px', fontWeight: 600, color: '#0F0F0F', letterSpacing: '-0.02em', lineHeight: 1, margin: 0 }}>
               {dim.name}
             </h3>
+            <p className="text-sm text-[#8B8682] mt-2">{dim.band}</p>
           </div>
-          <div className="text-right shrink-0">
-            <span className="tabular-nums" style={{ color, fontWeight: 300, fontSize: '40px', lineHeight: 1 }}>{dim.score}</span>
-            <p className="text-xs text-[#8B8682] mt-1">{dim.band}</p>
-          </div>
+          <RadialScore value={dim.score} color={color} />
         </div>
-
-        <AnimatedBar value={dim.score} color={color} />
 
         {hasColumns ? (
           <>
-            <p className="mt-6 text-[#1A1614] leading-relaxed text-[15px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
+            <p className="text-[#1A1614] leading-relaxed text-[15px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
             <div className="grid sm:grid-cols-2 gap-4 mt-6">
-              {/* What's working */}
-              <div className="rounded-xl p-5" style={{ backgroundColor: tint, border: `1px solid ${color}26` }}>
-                <div className="flex items-center gap-2 mb-2.5" style={{ color }}>
-                  <Check size={15} strokeWidth={2.75} />
-                  <span className="text-[11px] tracking-[0.14em] uppercase font-bold">What's working</span>
-                </div>
-                <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{dim.working}</p>
-              </div>
-              {/* Take note */}
-              <div className="rounded-xl p-5" style={{ backgroundColor: '#FBF6EE', border: '1px solid #EBDFCB' }}>
-                <div className="flex items-center gap-2 mb-2.5" style={{ color: '#B26A1C' }}>
-                  <AlertCircle size={15} strokeWidth={2.5} />
-                  <span className="text-[11px] tracking-[0.14em] uppercase font-bold">Take note</span>
-                </div>
-                <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{dim.takeNote}</p>
-              </div>
+              <InsightPanel
+                kind="working"
+                label="What's working"
+                body={dim.working}
+                accent={color}
+                bg={tint}
+                border={`${color}26`}
+                Icon={Check}
+              />
+              <InsightPanel
+                kind="note"
+                label="Take note"
+                body={dim.takeNote}
+                accent="#B26A1C"
+                bg="#FBF6EE"
+                border="#EBDFCB"
+                Icon={AlertCircle}
+              />
             </div>
           </>
         ) : (
-          <div className="mt-6 space-y-4">
+          <div className="space-y-4">
             {dim.text.split('\n\n').map((para: string, i: number) => (
               <p key={i} className="text-[#1A1614] leading-relaxed text-[15px]" style={{ fontWeight: 300 }}>{para}</p>
             ))}
@@ -388,7 +422,102 @@ function DimensionBlock({ id, dim, domain, color, tint, index }: {
   );
 }
 
-function AnimatedBar({ value, color, track = '#EFece6' }: { value: number; color: string; track?: string }) {
+function InsightPanel({ label, body, accent, bg, border, Icon }: {
+  kind: string;
+  label: string;
+  body: string;
+  accent: string;
+  bg: string;
+  border: string;
+  Icon: typeof Check;
+}) {
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+      className="group/panel relative rounded-xl p-5 pl-6 overflow-hidden cursor-default"
+      style={{ backgroundColor: bg, border: `1px solid ${border}` }}
+    >
+      {/* growing accent rail */}
+      <div
+        className="absolute top-0 left-0 h-full transition-all duration-300 group-hover/panel:w-[5px]"
+        style={{ width: 3, backgroundColor: accent }}
+      />
+      <div className="flex items-center gap-2 mb-2.5" style={{ color: accent }}>
+        <span
+          className="grid place-items-center rounded-full transition-transform duration-300 group-hover/panel:scale-110"
+          style={{ width: 24, height: 24, backgroundColor: `${accent}1F` }}
+        >
+          <Icon size={13} strokeWidth={3} />
+        </span>
+        <span className="text-[11px] tracking-[0.14em] uppercase font-bold">{label}</span>
+      </div>
+      <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{body}</p>
+    </motion.div>
+  );
+}
+
+function CountUp({ to, duration = 1.2, className, style }: {
+  to: number;
+  duration?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / (duration * 1000));
+      const eased = 1 - Math.pow(1 - t, 3);
+      setVal(Math.round(eased * to));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, duration]);
+  return <span ref={ref} className={className} style={style}>{val}</span>;
+}
+
+function RadialScore({ value, color, size = 108, stroke = 9 }: {
+  value: number;
+  color: string;
+  size?: number;
+  stroke?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = inView ? circ * (1 - value / 100) : circ;
+  return (
+    <div ref={ref} className="relative shrink-0" style={{ width: size, height: size }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#EFECE6" strokeWidth={stroke} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circ}
+          strokeDashoffset={offset}
+          style={{ transition: 'stroke-dashoffset 1.25s cubic-bezier(0.16,1,0.3,1)' }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <CountUp to={value} className="tabular-nums" style={{ color, fontWeight: 300, fontSize: size * 0.32, lineHeight: 1 }} />
+      </div>
+    </div>
+  );
+}
+
+function AnimatedBar({ value, color, track = '#EFECE6' }: { value: number; color: string; track?: string }) {
   return (
     <div className="w-full rounded-full overflow-hidden" style={{ backgroundColor: track, height: 8 }}>
       <motion.div
@@ -403,58 +532,85 @@ function AnimatedBar({ value, color, track = '#EFece6' }: { value: number; color
   );
 }
 
-// A "dumbbell" track showing felt vs expressed and the gap between them.
+// A "dumbbell" track showing felt vs expressed, the gap between them, and the
+// direction of masking. Gridlines and animated markers give it an infographic feel.
 function AlignmentTrack({ felt, expressed, color }: { felt: number; expressed: number; color: string }) {
   const lo = Math.min(felt, expressed);
   const hi = Math.max(felt, expressed);
   const gap = hi - lo;
-  const TRACK_TOP = 52;
+  const mid = (lo + hi) / 2;
+  const maskUp = expressed > felt;
+  const showDirection = gap >= 4;
+  const TRACK = 74;
   return (
-    <div className="relative select-none" style={{ height: 98 }}>
+    <div className="relative select-none" style={{ height: 128 }}>
+      {/* gridlines */}
+      {[0, 25, 50, 75, 100].map((t) => (
+        <div key={t} className="absolute" style={{ left: `${t}%`, top: TRACK - 8, height: 16, width: 1, backgroundColor: '#E8E4DC' }} />
+      ))}
       {/* baseline track */}
-      <div className="absolute left-0 right-0 rounded-full" style={{ top: TRACK_TOP, height: 6, backgroundColor: '#EDEAE3', transform: 'translateY(-50%)' }} />
+      <div className="absolute left-0 right-0 rounded-full" style={{ top: TRACK, height: 6, backgroundColor: '#EDEAE3', transform: 'translateY(-50%)' }} />
       {/* gap segment */}
       <motion.div
         className="absolute rounded-full"
-        style={{ top: TRACK_TOP, left: `${lo}%`, height: 6, backgroundColor: color, opacity: 0.5, transform: 'translateY(-50%)' }}
+        style={{ top: TRACK, left: `${lo}%`, height: 6, backgroundColor: color, opacity: 0.55, transform: 'translateY(-50%)' }}
         initial={{ width: 0 }}
         whileInView={{ width: `${gap}%` }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
       />
-      {/* end ticks */}
-      <span className="absolute text-[10px] text-[#B0ADA8]" style={{ left: 0, top: TRACK_TOP + 10 }}>0</span>
-      <span className="absolute text-[10px] text-[#B0ADA8]" style={{ right: 0, top: TRACK_TOP + 10 }}>100</span>
+
+      {/* end scale labels */}
+      <span className="absolute text-[10px] text-[#B0ADA8]" style={{ left: 0, top: TRACK + 12 }}>0</span>
+      <span className="absolute text-[10px] text-[#B0ADA8]" style={{ right: 0, top: TRACK + 12 }}>100</span>
+
+      {/* masking-direction tag above the gap */}
+      {showDirection && (
+        <motion.div
+          className="absolute flex items-center gap-1"
+          style={{ left: `${mid}%`, top: 36, transform: 'translateX(-50%)' }}
+          initial={{ opacity: 0, y: 6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.4, delay: 0.7 }}
+        >
+          <span className="whitespace-nowrap text-[9.5px] tracking-[0.12em] uppercase font-bold px-2 py-1 rounded-full inline-flex items-center gap-1"
+            style={{ color, backgroundColor: `${color}16` }}>
+            {maskUp ? <ArrowUpRight size={11} strokeWidth={2.75} /> : <ArrowDownRight size={11} strokeWidth={2.75} />}
+            {maskUp ? 'Masking upward' : 'Masking downward'}
+          </span>
+        </motion.div>
+      )}
 
       {/* Expressed marker (solid) + label above */}
       <motion.div
         className="absolute"
-        style={{ left: `${expressed}%`, top: TRACK_TOP, transform: 'translate(-50%,-50%)' }}
+        style={{ left: `${expressed}%`, top: TRACK, transform: 'translate(-50%,-50%)' }}
         initial={{ scale: 0, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div style={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: color, boxShadow: '0 0 0 4px #FFFFFF' }} />
+        <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: color, boxShadow: '0 0 0 4px #FFFFFF' }} />
       </motion.div>
-      <div className="absolute text-center" style={{ left: `${expressed}%`, top: 4, transform: 'translateX(-50%)' }}>
+      <div className="absolute text-center" style={{ left: `${expressed}%`, top: 2, transform: 'translateX(-50%)' }}>
         <p className="text-[10px] tracking-[0.12em] uppercase text-[#8B8682] font-semibold leading-none">Expressed</p>
-        <p className="tabular-nums leading-none mt-1" style={{ color, fontWeight: 600, fontSize: 18 }}>{expressed}</p>
+        <CountUp to={expressed} className="tabular-nums block leading-none mt-1" style={{ color, fontWeight: 600, fontSize: 18 }} />
       </div>
 
       {/* Felt marker (hollow) + label below */}
       <motion.div
         className="absolute"
-        style={{ left: `${felt}%`, top: TRACK_TOP, transform: 'translate(-50%,-50%)' }}
+        style={{ left: `${felt}%`, top: TRACK, transform: 'translate(-50%,-50%)' }}
         initial={{ scale: 0, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.4, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div style={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: '#FFFFFF', border: `3px solid ${color}`, boxShadow: '0 0 0 3px #FFFFFF' }} />
+        <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#FFFFFF', border: `3px solid ${color}`, boxShadow: '0 0 0 3px #FFFFFF' }} />
       </motion.div>
-      <div className="absolute text-center" style={{ left: `${felt}%`, top: TRACK_TOP + 18, transform: 'translateX(-50%)' }}>
-        <p className="tabular-nums leading-none" style={{ color, fontWeight: 600, fontSize: 18 }}>{felt}</p>
+      <div className="absolute text-center" style={{ left: `${felt}%`, top: TRACK + 16, transform: 'translateX(-50%)' }}>
+        <CountUp to={felt} className="tabular-nums block leading-none" style={{ color, fontWeight: 600, fontSize: 18 }} />
         <p className="text-[10px] tracking-[0.12em] uppercase text-[#8B8682] font-semibold leading-none mt-1">Felt</p>
       </div>
     </div>
