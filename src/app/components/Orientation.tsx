@@ -71,8 +71,8 @@ const concepts = [
 ];
 
 export function Orientation() {
-  const goToShape = () =>
-    document.getElementById('your-shape')?.scrollIntoView({ behavior: 'smooth' });
+  const goToDomains = () =>
+    document.getElementById('your-domains')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
     <div className="grid lg:grid-cols-5 gap-0 min-h-[90vh] items-start">
@@ -122,10 +122,10 @@ export function Orientation() {
 
         {/* CTA */}
         <button
-          onClick={goToShape}
+          onClick={goToDomains}
           className="bg-[#1A1614] text-white px-8 py-3 rounded-full text-sm tracking-wide hover:bg-[#2E2926] transition-colors"
         >
-          See your shape →
+          Begin the reading →
         </button>
       </div>
 

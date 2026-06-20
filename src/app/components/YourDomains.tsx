@@ -245,11 +245,14 @@ export function YourDomains() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full items-start"
+              className="max-w-6xl mx-auto w-full"
             >
-              {domainData.map((domain, domainIndex) => (
-                <DimensionColumn key={domain.key} domain={domain} index={domainIndex} />
-              ))}
+              <div className="grid md:grid-cols-3 gap-6 items-start">
+                {domainData.map((domain, domainIndex) => (
+                  <DimensionColumn key={domain.key} domain={domain} index={domainIndex} />
+                ))}
+              </div>
+              <DimensionComparisonPanel />
             </motion.div>
           )}
         </AnimatePresence>
@@ -340,12 +343,7 @@ function DomainCard({ domain: d, index }: { domain: DomainEntry; index: number }
           </div>
         </div>
         
-        <div 
-          className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl shadow-sm bg-white" 
-          style={{ color: d.color, border: `1px solid ${d.color}30` }}
-        >
-          {d.score}
-        </div>
+        <ScoreRing value={d.score} color={d.color} size={62} />
       </div>
       
       <p className="text-[#6A6764] text-[15px] leading-[1.6] mt-4 relative z-10 font-light">
@@ -553,20 +551,13 @@ function DimensionCard({ dimension: dim, domainColor, index }: { dimension: DimE
     <motion.div
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      whileHover={{
-        y: -3,
-        scale: 1.012,
-        backgroundColor: `${domainColor}08`,
-        borderColor: `${domainColor}40`,
-        transition: { duration: 0.18, ease: [0.22, 1, 0.36, 1] },
-      }}
       transition={{
         opacity: { delay: index * 0.08, duration: 0.4 },
         scale: { delay: index * 0.08, duration: 0.4 },
         y: { delay: index * 0.08, duration: 0.4 },
       }}
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E3DD' }}
-      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-lg hover:z-20 transition-shadow duration-500 group relative overflow-hidden transform-gpu"
+      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-[0_16px_36px_-30px_rgba(26,22,20,0.48)] hover:z-20 transition-shadow duration-300 group relative overflow-hidden transform-gpu"
     >
       {/* Domain accent — the colour means "this dimension belongs to this domain" */}
       <div className="h-1 w-full" style={{ backgroundColor: domainColor }} />
@@ -600,19 +591,14 @@ function DimensionCard({ dimension: dim, domainColor, index }: { dimension: DimE
             </span>
           </div>
 
-          <div
-            className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-[17px] shadow-sm bg-white flex-shrink-0 ml-3"
-            style={{ color: domainColor, border: `1px solid ${domainColor}30` }}
-          >
-            {dim.score}
-          </div>
+          <ScoreRing value={dim.score} color={domainColor} size={52} />
         </div>
       
       <div className="h-[150px] flex justify-center items-center py-6 relative z-10">
         <ImageWithFallback 
           src={dimIcons[dim.name as keyof typeof dimIcons]} 
           alt={dim.name} 
-          className="h-36 object-contain group-hover:scale-[1.04] transition-transform duration-500 ease-out drop-shadow-md" 
+          className="h-36 object-contain drop-shadow-md"
         />
       </div>
       
@@ -621,6 +607,100 @@ function DimensionCard({ dimension: dim, domainColor, index }: { dimension: DimE
         </p>
       </div>
     </motion.div>
+  );
+}
+
+function ScoreRing({ value, color, size = 56 }: { value: number; color: string; size?: number }) {
+  const radius = (size - 8) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dash = circumference * (value / 100);
+  return (
+    <div className="relative grid shrink-0 place-items-center rounded-full bg-white shadow-sm" style={{ width: size, height: size }}>
+      <svg className="absolute inset-0 -rotate-90" width={size} height={size} aria-hidden="true">
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#EEEAE3" strokeWidth="3" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeDasharray={`${dash} ${circumference - dash}`}
+        />
+      </svg>
+      <span className="relative font-bold tabular-nums" style={{ color, fontSize: size * 0.3, lineHeight: 1 }}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function DimensionComparisonPanel() {
+  const ordered = ['Self', 'Others', 'Senses', 'Perception', 'Past', 'Future'];
+  const dims = ordered
+    .map(name => domainData.flatMap(domain => domain.dimensions.map(dim => ({ ...dim, domain: domain.label, domainColor: domain.color }))).find(dim => dim.name === name))
+    .filter(Boolean) as Array<DimEntry & { domain: string; domainColor: string }>;
+  const mostResourced = dims.reduce((best, dim) => dim.score > best.score ? dim : best, dims[0]);
+  const mostStrained = dims.reduce((lowest, dim) => dim.score < lowest.score ? dim : lowest, dims[0]);
+
+  return (
+    <div className="mt-10 grid gap-6 rounded-[28px] border border-[#E5E3DD] bg-white p-7 shadow-[0_18px_48px_-42px_rgba(26,22,20,0.5)] lg:grid-cols-[1fr_280px]">
+      <div>
+        <div className="mb-7 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-[12px] uppercase tracking-[0.17em] font-bold text-[#1A1614]">Your six dimensions</p>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#6F6A64]">
+              A wider view of how each dimension is carrying the profile before you meet them one by one.
+            </p>
+          </div>
+          <p className="hidden text-[10px] uppercase tracking-[0.14em] font-bold text-[#A09A91] sm:block">Balance line</p>
+        </div>
+        <div className="relative h-72">
+          <div className="absolute left-0 right-0 top-[50%] border-t border-dashed border-[#CFC8BE]" />
+          <div className="absolute inset-0 grid grid-cols-6 gap-5 items-end">
+            {dims.map((dim) => (
+              <div key={dim.name} className="flex h-full flex-col items-center justify-end gap-4">
+                <div className="relative flex h-48 w-full items-end justify-center">
+                  <div className="absolute bottom-0 h-full w-8 rounded-full bg-[#F1EEE8]" />
+                  <motion.div
+                    className="relative z-10 w-8 rounded-full"
+                    style={{ backgroundColor: dim.domainColor }}
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${dim.score}%` }}
+                    viewport={{ once: true, amount: 0.35 }}
+                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                  />
+                </div>
+                <div className="text-center">
+                  <p className="text-[11px] uppercase tracking-[0.08em] font-bold" style={{ color: dim.domainColor }}>{dim.name}</p>
+                  <p className="mt-1 text-[11px] text-[#8B8682]">{dim.score}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="grid gap-4 content-center">
+        <DimensionNote title="Most resourced" dim={mostResourced} />
+        <DimensionNote title="Most strained" dim={mostStrained} />
+      </div>
+    </div>
+  );
+}
+
+function DimensionNote({ title, dim }: { title: string; dim: DimEntry & { domain: string; domainColor: string } }) {
+  return (
+    <div className="rounded-[22px] bg-[#F8F6F1] p-5">
+      <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-[#8B8682]">{title}</p>
+      <div className="mt-3 flex items-center justify-between gap-4">
+        <div>
+          <p style={{ fontFamily: SERIF, fontSize: 28, lineHeight: 1, color: '#15110F' }}>{dim.name}</p>
+          <p className="mt-1 text-sm text-[#6F6A64]">{dim.band}</p>
+        </div>
+        <ScoreRing value={dim.score} color={dim.domainColor} size={58} />
+      </div>
+    </div>
   );
 }
 

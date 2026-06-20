@@ -311,15 +311,15 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
         <LevelContinuum domain={domain} score={score} band={band} color={color} tint={tint} levels={content.levels} />
       </motion.div>
 
-      <motion.div id={`${domain.toLowerCase()}-alignment`} className="relative overflow-hidden rounded-[28px] py-2" {...reveal}>
+      <motion.div id={`${domain.toLowerCase()}-alignment`} className={`relative overflow-hidden rounded-[28px] py-2 ${content.isAlignmentFlagged ? 'pt-14' : ''}`} {...reveal}>
+        {content.isAlignmentFlagged && <FlaggedForYou />}
         <div className="relative grid lg:grid-cols-[0.88fr_1.12fr] gap-8 lg:gap-12 items-center">
           <div className="flex flex-col justify-between">
             <div>
-              <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="flex items-center gap-4">
                 <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3.1rem)', lineHeight: 1, letterSpacing: '-0.035em', color: '#15110F', margin: 0 }}>
                   Alignment
                 </h2>
-                {content.isAlignmentFlagged && <FlaggedForYou />}
               </div>
               <p className="mt-5 max-w-sm text-[#4D4945] leading-relaxed" style={{ fontWeight: 300 }}>
                 Alignment compares what is felt inside with what is expressed outside, then shows the distance between the two.
@@ -382,7 +382,9 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
           <p className="max-w-xl text-[#1A1614] leading-relaxed" style={{ fontSize: 20, fontWeight: 300 }}>
             {content.what}
           </p>
-          <SafetyScoreCard score={score} band={band} color={color} />
+          <div className="mt-12">
+            <SafetyScoreCard score={score} band={band} color={color} />
+          </div>
         </div>
 
         <div className="relative min-h-[450px]">
@@ -396,7 +398,7 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
 
           <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 560 450" preserveAspectRatio="none">
             <motion.path
-              d="M220 220 C180 260, 152 288, 116 342"
+              d="M220 220 C178 250, 162 276, 132 320 C126 328, 121 336, 116 342"
               fill="none"
               stroke={color}
               strokeWidth="2.2"
@@ -408,7 +410,7 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
               transition={{ duration: 0.9, delay: 0.2 }}
             />
             <motion.path
-              d="M220 220 C292 276, 360 302, 438 342"
+              d="M220 220 C278 258, 332 288, 416 322 C428 327, 434 335, 438 342"
               fill="none"
               stroke={color}
               strokeWidth="2.2"
@@ -464,7 +466,7 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
 function SafetyScoreCard({ score, band, color }: { score: number; band: string; color: string }) {
   return (
     <motion.div
-      className="relative mt-8 max-w-[470px] overflow-hidden rounded-[24px] px-6 py-5 text-white shadow-[0_22px_48px_-34px_rgba(0,0,0,0.72)]"
+      className="relative max-w-[400px] overflow-hidden rounded-[22px] px-5 py-4 text-white shadow-[0_22px_48px_-34px_rgba(0,0,0,0.72)]"
       style={{ backgroundColor: SAFETY_DARK }}
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -478,7 +480,7 @@ function SafetyScoreCard({ score, band, color }: { score: number; band: string; 
         }}
       />
       <div className="relative flex items-center gap-5">
-        <div className="relative grid h-28 w-28 shrink-0 place-items-center rounded-full bg-white/8">
+        <div className="relative grid h-24 w-24 shrink-0 place-items-center rounded-full bg-white/8">
           <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 112 112" aria-hidden="true">
             <circle cx="56" cy="56" r="47" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="7" />
             <motion.circle
@@ -497,11 +499,11 @@ function SafetyScoreCard({ score, band, color }: { score: number; band: string; 
               transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
             />
           </svg>
-          <CountUp to={score} className="relative tabular-nums block" style={{ color, fontSize: 46, lineHeight: 1, fontWeight: 400 }} />
+          <CountUp to={score} className="relative tabular-nums block" style={{ color: '#8FE9D5', fontSize: 42, lineHeight: 1, fontWeight: 400 }} />
         </div>
         <div className="min-w-0">
-          <p className="text-[13px] uppercase tracking-[0.18em] font-bold" style={{ color }}>Overall Safety</p>
-          <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2.5rem, 4vw, 3.65rem)', lineHeight: 0.95, letterSpacing: '-0.045em', margin: '10px 0 0', color: '#FFFFFF', whiteSpace: 'nowrap' }}>
+          <p className="text-[12px] uppercase tracking-[0.18em] font-bold" style={{ color }}>Overall Safety</p>
+          <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2.15rem, 3.4vw, 3rem)', lineHeight: 0.95, letterSpacing: '-0.045em', margin: '9px 0 0', color: '#FFFFFF', whiteSpace: 'nowrap' }}>
             {band}
           </h2>
         </div>
@@ -621,9 +623,6 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
             animate={{ opacity: [0.08, 0.14, 0.08], scale: [1, 1.03, 1] }}
             transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
           />
-          {steps.map((step, dot) => (
-            <circle key={step.label} cx={step.x} cy={step.y} r={dot === activeIndex ? 5 : 3.5} fill={dot === activeIndex ? color : '#CFC8BE'} />
-          ))}
         </svg>
         <motion.div
           className="absolute grid h-14 w-14 place-items-center rounded-full bg-white shadow-[0_18px_38px_-28px_rgba(0,0,0,0.6)]"
@@ -635,9 +634,9 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
           }}
           initial={{ scale: 0.7, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
-          animate={{ scale: [1, 1.07, 1], boxShadow: ['0 18px 38px -28px rgba(0,0,0,0.6)', `0 18px 42px -22px ${color}80`, '0 18px 38px -28px rgba(0,0,0,0.6)'] }}
+          animate={{ scale: [1, 1.13, 1.06, 1], boxShadow: ['0 18px 38px -28px rgba(0,0,0,0.6)', `0 20px 48px -20px ${color}90`, `0 18px 44px -24px ${color}66`, '0 18px 38px -28px rgba(0,0,0,0.6)'] }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ scale: { duration: 2.8, repeat: Infinity, ease: 'easeInOut' }, boxShadow: { duration: 2.8, repeat: Infinity, ease: 'easeInOut' } }}
+          transition={{ scale: { duration: 4.4, repeat: Infinity, ease: [0.45, 0, 0.25, 1] }, boxShadow: { duration: 4.4, repeat: Infinity, ease: [0.45, 0, 0.25, 1] } }}
         >
           <span className="text-sm font-semibold">{score}</span>
         </motion.div>
@@ -788,13 +787,17 @@ function DomainArchitectureGraphic({ domain, color, score, dimensions, active, o
 function FlaggedForYou() {
   return (
     <motion.div
-      className="relative z-10 inline-flex items-center gap-3 rounded-[16px] px-4 py-3 text-white shadow-[0_20px_38px_-28px_rgba(178,30,75,0.8)]"
+      className="absolute right-2 top-0 z-10 inline-flex items-center gap-3 rounded-t-[16px] rounded-b-[8px] px-4 py-3 text-white shadow-[0_20px_38px_-28px_rgba(178,30,75,0.8)]"
       style={{ backgroundColor: FLAG_COLOR }}
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.5 }}
       transition={{ duration: 0.45 }}
     >
+      <span
+        className="absolute -bottom-2 right-9 h-0 w-0 border-l-[9px] border-r-[9px] border-t-[9px] border-l-transparent border-r-transparent"
+        style={{ borderTopColor: FLAG_COLOR }}
+      />
       <span className="grid h-8 w-8 place-items-center rounded-full bg-white/16 text-white">
         <Flag size={15} fill="currentColor" />
       </span>
@@ -893,9 +896,8 @@ function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed'; colo
   const isFelt = mode === 'felt';
   return (
     <svg viewBox="0 0 48 48" className="h-10 w-10" aria-hidden="true">
-      <circle cx="24" cy="24" r="17" fill="#FFFFFF" stroke={isFelt ? '#D8D2C8' : color} strokeWidth="3" opacity={isFelt ? 0.72 : 0.95} />
-      <circle cx="24" cy="24" r="8" fill={isFelt ? color : '#FFFFFF'} stroke={isFelt ? color : '#D8D2C8'} strokeWidth={isFelt ? 0 : 3} />
-      <circle cx="24" cy="24" r="22" fill="none" stroke={color} strokeWidth="1.5" opacity={isFelt ? 0.08 : 0.18} />
+      <circle cx="24" cy="24" r="15" fill="none" stroke={isFelt ? '#FFFFFF' : color} strokeWidth="8" />
+      <circle cx="24" cy="24" r="8" fill={isFelt ? color : '#FFFFFF'} />
     </svg>
   );
 }
@@ -910,13 +912,13 @@ function VolumeColumn({ label, value, color }: { label: string; value: number; c
   return (
     <div className="flex flex-col items-center">
       <p className="mb-3 text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
-      <div className="flex h-40 flex-col-reverse justify-start gap-1.5">
+      <div className="flex h-48 flex-col-reverse justify-start gap-1.5">
         {Array.from({ length: segments }).map((_, index) => {
           const on = index < filled;
           return (
             <motion.div
               key={index}
-              className="h-2.5 w-12 rounded-full"
+              className="h-3 w-14 rounded-full"
               style={{ backgroundColor: on ? color : '#E7E3DB' }}
               initial={{ opacity: 0.25, scaleX: 0.65 }}
               whileInView={{ opacity: on ? 1 : 0.6, scaleX: 1 }}
@@ -926,7 +928,7 @@ function VolumeColumn({ label, value, color }: { label: string; value: number; c
           );
         })}
       </div>
-      <CountUp to={value} className="mt-3 tabular-nums" style={{ color, fontFamily: SERIF, fontSize: 35, lineHeight: 1, fontWeight: 400 }} />
+      <CountUp to={value} className="mt-3 tabular-nums" style={{ color: '#15110F', fontFamily: SERIF, fontSize: 35, lineHeight: 1, fontWeight: 400 }} />
     </div>
   );
 }
@@ -942,13 +944,13 @@ function GapColumn({ value, label, lines }: { value: number; label: string; line
       transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
     >
       <p className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: FLAG_COLOR }}>Gap</p>
-      <div className="my-3 flex h-40 flex-col-reverse justify-start gap-1.5">
+      <div className="my-3 flex h-48 flex-col-reverse justify-start gap-1.5">
         {Array.from({ length: segments }).map((_, index) => {
           const on = index < filled;
           return (
           <motion.div
             key={index}
-            className="h-2.5 w-12 rounded-full"
+            className="h-3 w-14 rounded-full"
               style={{ backgroundColor: on ? FLAG_COLOR : '#F1DCE4' }}
               initial={{ opacity: 0.25, scaleX: 0.55 }}
               whileInView={{ opacity: on ? 1 : 0.48, scaleX: 1 }}
@@ -1214,16 +1216,14 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
         </div>
 
         <div>
-          <div className="inline-flex items-end gap-5 rounded-[24px] bg-[#F7F5EF] px-5 py-4">
-            <div>
+          <div className="flex items-center justify-between gap-6">
+            <div className="inline-flex rounded-[24px] bg-[#F7F5EF] px-5 py-4">
+              <div>
               <p className="text-[10px] uppercase tracking-[0.15em] font-bold text-[#8B8682]">Your level</p>
               <p className="mt-1 text-[#15110F]" style={{ fontFamily: SERIF, fontSize: 34, lineHeight: 1 }}>{dim.band}</p>
+              </div>
             </div>
-            <div className="h-12 w-px bg-[#E3DED4]" />
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color }}>Score</p>
-              <CountUp to={dim.score} className="tabular-nums" style={{ color, fontSize: 34, lineHeight: 1, fontWeight: 400 }} />
-            </div>
+            <RadialScore value={dim.score} color={color} size={112} />
           </div>
           <p className="mt-7 text-[#1A1614] leading-relaxed text-[16px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
         </div>
@@ -1258,19 +1258,31 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
 
 function SafetyDimensionSymbol({ selected, value, color }: { selected: string; value: number; color: string }) {
   const isSelf = selected === 'Self';
-  const arcPath = isSelf
-    ? 'M58 178 C42 138, 54 92, 98 64'
-    : 'M206 206 C250 174, 255 112, 214 70';
+  const circle = isSelf
+    ? { cx: 94, cy: 176, r: 68 }
+    : { cx: 210, cy: 176, r: 68 };
   return (
     <div className="absolute inset-0">
       <svg viewBox="0 0 320 280" className="h-full w-full overflow-visible" aria-hidden="true">
-        <motion.path
-          d={arcPath}
+        <circle
+          cx={circle.cx}
+          cy={circle.cy}
+          r={circle.r}
+          fill="none"
+          stroke={color}
+          strokeWidth="30"
+          opacity="0.08"
+        />
+        <motion.circle
+          cx={circle.cx}
+          cy={circle.cy}
+          r={circle.r}
           fill="none"
           stroke={color}
           strokeWidth="30"
           strokeLinecap="round"
           pathLength="1"
+          strokeDasharray="1"
           initial={{ pathLength: 0 }}
           whileInView={{ pathLength: value / 100 }}
           viewport={{ once: true, amount: 0.5 }}
@@ -1297,17 +1309,17 @@ function SixDimensionScale({ active, color }: { active: string; color: string })
         <p className="text-[12px] uppercase tracking-[0.16em] font-bold text-[#1A1614]">Your six dimensions</p>
         <p className="text-[10px] uppercase tracking-[0.13em] font-bold text-[#A09A91]">Balance line</p>
       </div>
-      <div className="relative h-52">
+      <div className="relative h-64">
         <div className="absolute left-0 right-0 top-1/2 border-t border-dashed border-[#CFC8BE]" />
-        <div className="absolute inset-0 grid grid-cols-6 gap-4 items-end">
+        <div className="absolute inset-0 grid grid-cols-6 gap-5 items-end">
           {allDimensionScores.map((item) => {
             const selected = item.name === active;
             return (
               <div key={item.name} className="flex h-full flex-col items-center justify-end gap-3">
-                <div className="relative flex h-36 w-full items-end justify-center">
-                  <div className="absolute bottom-0 h-full w-5 rounded-full bg-[#F1EEE8]" />
+                <div className="relative flex h-48 w-full items-end justify-center">
+                  <div className="absolute bottom-0 h-full w-7 rounded-full bg-[#F1EEE8]" />
                   <motion.div
-                    className="relative z-10 w-5 rounded-full"
+                    className="relative z-10 w-7 rounded-full"
                     style={{ backgroundColor: selected ? color : '#D6D0C8' }}
                     initial={{ height: 0 }}
                     whileInView={{ height: `${item.score}%` }}

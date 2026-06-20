@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Mountain, Layers, Sparkles, Activity, Compass, BatteryLow,
-  ArrowLeft, ArrowRight,
+  ArrowLeft, ArrowRight, Info,
 } from 'lucide-react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
@@ -59,15 +59,45 @@ function InfoPiece({ piece }: { piece: Piece }) {
 
 export function YourShape() {
   const [step, setStep] = useState(0);
+  const [infoOpen, setInfoOpen] = useState(false);
 
   return (
     <div className="space-y-12">
       {/* Header */}
       <div>
         <p style={{ color: '#DC4C0C', fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>03</p>
-        <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
-          Your Shape
-        </h1>
+        <div className="relative inline-flex items-center gap-3">
+          <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
+            Your Shape
+          </h1>
+          <button
+            type="button"
+            onMouseEnter={() => setInfoOpen(true)}
+            onMouseLeave={() => setInfoOpen(false)}
+            onFocus={() => setInfoOpen(true)}
+            onBlur={() => setInfoOpen(false)}
+            onClick={() => setInfoOpen(open => !open)}
+            className="mb-[30px] grid h-8 w-8 place-items-center rounded-full border border-[#D9D2C8] bg-white text-[#6F6A64] shadow-sm transition-colors hover:text-[#DC4C0C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30"
+            aria-label="What this shape means"
+          >
+            <Info size={16} strokeWidth={2.2} />
+          </button>
+          <AnimatePresence>
+            {infoOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                transition={{ duration: 0.18 }}
+                className="absolute left-full top-0 z-20 ml-4 w-[320px] rounded-[18px] border border-[#E5DED3] bg-white p-5 shadow-[0_22px_48px_-34px_rgba(26,22,20,0.45)]"
+              >
+                <p className="text-sm leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
+                  Your shape shows how all three domains interact to produce the thoughts, feelings, behaviours, drives, and coping patterns you meet in everyday life. No domain works in isolation; the whole shape gives your profile its particular psychological flavour.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
         <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px', marginBottom: '32px' }} />
       </div>
 
