@@ -564,7 +564,7 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
 }) {
   const steps = [
     { label: 'Depleted', x: 68, y: 124 },
-    { label: 'Balanced', x: 548, y: 48 },
+    { label: 'Balanced', x: 638, y: 48 },
     { label: 'Excess', x: 768, y: 52 },
   ];
   const activeIndex = score < 45 ? 0 : score < 70 ? 1 : 2;
@@ -605,9 +605,9 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
             transition={{ duration: 0.8, delay: 0.5 }}
           />
           <motion.ellipse
-            cx="548"
+            cx="638"
             cy="50"
-            rx="86"
+            rx="96"
             ry="34"
             fill={color}
             opacity="0.08"
@@ -628,14 +628,22 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
           }}
           initial={{ scale: 0.7, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
+          animate={{ scale: [1, 1.07, 1], boxShadow: ['0 18px 38px -28px rgba(0,0,0,0.6)', `0 18px 42px -22px ${color}80`, '0 18px 38px -28px rgba(0,0,0,0.6)'] }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ type: 'spring', stiffness: 360, damping: 24, delay: 0.35 }}
+          transition={{ scale: { duration: 2.8, repeat: Infinity, ease: 'easeInOut' }, boxShadow: { duration: 2.8, repeat: Infinity, ease: 'easeInOut' } }}
         >
           <span className="text-sm font-semibold">{score}</span>
         </motion.div>
-        <div className="relative grid grid-cols-3 gap-8">
+        <div className="relative h-14">
           {steps.map((step, index) => (
-            <div key={step.label} className="text-center">
+            <div
+              key={step.label}
+              className="absolute top-0 text-center"
+              style={{
+                left: `${(step.x / 820) * 100}%`,
+                transform: 'translateX(-50%)',
+              }}
+            >
               <div className="mx-auto mb-3 h-3 w-px" style={{ backgroundColor: index === activeIndex ? color : '#D8D3CA' }} />
               <p className="text-[10px] uppercase tracking-[0.12em] font-bold" style={{ color: index === activeIndex ? color : '#9A948D' }}>
                 {step.label}
@@ -647,7 +655,7 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
           ))}
         </div>
       </div>
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-[1.12fr_0.88fr]">
         {cards.map(({ Icon, ...card }, index) => (
           <motion.div
             key={`${card.label}-${card.title}`}
@@ -655,15 +663,23 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.45, delay: index * 0.08 }}
-            className="grid gap-5 rounded-[22px] p-5 md:grid-cols-[72px_1fr]"
-            style={{ backgroundColor: index === 0 ? tint : '#FBFAF7' }}
+            className={`relative grid gap-5 rounded-[22px] p-5 md:grid-cols-[72px_1fr] ${index === 0 ? 'shadow-[0_22px_48px_-42px_rgba(0,0,0,0.55)]' : 'lg:translate-y-3'}`}
+            style={{
+              background: index === 0 ? `linear-gradient(135deg, ${tint} 0%, #FFFFFF 100%)` : '#FBFAF7',
+              border: index === 0 ? `1px solid ${color}2E` : '1px solid #EEE9E0',
+            }}
           >
-            <div className="grid h-16 w-16 place-items-center rounded-full bg-white shadow-[0_18px_32px_-28px_rgba(0,0,0,0.5)]" style={{ color }}>
+            {index === 0 && (
+              <span className="absolute right-5 top-5 rounded-full px-3 py-1 text-[9px] uppercase tracking-[0.14em] font-bold text-white" style={{ backgroundColor: color }}>
+                Current
+              </span>
+            )}
+            <div className="grid h-16 w-16 place-items-center rounded-full bg-white shadow-[0_18px_32px_-28px_rgba(0,0,0,0.5)]" style={{ color: index === 0 ? color : '#9B8F80' }}>
               <Icon size={34} strokeWidth={1.8} />
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-[0.14em] font-bold" style={{ color }}>{card.label}</p>
-              <h3 style={{ fontFamily: SERIF, fontSize: 32, lineHeight: 1, margin: '10px 0 12px', color: '#15110F' }}>{card.title}</h3>
+              <p className="text-[10px] uppercase tracking-[0.14em] font-bold" style={{ color: index === 0 ? color : '#9B8F80' }}>{card.label}</p>
+              <h3 style={{ fontFamily: SERIF, fontSize: index === 0 ? 34 : 30, lineHeight: 1, margin: '10px 0 12px', color: '#15110F' }}>{card.title}</h3>
               <p className="text-sm text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{card.body}</p>
             </div>
           </motion.div>
