@@ -1172,8 +1172,7 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
       viewport={{ once: true, amount: 0.16 }}
       whileHover={{ y: -5 }}
       transition={{ type: 'spring', stiffness: 360, damping: 34, delay: index * 0.04 }}
-      className="group/safety-dim relative overflow-hidden rounded-[30px] border bg-white p-7 md:p-9 cursor-default"
-      style={{ borderColor: active ? `${color}66` : '#E5E3DD' }}
+      className="group/safety-dim relative overflow-hidden rounded-[30px] bg-white p-7 md:p-9 cursor-default"
     >
       <div
         className="absolute -right-20 -bottom-24 h-80 w-80 rounded-full pointer-events-none"
