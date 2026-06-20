@@ -311,15 +311,15 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
         <LevelContinuum domain={domain} score={score} band={band} color={color} tint={tint} levels={content.levels} />
       </motion.div>
 
-      <motion.div id={`${domain.toLowerCase()}-alignment`} className={`relative overflow-hidden rounded-[28px] py-2 ${content.isAlignmentFlagged ? 'pt-14' : ''}`} {...reveal}>
-        {content.isAlignmentFlagged && <FlaggedForYou />}
+      <motion.div id={`${domain.toLowerCase()}-alignment`} className="relative overflow-hidden rounded-[28px] py-2" {...reveal}>
         <div className="relative grid lg:grid-cols-[0.88fr_1.12fr] gap-8 lg:gap-12 items-center">
           <div className="flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-start justify-between gap-4">
                 <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3.1rem)', lineHeight: 1, letterSpacing: '-0.035em', color: '#15110F', margin: 0 }}>
                   Alignment
                 </h2>
+                {content.isAlignmentFlagged && <FlaggedForYou />}
               </div>
               <p className="mt-5 max-w-sm text-[#4D4945] leading-relaxed" style={{ fontWeight: 300 }}>
                 Alignment compares what is felt inside with what is expressed outside, then shows the distance between the two.
@@ -478,19 +478,26 @@ function SafetyScoreCard({ score, band, color }: { score: number; band: string; 
         }}
       />
       <div className="relative flex items-center gap-5">
-        <div className="relative shrink-0 rounded-[20px] bg-white/8 px-5 py-4">
-          <p className="text-[9px] uppercase tracking-[0.16em] font-bold text-white/55">Score</p>
-          <CountUp to={score} className="tabular-nums block" style={{ color, fontSize: 50, lineHeight: 0.95, fontWeight: 400 }} />
-          <div className="mt-3 h-1.5 w-24 overflow-hidden rounded-full bg-white/18">
-            <motion.div
-              className="h-full rounded-full"
-              style={{ backgroundColor: color }}
-              initial={{ width: 0 }}
-              whileInView={{ width: `${score}%` }}
+        <div className="relative grid h-28 w-28 shrink-0 place-items-center rounded-full bg-white/8">
+          <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 112 112" aria-hidden="true">
+            <circle cx="56" cy="56" r="47" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="7" />
+            <motion.circle
+              cx="56"
+              cy="56"
+              r="47"
+              fill="none"
+              stroke={color}
+              strokeWidth="7"
+              strokeLinecap="round"
+              pathLength="1"
+              strokeDasharray="1"
+              initial={{ strokeDashoffset: 1 }}
+              whileInView={{ strokeDashoffset: 1 - score / 100 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
             />
-          </div>
+          </svg>
+          <CountUp to={score} className="relative tabular-nums block" style={{ color, fontSize: 46, lineHeight: 1, fontWeight: 400 }} />
         </div>
         <div className="min-w-0">
           <p className="text-[13px] uppercase tracking-[0.18em] font-bold" style={{ color }}>Overall Safety</p>
@@ -513,13 +520,13 @@ function SafetyFocusSymbol({ color, size = 250 }: { color: string; size?: number
         </linearGradient>
       </defs>
       <g transform="translate(998,0) scale(-1,1)">
-        <motion.path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={color} opacity="0.82" initial={{ opacity: 0 }} whileInView={{ opacity: 0.82 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7 }} />
-        <motion.path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={color} opacity="0.54" initial={{ opacity: 0 }} whileInView={{ opacity: 0.54 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7, delay: 0.08 }} />
+        <motion.path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={color} stroke="#297E70" strokeWidth="7" strokeLinejoin="round" opacity="0.82" initial={{ opacity: 0 }} whileInView={{ opacity: 0.82 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7 }} />
+        <motion.path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={color} stroke="#297E70" strokeWidth="7" strokeLinejoin="round" opacity="0.54" initial={{ opacity: 0 }} whileInView={{ opacity: 0.54 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7, delay: 0.08 }} />
         <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={color} opacity="0.54" />
 
-        <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H600.756L700.994 344.272L500.533 -2Z" fill="url(#safetyNeutralFade)" opacity="0.48" />
-        <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F5F1E9" opacity="0.62" />
-        <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F7F4EE" opacity="0.58" />
+        <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H600.756L700.994 344.272L500.533 -2Z" fill="url(#safetyNeutralFade)" stroke="#D2CBC0" strokeWidth="7" strokeLinejoin="round" opacity="0.5" />
+        <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F5F1E9" stroke="#D2CBC0" strokeWidth="7" strokeLinejoin="round" opacity="0.64" />
+        <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F7F4EE" stroke="#D2CBC0" strokeWidth="7" strokeLinejoin="round" opacity="0.6" />
       </g>
     </svg>
   );
@@ -781,17 +788,13 @@ function DomainArchitectureGraphic({ domain, color, score, dimensions, active, o
 function FlaggedForYou() {
   return (
     <motion.div
-      className="absolute left-0 top-0 z-10 inline-flex items-center gap-3 rounded-t-[16px] rounded-b-[8px] px-4 py-3 text-white shadow-[0_20px_38px_-28px_rgba(178,30,75,0.8)]"
+      className="relative z-10 inline-flex items-center gap-3 rounded-[16px] px-4 py-3 text-white shadow-[0_20px_38px_-28px_rgba(178,30,75,0.8)]"
       style={{ backgroundColor: FLAG_COLOR }}
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.5 }}
       transition={{ duration: 0.45 }}
     >
-      <span
-        className="absolute -bottom-2 left-8 h-0 w-0 border-l-[9px] border-r-[9px] border-t-[9px] border-l-transparent border-r-transparent"
-        style={{ borderTopColor: FLAG_COLOR }}
-      />
       <span className="grid h-8 w-8 place-items-center rounded-full bg-white/16 text-white">
         <Flag size={15} fill="currentColor" />
       </span>
@@ -809,6 +812,7 @@ function DomainAlignmentBridge({ overall, felt, expressed, color }: {
   const gap = expressed - felt;
   const absoluteGap = Math.abs(gap);
   const alignmentLabel = absoluteGap <= 4 ? 'Very aligned' : absoluteGap <= 9 ? 'Slightly misaligned' : absoluteGap <= 14 ? 'Misaligned' : 'Very misaligned';
+  const gapLines = Math.max(1, Math.abs(measurementLineCount(expressed) - measurementLineCount(felt)));
 
   return (
     <div className="relative overflow-hidden rounded-[28px] border bg-white p-7" style={{ borderColor: `${color}24` }}>
@@ -817,11 +821,11 @@ function DomainAlignmentBridge({ overall, felt, expressed, color }: {
         style={{ background: `radial-gradient(circle, ${FLAG_COLOR}12 0%, transparent 70%)` }}
       />
       <div className="relative">
-        <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end">
+        <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 items-end">
           <VolumeColumn label="Overall" value={overall} color="#6F6A64" />
           <VolumeColumn label="Felt" value={felt} color={FELT_COLOR} />
           <VolumeColumn label="Expressed" value={expressed} color={EXPRESSED_COLOR} />
-          <GapColumn value={absoluteGap} label={alignmentLabel} />
+          <GapColumn value={absoluteGap} label={alignmentLabel} lines={gapLines} />
         </div>
       </div>
     </div>
@@ -864,11 +868,7 @@ function AlignmentMeaningCard({ label, body, value, color, mode = 'felt' }: {
     <div className="relative overflow-hidden rounded-[20px] border bg-white/82 p-4 shadow-[0_18px_42px_-38px_rgba(0,0,0,0.45)]" style={{ borderColor: `${color}22` }}>
       <div className="flex items-center gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[16px]" style={{ backgroundColor: mode === 'felt' ? '#F1EFE9' : '#EEF3F7' }}>
-          {mode === 'felt' ? (
-            <span className="h-4 w-4 rounded-full" style={{ backgroundColor: color }} />
-          ) : (
-            <span className="h-7 w-7 rounded-full border-[3px]" style={{ borderColor: color }} />
-          )}
+          <AlignmentSignalIcon mode={mode} color={color} />
         </div>
         <div className="min-w-0">
           <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
@@ -889,19 +889,34 @@ function AlignmentMeaningCard({ label, body, value, color, mode = 'felt' }: {
   );
 }
 
+function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed'; color: string }) {
+  const isFelt = mode === 'felt';
+  return (
+    <svg viewBox="0 0 48 48" className="h-10 w-10" aria-hidden="true">
+      <circle cx="24" cy="24" r="17" fill="#FFFFFF" stroke={isFelt ? '#D8D2C8' : color} strokeWidth="3" opacity={isFelt ? 0.72 : 0.95} />
+      <circle cx="24" cy="24" r="8" fill={isFelt ? color : '#FFFFFF'} stroke={isFelt ? color : '#D8D2C8'} strokeWidth={isFelt ? 0 : 3} />
+      <circle cx="24" cy="24" r="22" fill="none" stroke={color} strokeWidth="1.5" opacity={isFelt ? 0.08 : 0.18} />
+    </svg>
+  );
+}
+
+function measurementLineCount(value: number) {
+  return Math.max(1, Math.min(22, Math.round(value / 4.5)));
+}
+
 function VolumeColumn({ label, value, color }: { label: string; value: number; color: string }) {
-  const segments = 24;
-  const filled = Math.round((value / 100) * segments);
+  const segments = 22;
+  const filled = measurementLineCount(value);
   return (
     <div className="flex flex-col items-center">
       <p className="mb-3 text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
-      <div className="flex h-32 flex-col-reverse justify-start gap-1">
+      <div className="flex h-40 flex-col-reverse justify-start gap-1.5">
         {Array.from({ length: segments }).map((_, index) => {
           const on = index < filled;
           return (
             <motion.div
               key={index}
-              className="h-1.5 w-10 rounded-full"
+              className="h-2.5 w-12 rounded-full"
               style={{ backgroundColor: on ? color : '#E7E3DB' }}
               initial={{ opacity: 0.25, scaleX: 0.65 }}
               whileInView={{ opacity: on ? 1 : 0.6, scaleX: 1 }}
@@ -916,9 +931,9 @@ function VolumeColumn({ label, value, color }: { label: string; value: number; c
   );
 }
 
-function GapColumn({ value, label }: { value: number; label: string }) {
-  const segments = 22;
-  const filled = Math.max(6, Math.min(segments, Math.round((value / 18) * segments)));
+function GapColumn({ value, label, lines }: { value: number; label: string; lines: number }) {
+  const segments = 8;
+  const filled = Math.max(1, Math.min(segments, lines));
   return (
     <motion.div
       className="relative flex flex-col items-center rounded-[22px] bg-[#FFF8FA] px-4 py-5"
@@ -927,13 +942,13 @@ function GapColumn({ value, label }: { value: number; label: string }) {
       transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
     >
       <p className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: FLAG_COLOR }}>Gap</p>
-      <div className="my-3 flex h-32 flex-col-reverse justify-start gap-1">
+      <div className="my-3 flex h-40 flex-col-reverse justify-start gap-1.5">
         {Array.from({ length: segments }).map((_, index) => {
           const on = index < filled;
           return (
           <motion.div
             key={index}
-            className="h-1.5 w-10 rounded-full"
+            className="h-2.5 w-12 rounded-full"
               style={{ backgroundColor: on ? FLAG_COLOR : '#F1DCE4' }}
               initial={{ opacity: 0.25, scaleX: 0.55 }}
               whileInView={{ opacity: on ? 1 : 0.48, scaleX: 1 }}
@@ -981,10 +996,10 @@ function AlignmentInsights({ domain, color, alignmentText, feltText, expressedTe
   ];
 
   return (
-    <div className="mt-10 border-t pt-8" style={{ borderColor: `${color}24` }}>
-      <div className="mb-5">
-        <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(2.4rem, 4vw, 3.6rem)', lineHeight: 1.02, letterSpacing: '-0.04em', margin: 0, color: '#15110F' }}>
-          {alignmentLabel}
+    <div className="mt-9">
+      <div className="mb-5 max-w-3xl">
+        <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(1.65rem, 2.6vw, 2.15rem)', lineHeight: 1.08, letterSpacing: '-0.028em', margin: 0, color: '#15110F' }}>
+          Your Alignment for {domain}: {alignmentLabel}
         </h3>
       </div>
       <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
@@ -1262,13 +1277,13 @@ function SafetyDimensionSymbol({ selected, value, color }: { selected: string; v
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           opacity="0.18"
         />
-        <g transform="translate(262 18) scale(-0.24 0.24)" opacity="0.92">
-          <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={isSelf ? color : '#F4F1EA'} opacity={isSelf ? 0.86 : 0.42} />
-          <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={!isSelf ? color : '#F4F1EA'} opacity={!isSelf ? 0.82 : 0.42} />
+        <g transform="translate(262 18) scale(-0.24 0.24)" opacity="0.94" strokeLinejoin="round">
+          <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={isSelf ? color : '#F4F1EA'} stroke={isSelf ? '#2C7C70' : '#BFB8AD'} strokeWidth="8" opacity={isSelf ? 0.88 : 0.46} />
+          <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={!isSelf ? color : '#F4F1EA'} stroke={!isSelf ? '#2C7C70' : '#BFB8AD'} strokeWidth="8" opacity={!isSelf ? 0.86 : 0.46} />
           <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={color} opacity="0.42" />
-          <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H600.756L700.994 344.272L500.533 -2Z" fill="#F8F5EF" opacity="0.28" />
-          <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F8F5EF" opacity="0.28" />
-          <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F8F5EF" opacity="0.28" />
+          <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H600.756L700.994 344.272L500.533 -2Z" fill="#F8F5EF" stroke="#BFB8AD" strokeWidth="8" opacity="0.36" />
+          <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F8F5EF" stroke="#BFB8AD" strokeWidth="8" opacity="0.36" />
+          <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F8F5EF" stroke="#BFB8AD" strokeWidth="8" opacity="0.36" />
         </g>
       </svg>
     </div>
