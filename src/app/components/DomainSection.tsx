@@ -313,18 +313,14 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
 
       <motion.div id={`${domain.toLowerCase()}-alignment`} className={`relative overflow-hidden rounded-[28px] py-2 ${content.isAlignmentFlagged ? 'pt-14' : ''}`} {...reveal}>
         {content.isAlignmentFlagged && <FlaggedForYou />}
-        <div className="relative grid lg:grid-cols-[0.58fr_1.42fr] gap-8 lg:gap-12 items-start">
-          <div className="flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-4">
-                <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3.1rem)', lineHeight: 1, letterSpacing: '-0.035em', color: '#15110F', margin: 0 }}>
-                  Alignment
-                </h2>
-              </div>
-              <p className="mt-5 max-w-sm text-[#4D4945] leading-relaxed" style={{ fontWeight: 300 }}>
-                Alignment compares what is felt inside with what is expressed outside, then shows the distance between the two.
-              </p>
-            </div>
+        <div className="relative">
+          <div>
+            <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3.1rem)', lineHeight: 1, letterSpacing: '-0.035em', color: '#15110F', margin: 0 }}>
+              Alignment
+            </h2>
+            <p className="mt-5 max-w-2xl text-[#4D4945] leading-relaxed" style={{ fontWeight: 300 }}>
+              Alignment compares what is felt inside with what is expressed outside, then shows the distance between the two.
+            </p>
           </div>
 
           <DomainAlignmentBridge domain={domain} felt={felt} expressed={expressed} alignmentText={content.alignmentText} />
@@ -810,34 +806,27 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
     : upward
       ? `You show more ${domain} than you feel.`
       : `You show less ${domain} than you feel.`;
+  const maskingLabel = upward ? 'Upward masking' : gap < 0 ? 'Downward masking' : 'Integrated signal';
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${FLAG_COLOR}18` }}>
+    <div className="relative mt-8 overflow-hidden rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${FLAG_COLOR}18` }}>
       <div
         className="absolute -right-24 -top-28 h-80 w-80 rounded-full pointer-events-none"
         style={{ background: `radial-gradient(circle, ${FLAG_COLOR}12 0%, transparent 70%)` }}
       />
-      <div className="relative grid gap-7 xl:grid-cols-[1.08fr_0.92fr]">
+      <div className="relative grid gap-8 xl:grid-cols-[1.08fr_0.92fr]">
         <div className="flex flex-col items-center justify-center">
-          <SplitAlignmentCircle felt={felt} expressed={expressed} gap={absoluteGap} />
-          <div className="mt-5 max-w-lg text-center">
-            <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: FLAG_COLOR }}>
-              {upward ? 'Upward masking' : gap < 0 ? 'Downward masking' : 'Integrated signal'} · {alignmentLabel}
-            </p>
-            <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.65rem, 3vw, 2.25rem)', lineHeight: 1.05, letterSpacing: '-0.03em', color: '#15110F' }}>
-              {verdict} This gap is wide enough to cost you.
-            </h3>
-          </div>
+          <SplitAlignmentCircle domain={domain} felt={felt} expressed={expressed} gap={absoluteGap} />
         </div>
 
         <div className="grid content-center gap-3">
           <AlignmentInfoTile
-            label="Felt"
+            label={`Felt ${domain}`}
             body={`What is actually available inside your ${domain} system.`}
             mode="felt"
           />
           <AlignmentInfoTile
-            label="Expressed"
+            label={`Expressed ${domain}`}
             body={`What other people can see, receive, or infer from your ${domain}.`}
             mode="expressed"
           />
@@ -850,7 +839,21 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
                 : `Your inside and outside signals are moving together.`}
             mode="masking"
           />
-          <p className="mt-3 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+        </div>
+      </div>
+
+      <div className="relative mt-7 grid gap-6 rounded-[24px] bg-[#FBFAF7] p-5 md:grid-cols-[0.92fr_1.08fr] md:p-6">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: FLAG_COLOR }}>
+            {maskingLabel} · {alignmentLabel}
+          </p>
+          <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.75rem, 3.2vw, 2.55rem)', lineHeight: 1.02, letterSpacing: '-0.035em', color: '#15110F' }}>
+            {verdict}
+          </h3>
+        </div>
+        <div>
+          <AlignmentSeverityCue gap={absoluteGap} label={alignmentLabel} />
+          <p className="mt-5 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
             {alignmentText}
           </p>
         </div>
@@ -859,12 +862,20 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
   );
 }
 
-function SplitAlignmentCircle({ felt, expressed, gap }: { felt: number; expressed: number; gap: number }) {
-  const separation = Math.min(42, 8 + gap * 1.6);
+function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
+  felt: number;
+  expressed: number;
+  gap: number;
+}) {
+  const separation = Math.min(38, 6 + gap * 1.45);
   const topY = 138 - separation / 2;
   const bottomY = 170 + separation / 2;
   const expressedPath = `M 54 ${topY} A 116 116 0 0 1 286 ${topY}`;
   const feltPath = `M 54 ${bottomY} A 116 116 0 0 0 286 ${bottomY}`;
+  const closedExpressedPath = 'M 54 154 A 116 116 0 0 1 286 154';
+  const closedFeltPath = 'M 54 154 A 116 116 0 0 0 286 154';
+  const gapCenterY = (topY + bottomY) / 2;
 
   return (
     <svg viewBox="0 0 340 340" className="h-[330px] w-full max-w-[420px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
@@ -875,50 +886,84 @@ function SplitAlignmentCircle({ felt, expressed, gap }: { felt: number; expresse
       </defs>
       <motion.path
         d={expressedPath}
+        initial={{ d: closedExpressedPath }}
+        whileInView={{ d: expressedPath }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         fill="none"
         stroke="#E9E4DC"
         strokeWidth="30"
-        strokeLinecap="round"
+        strokeLinecap="butt"
         filter="url(#alignmentSoftShadow)"
       />
       <motion.path
         d={feltPath}
+        initial={{ d: closedFeltPath }}
+        whileInView={{ d: feltPath }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         fill="none"
         stroke="#E9E4DC"
         strokeWidth="30"
-        strokeLinecap="round"
+        strokeLinecap="butt"
         filter="url(#alignmentSoftShadow)"
       />
       <motion.path
         d={expressedPath}
+        initial={{ d: closedExpressedPath, strokeDashoffset: 1 }}
+        whileInView={{ d: expressedPath, strokeDashoffset: 1 - expressed / 100 }}
+        viewport={{ once: true, amount: 0.45 }}
         fill="none"
         stroke={EXPRESSED_COLOR}
         strokeWidth="30"
-        strokeLinecap="round"
+        strokeLinecap="butt"
         pathLength="1"
         strokeDasharray="1"
-        initial={{ strokeDashoffset: 1 }}
-        whileInView={{ strokeDashoffset: 1 - expressed / 100 }}
-        viewport={{ once: true, amount: 0.45 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
       />
       <motion.path
         d={feltPath}
+        initial={{ d: closedFeltPath, strokeDashoffset: 1 }}
+        whileInView={{ d: feltPath, strokeDashoffset: 1 - felt / 100 }}
+        viewport={{ once: true, amount: 0.45 }}
         fill="none"
         stroke={FELT_COLOR}
         strokeWidth="30"
-        strokeLinecap="round"
+        strokeLinecap="butt"
         pathLength="1"
         strokeDasharray="1"
-        initial={{ strokeDashoffset: 1 }}
-        whileInView={{ strokeDashoffset: 1 - felt / 100 }}
-        viewport={{ once: true, amount: 0.45 }}
-        transition={{ duration: 1, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.05, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       />
-      <line x1="170" y1={topY + 24} x2="170" y2={bottomY - 24} stroke={FLAG_COLOR} strokeWidth="2" strokeLinecap="round" opacity="0.45" />
+      <motion.rect
+        x="60"
+        y={topY + 18}
+        width="220"
+        height={Math.max(10, bottomY - topY - 36)}
+        rx="5"
+        fill={FLAG_COLOR}
+        initial={{ opacity: 0, scaleY: 0.2 }}
+        whileInView={{ opacity: 0.08, scaleY: 1 }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        style={{ transformOrigin: '170px 170px' }}
+      />
+      <motion.line
+        x1="76"
+        y1={gapCenterY}
+        x2="264"
+        y2={gapCenterY}
+        stroke={FLAG_COLOR}
+        strokeWidth="2"
+        strokeDasharray="6 8"
+        strokeLinecap="round"
+        initial={{ opacity: 0, pathLength: 0 }}
+        whileInView={{ opacity: 0.52, pathLength: 1 }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{ duration: 0.75, delay: 0.55 }}
+      />
       <motion.circle
         cx="170"
-        cy={(topY + bottomY) / 2}
+        cy={gapCenterY}
         r="34"
         fill="#FFFFFF"
         stroke={FLAG_COLOR}
@@ -926,13 +971,42 @@ function SplitAlignmentCircle({ felt, expressed, gap }: { felt: number; expresse
         animate={{ scale: [1, 1.06, 1] }}
         transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <text x="170" y={(topY + bottomY) / 2 - 3} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 32, fill: '#15110F' }}>{gap}</text>
-      <text x="170" y={(topY + bottomY) / 2 + 18} textAnchor="middle" style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.15em', fill: FLAG_COLOR }}>GAP</text>
-      <text x="170" y={topY - 48} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', fill: EXPRESSED_COLOR }}>EXPRESSED</text>
-      <text x="170" y={bottomY + 62} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', fill: FELT_COLOR }}>FELT</text>
+      <text x="170" y={gapCenterY - 3} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 32, fill: '#15110F' }}>{gap}</text>
+      <text x="170" y={gapCenterY + 18} textAnchor="middle" style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.15em', fill: FLAG_COLOR }}>GAP</text>
+      <text x="170" y={topY - 48} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', fill: EXPRESSED_COLOR }}>EXPRESSED {domain.toUpperCase()}</text>
+      <text x="170" y={bottomY + 62} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', fill: FELT_COLOR }}>FELT {domain.toUpperCase()}</text>
       <text x="286" y={topY + 10} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 30, fill: EXPRESSED_COLOR }}>{expressed}</text>
       <text x="54" y={bottomY + 10} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 30, fill: FELT_COLOR }}>{felt}</text>
     </svg>
+  );
+}
+
+function AlignmentSeverityCue({ gap, label }: { gap: number; label: string }) {
+  const stages = ['Aligned', 'Almost aligned', 'Slightly misaligned', 'Misaligned', 'Very misaligned'];
+  const active = gap <= 4 ? 0 : gap <= 8 ? 1 : gap <= 11 ? 2 : gap <= 16 ? 3 : 4;
+  return (
+    <div>
+      <div className="flex items-center gap-2" aria-label={`Alignment level: ${label}`}>
+        {stages.map((stage, index) => {
+          const selected = index === active;
+          return (
+            <motion.span
+              key={stage}
+              className="h-2.5 flex-1 rounded-full"
+              style={{ backgroundColor: selected ? FLAG_COLOR : index < active ? `${FLAG_COLOR}40` : '#E2DDD5' }}
+              initial={{ scaleX: 0.4, opacity: 0 }}
+              whileInView={{ scaleX: 1, opacity: selected ? 1 : 0.72 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.32, delay: index * 0.04 }}
+            />
+          );
+        })}
+      </div>
+      <div className="mt-2 flex justify-between gap-3 text-[9px] uppercase tracking-[0.12em] font-bold text-[#9B958C]">
+        <span>Integrated</span>
+        <span style={{ color: FLAG_COLOR }}>{label}</span>
+      </div>
+    </div>
   );
 }
 
