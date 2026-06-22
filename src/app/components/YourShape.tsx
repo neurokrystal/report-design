@@ -28,8 +28,8 @@ type Piece = { kicker: string; tone: keyof typeof TONE; body: string; Icon: type
 // Six pieces of information across three steps — left/right, surface → deep.
 const beats: { left: Piece; right: Piece }[] = [
   {
-    left:  { kicker: 'The Shape',        tone: 'neutral', Icon: Mountain, body: 'The Sharp Peak — one domain standing clearly above the other two.' },
-    right: { kicker: 'The Architecture', tone: 'neutral', Icon: Layers,   body: 'Challenge holds the apex; Safety and Play form the base beneath it.' },
+    left:  { kicker: 'The Shape',        tone: 'neutral', Icon: Mountain, body: 'A Sharp Peak is created when one domain becomes visibly taller than the other two.' },
+    right: { kicker: 'The Architecture', tone: 'neutral', Icon: Layers,   body: 'In this profile, Challenge holds the apex while Safety and Play sit as a narrower base beneath it.' },
   },
   {
     left:  { kicker: "What's Working", tone: 'good', Icon: Sparkles, body: 'Your peak is a genuine resource — it generates the direction, momentum, and significance the other two domains cannot supply right now.' },
@@ -113,11 +113,27 @@ export function YourShape() {
             letterSpacing: '-0.035em',
             lineHeight: 1.05,
           }}>
-            Sharp Peak
+            Your domains come together into a sharp peak.
           </h2>
-          <p style={{ fontSize: '17px', color: '#1A1614', lineHeight: 1.7, fontWeight: 300 }}>
-            Challenge rises clearly above Safety and Play — a profile built for reach and direction, carried by a narrower base than it deserves.
-          </p>
+          <div className="grid gap-3 pt-1">
+            {[
+              'Challenge sits at the top.',
+              'Safety and Play are running low beneath it.',
+              'The result is a powerful peak with a fragile base.',
+            ].map((point, index) => (
+              <motion.div
+                key={point}
+                className="flex items-center gap-3 rounded-[16px] bg-[#F7F4EE] px-4 py-3"
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.35, delay: index * 0.08 }}
+              >
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: index === 0 ? CH : '#A8A095' }} />
+                <span className="text-[15.5px] leading-snug text-[#1A1614]" style={{ fontWeight: 350 }}>{point}</span>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* Right Column: the Dimensional symbol as three solid sections */}
@@ -129,8 +145,26 @@ export function YourShape() {
                 <stop offset="100%" stopColor="#E8551D" stopOpacity="0" />
               </radialGradient>
             </defs>
-            <ellipse cx="499" cy="278" rx="210" ry="245" fill="url(#sharpPeakGlow)" />
-            <path d="M499 18 C496 160, 497 304, 499 518" fill="none" stroke="#E8551D" strokeWidth="5" strokeLinecap="round" opacity="0.22" />
+            <motion.ellipse
+              cx="499"
+              cy="278"
+              rx="210"
+              ry="245"
+              fill="url(#sharpPeakGlow)"
+              animate={{ opacity: [0.58, 0.88, 0.58], scale: [0.985, 1.025, 0.985] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ transformOrigin: '499px 278px' }}
+            />
+            <motion.path
+              d="M499 18 C496 160, 497 304, 499 518"
+              fill="none"
+              stroke="#E8551D"
+              strokeWidth="5"
+              strokeLinecap="round"
+              opacity="0.22"
+              animate={{ opacity: [0.18, 0.34, 0.18] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+            />
             <path d="M362 548 C418 506, 469 489, 499 489 C530 489, 582 506, 638 548" fill="none" stroke="#E8551D" strokeWidth="4" strokeLinecap="round" opacity="0.2" />
             {/* ── The symbol (mirrored to match section 2) ── */}
             <g transform="translate(998,0) scale(-1,1)">
@@ -142,14 +176,27 @@ export function YourShape() {
               <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={SAFETY_FILL} />
               <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={SAFETY_FILL} />
               {/* Challenge — highlighted, one solid section */}
-              <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z" fill={CH} />
-              <path d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z" fill={CH} />
+              <motion.path
+                d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z"
+                fill={CH}
+                animate={{ opacity: [0.9, 1, 0.9] }}
+                transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.path
+                d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z"
+                fill={CH}
+                animate={{ opacity: [0.9, 1, 0.9] }}
+                transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+              />
             </g>
 
             {/* ── Labels only: the numbers were introduced in the domain section. ── */}
             <text x={MX(500)} y="276" textAnchor="middle" fill="#FFFFFF" fontSize="22" fontWeight="800" letterSpacing="3.5" opacity="0.96">CHALLENGE</text>
-            <text x={MX(700)} y="705" textAnchor="middle" fill="#5C574F" fontSize="22" fontWeight="800" letterSpacing="3">SAFETY</text>
-            <text x={MX(280)} y="705" textAnchor="middle" fill="#5C574F" fontSize="22" fontWeight="800" letterSpacing="3">PLAY</text>
+            <text x={MX(500)} y="309" textAnchor="middle" fill="#FFFFFF" fontSize="20" fontWeight="700" opacity="0.88">High</text>
+            <text x={MX(700)} y="695" textAnchor="middle" fill="#5C574F" fontSize="21" fontWeight="800" letterSpacing="3">SAFETY</text>
+            <text x={MX(700)} y="728" textAnchor="middle" fill="#5C574F" fontSize="19" fontWeight="700" opacity="0.86">Very Low</text>
+            <text x={MX(280)} y="695" textAnchor="middle" fill="#5C574F" fontSize="21" fontWeight="800" letterSpacing="3">PLAY</text>
+            <text x={MX(280)} y="728" textAnchor="middle" fill="#5C574F" fontSize="19" fontWeight="700" opacity="0.86">Low</text>
           </svg>
         </div>
       </div>
