@@ -30,7 +30,7 @@ import lowSelfNew from '../../imports/10_Low_Self_new.svg';
 import lowOthersNew from '../../imports/10_Low_Others_new.svg';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
-const FLAG_COLOR = '#B21E4B';
+const FLAG_COLOR = '#DC4C0C';
 const ALIGNMENT_ACCENT = '#2F9A86';
 const ALIGNMENT_INK = '#0F473D';
 const ALIGNMENT_TRACK = '#E3DED5';
@@ -577,18 +577,35 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
     <div className="rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${color}28` }}>
       <div className="relative pb-10 pt-3">
         <svg className="h-44 w-full overflow-visible" viewBox="0 0 820 176" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id={`${domain}ContinuumSweep`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor={color} stopOpacity="0" />
+              <stop offset="48%" stopColor={color} stopOpacity="0.88" />
+              <stop offset="100%" stopColor={color} stopOpacity="0" />
+            </linearGradient>
+          </defs>
           <path d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54" fill="none" stroke="#EDEAE3" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-          <motion.path
+          <path
             d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50"
             fill="none"
             stroke={color}
             strokeWidth="10"
             strokeLinecap="round"
             pathLength="1"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: marker / 100 }}
-            viewport={{ once: true, amount: 0.45 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            strokeDasharray="1"
+            strokeDashoffset={1 - marker / 100}
+            opacity="0.72"
+          />
+          <motion.path
+            d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50"
+            fill="none"
+            stroke={`url(#${domain}ContinuumSweep)`}
+            strokeWidth="13"
+            strokeLinecap="round"
+            pathLength="1"
+            strokeDasharray="0.18 1"
+            animate={{ strokeDashoffset: [1, 1 - marker / 100, 1 - marker / 100] }}
+            transition={{ duration: 4.6, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.72, 1] }}
           />
           <motion.path
             d="M596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54"
@@ -623,9 +640,9 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
           }}
           initial={{ scale: 0.7, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
-          animate={{ scale: [1, 1.13, 1.06, 1], boxShadow: ['0 18px 38px -28px rgba(0,0,0,0.6)', `0 20px 48px -20px ${color}90`, `0 18px 44px -24px ${color}66`, '0 18px 38px -28px rgba(0,0,0,0.6)'] }}
+          animate={{ scale: [1, 1, 1.17, 1.04, 1], boxShadow: ['0 18px 38px -28px rgba(0,0,0,0.6)', '0 18px 38px -28px rgba(0,0,0,0.6)', `0 20px 54px -18px ${color}90`, `0 18px 44px -24px ${color}66`, '0 18px 38px -28px rgba(0,0,0,0.6)'] }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ scale: { duration: 4.4, repeat: Infinity, ease: [0.45, 0, 0.25, 1] }, boxShadow: { duration: 4.4, repeat: Infinity, ease: [0.45, 0, 0.25, 1] } }}
+          transition={{ scale: { duration: 4.6, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.7, 0.82, 0.92, 1] }, boxShadow: { duration: 4.6, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.7, 0.82, 0.92, 1] } }}
         >
           <span className="text-sm font-semibold">{score}</span>
         </motion.div>
@@ -880,13 +897,22 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
   const closedExpressedPath = 'M 54 154 A 116 116 0 0 1 286 154';
   const closedFeltPath = 'M 54 154 A 116 116 0 0 0 286 154';
   const gapCenterY = (topY + bottomY) / 2;
+  const gapColumnY = topY + 12;
+  const gapColumnHeight = Math.max(58, bottomY - topY + 64);
 
   return (
-    <svg viewBox="0 0 380 340" className="h-[330px] w-full max-w-[460px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
+    <svg viewBox="0 0 360 340" className="h-[330px] w-full max-w-[440px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
       <defs>
         <filter id="alignmentSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.09" />
         </filter>
+        <linearGradient id="gapColumnFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0" />
+          <stop offset="18%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.1" />
+          <stop offset="50%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.18" />
+          <stop offset="82%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.1" />
+          <stop offset="100%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0" />
+        </linearGradient>
       </defs>
       <motion.path
         d={expressedPath}
@@ -938,39 +964,22 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
         strokeDasharray="1"
         transition={{ duration: 1.05, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       />
+      <text x="170" y={topY - 36} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 18, letterSpacing: '0', fill: ALIGNMENT_INK }}>Expressed</text>
+      <text x="170" y={bottomY + 72} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 18, letterSpacing: '0', fill: ALIGNMENT_INK }}>Felt</text>
       <motion.g
-        initial={{ opacity: 0, scaleY: 0.2 }}
+        initial={{ opacity: 0, scaleY: 0.15 }}
         whileInView={{ opacity: 1, scaleY: 1 }}
         viewport={{ once: true, amount: 0.45 }}
-        transition={{ duration: 0.75, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        style={{ transformOrigin: `306px ${gapCenterY}px` }}
+        transition={{ duration: 0.78, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        style={{ transformOrigin: `170px ${gapCenterY}px` }}
       >
-        <rect x="288" y={topY} width="36" height={bottomY - topY} rx="18" fill={ALIGNMENT_ACCENT} opacity="0.09" />
-        <path
-          d={`M286 ${topY} H318 V${bottomY} H286`}
-          fill="none"
-          stroke={ALIGNMENT_ACCENT}
-          strokeWidth="2"
-          strokeLinecap="square"
-          strokeLinejoin="round"
-          opacity="0.7"
-        />
+        <rect x="139" y={gapColumnY} width="62" height={gapColumnHeight} fill="url(#gapColumnFade)" />
+        <line x1="139" y1={gapCenterY} x2="201" y2={gapCenterY} stroke={ALIGNMENT_ACCENT} strokeWidth="1.4" opacity="0.38" />
+        <path d={`M170 ${gapCenterY - 31} L164 ${gapCenterY - 22} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.28" />
+        <path d={`M170 ${gapCenterY + 31} L164 ${gapCenterY + 22} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.28" />
+        <text x="170" y={gapCenterY - 8} textAnchor="middle" style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.16em', fill: ALIGNMENT_ACCENT }}>GAP</text>
+        <text x="170" y={gapCenterY + 24} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 34, fill: ALIGNMENT_INK }}>{gap}</text>
       </motion.g>
-      <text x="170" y={topY - 30} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 17, letterSpacing: '0', fill: ALIGNMENT_INK }}>{`Expressed ${domain}`}</text>
-      <text x="170" y={bottomY + 66} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 17, letterSpacing: '0', fill: ALIGNMENT_INK }}>{`Felt ${domain}`}</text>
-      <g>
-        <rect x="324" y={gapCenterY - 24} width="50" height="48" rx="16" fill="#FFFFFF" stroke={ALIGNMENT_ACCENT} strokeWidth="1.5" />
-        <text x="349" y={gapCenterY - 2} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 23, fill: '#15110F' }}>{gap}</text>
-        <text x="349" y={gapCenterY + 15} textAnchor="middle" style={{ fontSize: 8, fontWeight: 800, letterSpacing: '0.14em', fill: ALIGNMENT_ACCENT }}>GAP</text>
-      </g>
-      <g>
-        <rect x="299" y={topY - 54} width="56" height="31" rx="15.5" fill="#FFFFFF" stroke={ALIGNMENT_TRACK} strokeWidth="1" />
-        <text x="327" y={topY - 33} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 20, fill: ALIGNMENT_INK }}>{expressed}</text>
-      </g>
-      <g>
-        <rect x="11" y={bottomY + 10} width="56" height="31" rx="15.5" fill="#FFFFFF" stroke={ALIGNMENT_TRACK} strokeWidth="1" />
-        <text x="39" y={bottomY + 31} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 20, fill: ALIGNMENT_INK }}>{felt}</text>
-      </g>
     </svg>
   );
 }
@@ -1049,8 +1058,10 @@ function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed' | 'ma
       )}
       {mode === 'masking' && (
         <>
-          <path d="M10 24 A14 14 0 1 1 38 24 A14 14 0 1 1 10 24" fill="none" stroke={color} strokeWidth="5" strokeLinecap="butt" opacity="0.9" />
-          <path d="M16 31 L31 16" fill="none" stroke={ALIGNMENT_ACCENT} strokeWidth="3" strokeLinecap="round" />
+          <path d="M10 24 A14 14 0 1 1 38 24 A14 14 0 1 1 10 24" fill="none" stroke={color} strokeWidth="6" strokeLinecap="butt" opacity="0.9" />
+          <path d="M14 25 L34 23" fill="none" stroke="#FFFFFF" strokeWidth="5" strokeLinecap="round" />
+          <path d="M15 25 L33 23.2" fill="none" stroke={ALIGNMENT_ACCENT} strokeWidth="1.6" strokeLinecap="round" opacity="0.75" />
+          <path d="M13.5 20.5 V28.5 M34.5 19.5 V27.5" fill="none" stroke={ALIGNMENT_ACCENT} strokeWidth="1.4" strokeLinecap="round" opacity="0.45" />
         </>
       )}
     </svg>
@@ -1275,25 +1286,45 @@ function SafetyDimensionSymbol({ selected, color }: { selected: string; value: n
 
 function DimensionSliceMarker({ selected, value, color }: { selected: string; value: number; color: string }) {
   const isSelf = selected === 'Self';
-  const dotPosition = isSelf ? { left: '47%', top: '58%' } : { left: '25%', top: '67%' };
-  const labelPosition = isSelf ? { left: '14%', top: '42%' } : { left: '7%', top: '47%' };
+  const dotPosition = isSelf ? { left: '31%', top: '66%' } : { left: '24%', top: '69%' };
+  const labelPosition = isSelf ? { left: '7%', top: '42%' } : { left: '7%', top: '48%' };
+  const radius = 31;
+  const circumference = 2 * Math.PI * radius;
+  const dash = circumference * (value / 100);
 
   return (
     <>
       <motion.div
-        className="absolute z-20 h-4 w-4 rounded-full"
-        style={{ ...dotPosition, backgroundColor: color, boxShadow: `0 0 0 12px ${color}16` }}
-        animate={{ scale: [1, 1.18, 1], opacity: [0.9, 1, 0.9] }}
+        className="absolute z-20 h-[18px] w-[18px] rounded-full"
+        style={{ ...dotPosition, backgroundColor: color, boxShadow: `0 0 0 13px ${color}18` }}
+        animate={{ scale: [1, 1.2, 1], opacity: [0.9, 1, 0.9], boxShadow: [`0 0 0 10px ${color}12`, `0 0 0 20px ${color}1F`, `0 0 0 10px ${color}12`] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute z-20 rounded-full bg-white px-4 py-2 shadow-[0_14px_30px_-24px_rgba(0,0,0,0.55)]"
-        style={{ ...labelPosition, border: `1px solid ${color}28` }}
+        className="absolute z-20 grid h-[86px] w-[86px] place-items-center rounded-full bg-white/92 shadow-[0_18px_34px_-28px_rgba(0,0,0,0.55)] backdrop-blur-sm"
+        style={{ ...labelPosition }}
         initial={{ opacity: 0, y: 8 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
       >
+        <svg className="absolute inset-0 -rotate-90" width="86" height="86" aria-hidden="true">
+          <circle cx="43" cy="43" r={radius} fill="none" stroke="#EFEAE2" strokeWidth="7" />
+          <motion.circle
+            cx="43"
+            cy="43"
+            r={radius}
+            fill="none"
+            stroke={color}
+            strokeWidth="7"
+            strokeLinecap="round"
+            strokeDasharray={`${dash} ${circumference - dash}`}
+            initial={{ strokeDashoffset: dash }}
+            whileInView={{ strokeDashoffset: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          />
+        </svg>
         <span className="tabular-nums" style={{ fontFamily: SERIF, fontSize: 30, lineHeight: 1, color }}>{value}</span>
       </motion.div>
     </>

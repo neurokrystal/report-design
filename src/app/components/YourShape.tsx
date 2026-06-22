@@ -107,11 +107,11 @@ export function YourShape() {
         <div className="space-y-6">
           <h2 style={{
             fontFamily: SERIF,
-            fontSize: 'clamp(2.4rem, 4.6vw, 3.4rem)',
+            fontSize: 'clamp(1.8rem, 3.2vw, 2.55rem)',
             fontWeight: 600,
             color: '#0F0F0F',
             letterSpacing: '-0.035em',
-            lineHeight: 1.05,
+            lineHeight: 1.08,
           }}>
             Your domains come together into a sharp peak.
           </h2>
@@ -141,17 +141,18 @@ export function YourShape() {
           <svg viewBox="0 0 998 880" className="w-full max-w-[460px] h-auto overflow-visible">
             <defs>
               <radialGradient id="sharpPeakGlow" cx="50%" cy="25%" r="58%">
-                <stop offset="0%" stopColor="#E8551D" stopOpacity="0.22" />
+                <stop offset="0%" stopColor="#E8551D" stopOpacity="0.36" />
+                <stop offset="48%" stopColor="#E8551D" stopOpacity="0.16" />
                 <stop offset="100%" stopColor="#E8551D" stopOpacity="0" />
               </radialGradient>
             </defs>
             <motion.ellipse
               cx="499"
               cy="278"
-              rx="210"
-              ry="245"
+              rx="235"
+              ry="270"
               fill="url(#sharpPeakGlow)"
-              animate={{ opacity: [0.58, 0.88, 0.58], scale: [0.985, 1.025, 0.985] }}
+              animate={{ opacity: [0.74, 1, 0.74], scale: [0.985, 1.03, 0.985] }}
               transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
               style={{ transformOrigin: '499px 278px' }}
             />
@@ -191,12 +192,12 @@ export function YourShape() {
             </g>
 
             {/* ── Labels only: the numbers were introduced in the domain section. ── */}
-            <text x={MX(500)} y="276" textAnchor="middle" fill="#FFFFFF" fontSize="22" fontWeight="800" letterSpacing="3.5" opacity="0.96">CHALLENGE</text>
-            <text x={MX(500)} y="309" textAnchor="middle" fill="#FFFFFF" fontSize="20" fontWeight="700" opacity="0.88">High</text>
-            <text x={MX(700)} y="695" textAnchor="middle" fill="#5C574F" fontSize="21" fontWeight="800" letterSpacing="3">SAFETY</text>
-            <text x={MX(700)} y="728" textAnchor="middle" fill="#5C574F" fontSize="19" fontWeight="700" opacity="0.86">Very Low</text>
-            <text x={MX(280)} y="695" textAnchor="middle" fill="#5C574F" fontSize="21" fontWeight="800" letterSpacing="3">PLAY</text>
-            <text x={MX(280)} y="728" textAnchor="middle" fill="#5C574F" fontSize="19" fontWeight="700" opacity="0.86">Low</text>
+            <text x={MX(500)} y="270" textAnchor="middle" dominantBaseline="middle" fill="#FFFFFF" fontSize="28" fontWeight="800" letterSpacing="3.2" opacity="0.96">CHALLENGE</text>
+            <text x={MX(500)} y="308" textAnchor="middle" dominantBaseline="middle" fill="#FFFFFF" fontSize="23" fontWeight="700" opacity="0.9">High</text>
+            <text x={MX(700)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="27" fontWeight="800" letterSpacing="3">SAFETY</text>
+            <text x={MX(700)} y="727" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="23" fontWeight="700" opacity="0.88">Very Low</text>
+            <text x={MX(280)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="27" fontWeight="800" letterSpacing="3">PLAY</text>
+            <text x={MX(280)} y="727" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="23" fontWeight="700" opacity="0.88">Low</text>
           </svg>
         </div>
       </div>

@@ -578,14 +578,14 @@ function DimensionCard({ dimension: dim, domainKey, domainColor, index }: { dime
         y: { delay: index * 0.08, duration: 0.4 },
       }}
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E3DD' }}
-      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-[0_18px_42px_-32px_rgba(26,22,20,0.42)] hover:z-20 transition-[box-shadow,border-color] duration-500 group relative overflow-hidden transform-gpu cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-[0_18px_42px_-32px_rgba(26,22,20,0.42)] hover:z-20 transition-[box-shadow,border-color,background-color] duration-700 group relative overflow-hidden transform-gpu cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       {/* Domain accent — the colour means "this dimension belongs to this domain" */}
       <div className="h-1 w-full" style={{ backgroundColor: domainColor }} />
 
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500 pointer-events-none"
-        style={{ backgroundColor: domainColor }}
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out pointer-events-none"
+        style={{ background: `linear-gradient(135deg, ${domainColor}12 0%, ${domainColor}08 44%, transparent 100%)` }}
       />
 
       <div className="p-7 flex flex-col flex-1">
