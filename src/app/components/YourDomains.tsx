@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flag, ArrowRight } from 'lucide-react';
+import { Flag, ArrowRight, Sparkles, Wrench } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 import lowFuture from "../../imports/10__Low_Future.svg";
@@ -173,7 +173,7 @@ export function YourDomains() {
               className="relative justify-self-center lg:justify-self-start rounded-2xl bg-[#F4F1EA] px-5 py-4 max-w-[280px]"
             >
               <span
-                className="absolute -left-2 top-6 h-4 w-4 rotate-45 bg-[#F4F1EA]"
+                className="absolute -left-3 top-[2.15rem] h-5 w-5 -translate-y-1/2 rotate-45 bg-[#F4F1EA]"
                 aria-hidden="true"
               />
               <p style={{ color: '#4D4945', fontSize: '13.5px', lineHeight: 1.6, fontWeight: 300, margin: 0 }}>
@@ -570,9 +570,7 @@ function DimensionCard({ dimension: dim, domainKey, domainColor, index }: { dime
       whileHover={{
         y: -4,
         scale: 1.006,
-        backgroundColor: `${domainColor}07`,
-        borderColor: `${domainColor}38`,
-        transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] },
       }}
       transition={{
         opacity: { delay: index * 0.08, duration: 0.4 },
@@ -580,13 +578,13 @@ function DimensionCard({ dimension: dim, domainKey, domainColor, index }: { dime
         y: { delay: index * 0.08, duration: 0.4 },
       }}
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E3DD' }}
-      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-[0_18px_42px_-32px_rgba(26,22,20,0.42)] hover:z-20 transition-shadow duration-300 group relative overflow-hidden transform-gpu cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-[0_18px_42px_-32px_rgba(26,22,20,0.42)] hover:z-20 transition-[box-shadow,border-color] duration-500 group relative overflow-hidden transform-gpu cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       {/* Domain accent — the colour means "this dimension belongs to this domain" */}
       <div className="h-1 w-full" style={{ backgroundColor: domainColor }} />
 
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-[0.045] transition-opacity duration-200 pointer-events-none"
+        className="absolute inset-0 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500 pointer-events-none"
         style={{ backgroundColor: domainColor }}
       />
 
@@ -677,10 +675,8 @@ function DimensionComparisonPanel() {
               A wider view of how each dimension is carrying the profile before you meet them one by one.
             </p>
           </div>
-          <p className="hidden text-[10px] uppercase tracking-[0.14em] font-bold text-[#A09A91] sm:block">Balance line</p>
         </div>
         <div className="relative h-72">
-          <div className="absolute left-0 right-0 top-[50%] border-t border-dashed border-[#CFC8BE]" />
           <div className="absolute inset-0 grid grid-cols-6 gap-5 items-end">
             {dims.map((dim) => (
               <div key={dim.name} className="flex h-full flex-col items-center justify-end gap-4">
@@ -697,7 +693,6 @@ function DimensionComparisonPanel() {
                 </div>
                 <div className="text-center">
                   <p className="text-[11px] uppercase tracking-[0.08em] font-bold" style={{ color: dim.domainColor }}>{dim.name}</p>
-                  <p className="mt-1 text-[11px] text-[#8B8682]">{dim.score}</p>
                 </div>
               </div>
             ))}
@@ -706,22 +701,36 @@ function DimensionComparisonPanel() {
       </div>
       <div className="grid gap-4 content-center">
         <DimensionNote title="Most resourced" dim={mostResourced} />
-        <DimensionNote title="Most strained" dim={mostStrained} />
+        <DimensionNote title="Needs most work" dim={mostStrained} />
       </div>
     </div>
   );
 }
 
 function DimensionNote({ title, dim }: { title: string; dim: DimEntry & { domain: string; domainColor: string } }) {
+  const isResource = title === 'Most resourced';
+  const Icon = isResource ? Sparkles : Wrench;
   return (
     <div className="rounded-[22px] bg-[#F8F6F1] p-5">
-      <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-[#8B8682]">{title}</p>
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-[#8B8682]">{title}</p>
+        <motion.span
+          className="grid h-12 w-12 place-items-center rounded-full"
+          style={{
+            color: isResource ? '#DC4C0C' : '#42A68E',
+            backgroundColor: isResource ? '#FFF1EA' : '#EAF7F3',
+          }}
+          animate={isResource ? { scale: [1, 1.08, 1], rotate: [0, -4, 3, 0] } : { y: [0, -3, 0] }}
+          transition={{ duration: isResource ? 4.2 : 3.8, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <Icon size={24} strokeWidth={2.1} />
+        </motion.span>
+      </div>
       <div className="mt-3 flex items-center justify-between gap-4">
         <div>
           <p style={{ fontFamily: SERIF, fontSize: 28, lineHeight: 1, color: '#15110F' }}>{dim.name}</p>
           <p className="mt-1 text-sm text-[#6F6A64]">{dim.band}</p>
         </div>
-        <ScoreRing value={dim.score} color={dim.domainColor} size={58} />
       </div>
     </div>
   );

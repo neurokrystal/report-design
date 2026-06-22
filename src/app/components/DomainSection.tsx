@@ -313,7 +313,7 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
 
       <motion.div id={`${domain.toLowerCase()}-alignment`} className={`relative overflow-hidden rounded-[28px] py-2 ${content.isAlignmentFlagged ? 'pt-14' : ''}`} {...reveal}>
         {content.isAlignmentFlagged && <FlaggedForYou />}
-        <div className="relative grid lg:grid-cols-[0.88fr_1.12fr] gap-8 lg:gap-12 items-center">
+        <div className="relative grid lg:grid-cols-[0.58fr_1.42fr] gap-8 lg:gap-12 items-start">
           <div className="flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-4">
@@ -327,17 +327,8 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
             </div>
           </div>
 
-          <DomainAlignmentBridge overall={score} felt={felt} expressed={expressed} color={color} />
+          <DomainAlignmentBridge domain={domain} felt={felt} expressed={expressed} alignmentText={content.alignmentText} />
         </div>
-        <AlignmentContextRow domain={domain} felt={felt} expressed={expressed} />
-        <AlignmentInsights
-          domain={domain}
-          color={color}
-          alignmentText={content.alignmentText}
-          alignmentExtended={content.alignmentExtended}
-          felt={felt}
-          expressed={expressed}
-        />
       </motion.div>
 
       <div className="space-y-8">
@@ -804,287 +795,178 @@ function FlaggedForYou() {
   );
 }
 
-function DomainAlignmentBridge({ overall, felt, expressed, color }: {
-  overall: number;
+function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
   felt: number;
   expressed: number;
-  color: string;
+  alignmentText: string;
 }) {
   const gap = expressed - felt;
   const absoluteGap = Math.abs(gap);
   const alignmentLabel = absoluteGap <= 4 ? 'Very aligned' : absoluteGap <= 9 ? 'Slightly misaligned' : absoluteGap <= 14 ? 'Misaligned' : 'Very misaligned';
+  const upward = gap > 0;
+  const verdict = gap === 0
+    ? `Your expressed ${domain} is closely reflecting what you feel.`
+    : upward
+      ? `You show more ${domain} than you feel.`
+      : `You show less ${domain} than you feel.`;
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] border bg-white p-7 md:p-8" style={{ borderColor: `${color}24` }}>
+    <div className="relative overflow-hidden rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${FLAG_COLOR}18` }}>
       <div
-        className="absolute -right-20 -top-24 h-72 w-72 rounded-full pointer-events-none"
+        className="absolute -right-24 -top-28 h-80 w-80 rounded-full pointer-events-none"
         style={{ background: `radial-gradient(circle, ${FLAG_COLOR}12 0%, transparent 70%)` }}
       />
-      <div className="relative">
-        <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end">
-          <VolumeColumn label="Overall" value={overall} color="#6F6A64" />
-          <VolumeColumn label="Felt" value={felt} color={FELT_COLOR} />
-          <VolumeColumn label="Expressed" value={expressed} color={EXPRESSED_COLOR} />
-          <GapColumn value={absoluteGap} label={alignmentLabel} felt={felt} expressed={expressed} />
+      <div className="relative grid gap-7 xl:grid-cols-[1.08fr_0.92fr]">
+        <div className="flex flex-col items-center justify-center">
+          <SplitAlignmentCircle felt={felt} expressed={expressed} gap={absoluteGap} />
+          <div className="mt-5 max-w-lg text-center">
+            <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: FLAG_COLOR }}>
+              {upward ? 'Upward masking' : gap < 0 ? 'Downward masking' : 'Integrated signal'} · {alignmentLabel}
+            </p>
+            <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.65rem, 3vw, 2.25rem)', lineHeight: 1.05, letterSpacing: '-0.03em', color: '#15110F' }}>
+              {verdict} This gap is wide enough to cost you.
+            </h3>
+          </div>
+        </div>
+
+        <div className="grid content-center gap-3">
+          <AlignmentInfoTile
+            label="Felt"
+            body={`What is actually available inside your ${domain} system.`}
+            mode="felt"
+          />
+          <AlignmentInfoTile
+            label="Expressed"
+            body={`What other people can see, receive, or infer from your ${domain}.`}
+            mode="expressed"
+          />
+          <AlignmentInfoTile
+            label="Masking direction"
+            body={upward
+              ? `Your outside signal is running ahead of your inside ${domain}.`
+              : gap < 0
+                ? `Your inside ${domain} is stronger than what you show outwardly.`
+                : `Your inside and outside signals are moving together.`}
+            mode="masking"
+          />
+          <p className="mt-3 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+            {alignmentText}
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-function AlignmentContextRow({ domain, felt, expressed }: {
-  domain: 'Safety' | 'Play' | 'Challenge';
-  felt: number;
-  expressed: number;
-}) {
-  const upward = expressed > felt;
-  const same = expressed === felt;
-  return (
-    <div className="mt-6 grid gap-4 md:grid-cols-3">
-      <AlignmentMeaningCard
-        label="Felt"
-        body={`What is actually available inside your ${domain} system.`}
-        value={felt}
-        color={FELT_COLOR}
-        mode="felt"
-      />
-      <AlignmentMeaningCard
-        label="Expressed"
-        body={`What other people can see, receive, or infer from your ${domain}.`}
-        value={expressed}
-        color={EXPRESSED_COLOR}
-        mode="expressed"
-      />
-      <MaskingDirectionCard
-        direction={same ? 'Matched signal' : upward ? 'Upward masking' : 'Downward masking'}
-        body={same
-          ? 'What you show is closely matched to what you feel.'
-          : upward
-            ? `You are showing more ${domain} than you are actually feeling inside.`
-            : `You are showing less ${domain} than you are actually carrying inside.`}
-      />
-    </div>
-  );
-}
+function SplitAlignmentCircle({ felt, expressed, gap }: { felt: number; expressed: number; gap: number }) {
+  const separation = Math.min(42, 8 + gap * 1.6);
+  const topY = 138 - separation / 2;
+  const bottomY = 170 + separation / 2;
+  const expressedPath = `M 54 ${topY} A 116 116 0 0 1 286 ${topY}`;
+  const feltPath = `M 54 ${bottomY} A 116 116 0 0 0 286 ${bottomY}`;
 
-function AlignmentMeaningCard({ label, body, value, color, mode = 'felt' }: {
-  value: number;
-  color: string;
-  label: string;
-  body: string;
-  mode?: 'felt' | 'expressed';
-}) {
   return (
-    <div className="relative overflow-hidden rounded-[20px] bg-white/84 p-4 shadow-[0_18px_42px_-38px_rgba(0,0,0,0.45)]">
-      <div className="flex items-center gap-4">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[16px]" style={{ backgroundColor: mode === 'felt' ? '#F1EFE9' : '#EEF3F7' }}>
-          <AlignmentSignalIcon mode={mode} color={color} />
-        </div>
-        <div className="min-w-0">
-          <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
-          <p className="mt-1 text-sm leading-snug text-[#4D4945]" style={{ fontWeight: 300 }}>{body}</p>
-        </div>
-      </div>
-      <div className="mt-4 h-1.5 rounded-full bg-[#EDEAE3] overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ backgroundColor: color }}
-          initial={{ width: 0 }}
-          whileInView={{ width: `${value}%` }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed'; color: string }) {
-  const isFelt = mode === 'felt';
-  return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10" aria-hidden="true">
-      <circle cx="24" cy="24" r="16" fill={isFelt ? '#FFFFFF' : color} />
-      <circle cx="24" cy="24" r="7.5" fill={isFelt ? color : '#FFFFFF'} />
+    <svg viewBox="0 0 340 340" className="h-[330px] w-full max-w-[420px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
+      <defs>
+        <filter id="alignmentSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="16" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.12" />
+        </filter>
+      </defs>
+      <motion.path
+        d={expressedPath}
+        fill="none"
+        stroke="#E9E4DC"
+        strokeWidth="30"
+        strokeLinecap="round"
+        filter="url(#alignmentSoftShadow)"
+      />
+      <motion.path
+        d={feltPath}
+        fill="none"
+        stroke="#E9E4DC"
+        strokeWidth="30"
+        strokeLinecap="round"
+        filter="url(#alignmentSoftShadow)"
+      />
+      <motion.path
+        d={expressedPath}
+        fill="none"
+        stroke={EXPRESSED_COLOR}
+        strokeWidth="30"
+        strokeLinecap="round"
+        pathLength="1"
+        strokeDasharray="1"
+        initial={{ strokeDashoffset: 1 }}
+        whileInView={{ strokeDashoffset: 1 - expressed / 100 }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      />
+      <motion.path
+        d={feltPath}
+        fill="none"
+        stroke={FELT_COLOR}
+        strokeWidth="30"
+        strokeLinecap="round"
+        pathLength="1"
+        strokeDasharray="1"
+        initial={{ strokeDashoffset: 1 }}
+        whileInView={{ strokeDashoffset: 1 - felt / 100 }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{ duration: 1, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+      />
+      <line x1="170" y1={topY + 24} x2="170" y2={bottomY - 24} stroke={FLAG_COLOR} strokeWidth="2" strokeLinecap="round" opacity="0.45" />
+      <motion.circle
+        cx="170"
+        cy={(topY + bottomY) / 2}
+        r="34"
+        fill="#FFFFFF"
+        stroke={FLAG_COLOR}
+        strokeWidth="2"
+        animate={{ scale: [1, 1.06, 1] }}
+        transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <text x="170" y={(topY + bottomY) / 2 - 3} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 32, fill: '#15110F' }}>{gap}</text>
+      <text x="170" y={(topY + bottomY) / 2 + 18} textAnchor="middle" style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.15em', fill: FLAG_COLOR }}>GAP</text>
+      <text x="170" y={topY - 48} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', fill: EXPRESSED_COLOR }}>EXPRESSED</text>
+      <text x="170" y={bottomY + 62} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.16em', fill: FELT_COLOR }}>FELT</text>
+      <text x="286" y={topY + 10} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 30, fill: EXPRESSED_COLOR }}>{expressed}</text>
+      <text x="54" y={bottomY + 10} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 30, fill: FELT_COLOR }}>{felt}</text>
     </svg>
   );
 }
 
-function MaskingDirectionCard({ direction, body }: { direction: string; body: string }) {
-  const upward = direction === 'Upward masking';
-  const Icon = upward ? ArrowUpRight : direction === 'Downward masking' ? ArrowDownRight : Compass;
-  return (
-    <div className="relative overflow-hidden rounded-[20px] bg-[#FFF8FA] p-4 shadow-[0_18px_42px_-38px_rgba(0,0,0,0.45)]">
-      <div className="flex items-center gap-4">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[16px] bg-[#F7E7ED]" style={{ color: FLAG_COLOR }}>
-          <Icon size={25} strokeWidth={2.1} />
-        </div>
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color: FLAG_COLOR }}>Masking direction</p>
-          <p className="mt-1 text-sm leading-snug text-[#4D4945]" style={{ fontWeight: 300 }}>{direction}</p>
-        </div>
-      </div>
-      <p className="mt-4 text-sm leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>{body}</p>
-    </div>
-  );
-}
-
-function VolumeColumn({ label, value, color }: { label: string; value: number; color: string }) {
-  const segments = 12;
-  const filled = Math.max(1, Math.min(segments, Math.round((value / 100) * segments)));
-  return (
-    <div className="flex flex-col items-center">
-      <p className="mb-3 text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
-      <div className="flex h-56 flex-col-reverse justify-start gap-2">
-        {Array.from({ length: segments }).map((_, index) => {
-          const on = index < filled;
-          return (
-            <motion.div
-              key={index}
-              className="h-3.5 w-16 rounded-full"
-              style={{ backgroundColor: on ? color : '#E7E3DB' }}
-              initial={{ opacity: 0.25, scaleX: 0.65 }}
-              whileInView={{ opacity: on ? 1 : 0.6, scaleX: 1 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.28, delay: index * 0.012 }}
-            />
-          );
-        })}
-      </div>
-      <CountUp to={value} className="mt-3 tabular-nums" style={{ color: '#15110F', fontFamily: SERIF, fontSize: 35, lineHeight: 1, fontWeight: 400 }} />
-    </div>
-  );
-}
-
-function GapColumn({ value, label, felt, expressed }: { value: number; label: string; felt: number; expressed: number }) {
-  const feltTop = 100 - felt;
-  const expressedTop = 100 - expressed;
-  const top = Math.min(feltTop, expressedTop);
-  const height = Math.max(12, Math.abs(expressedTop - feltTop));
-  const upward = expressed > felt;
-  return (
-    <motion.div
-      className="relative flex flex-col items-center rounded-[22px] bg-[#FFF8FA] px-4 py-5"
-      style={{ border: `1px solid ${FLAG_COLOR}24` }}
-      animate={{ y: [0, -4, 0] }}
-      transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
-    >
-      <p className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: FLAG_COLOR }}>Gap</p>
-      <div className="relative my-3 h-56 w-24">
-        <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-[#F2DCE4]" />
-        <motion.div
-          className="absolute left-1/2 w-14 -translate-x-1/2 rounded-full"
-          style={{ top: `${feltTop}%`, height: 4, backgroundColor: FELT_COLOR }}
-          initial={{ scaleX: 0.4, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.35 }}
-        />
-        <motion.div
-          className="absolute left-1/2 w-14 -translate-x-1/2 rounded-full"
-          style={{ top: `${expressedTop}%`, height: 4, backgroundColor: EXPRESSED_COLOR }}
-          initial={{ scaleX: 0.4, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.35, delay: 0.08 }}
-        />
-        <motion.div
-          className="absolute left-1/2 w-10 -translate-x-1/2 rounded-full"
-          style={{
-            top: `${top}%`,
-            height: `${height}%`,
-            background: `linear-gradient(${upward ? 'to top' : 'to bottom'}, ${FLAG_COLOR}55, ${FLAG_COLOR}10)`,
-            border: `1px solid ${FLAG_COLOR}38`,
-          }}
-          initial={{ scaleY: 0.2, opacity: 0 }}
-          whileInView={{ scaleY: 1, opacity: 1 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ backgroundColor: FLAG_COLOR }} />
-          <span className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rounded-full" style={{ backgroundColor: FLAG_COLOR }} />
-        </motion.div>
-        <div className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[0_16px_35px_-28px_rgba(0,0,0,0.5)]">
-          <span className="text-[#15110F] leading-none" style={{ fontFamily: SERIF, fontSize: 33 }}>{value}</span>
-        </div>
-      </div>
-      <p className="mt-1 text-[9px] uppercase tracking-[0.14em] font-bold text-center" style={{ color: FLAG_COLOR }}>{label}</p>
-    </motion.div>
-  );
-}
-
-function AlignmentInsights({ domain, color, alignmentText, alignmentExtended, felt, expressed }: {
-  domain: 'Safety' | 'Play' | 'Challenge';
-  color: string;
-  alignmentText: string;
-  alignmentExtended: string | null;
-  felt: number;
-  expressed: number;
+function AlignmentInfoTile({ label, body, mode }: {
+  label: string;
+  body: string;
+  mode: 'felt' | 'expressed' | 'masking';
 }) {
-  const gap = expressed - felt;
-  const absoluteGap = Math.abs(gap);
-  const alignmentLabel = absoluteGap <= 4 ? 'Very aligned' : absoluteGap <= 9 ? 'Slightly misaligned' : absoluteGap <= 14 ? 'Misaligned' : 'Very misaligned';
-  const maskingLabel = gap > 0 ? 'Upward masking' : gap < 0 ? 'Downward masking' : 'Matched signal';
-  const costPosition = Math.min(94, Math.max(8, (absoluteGap / 20) * 100));
-
+  const isFelt = mode === 'felt';
+  const isExpressed = mode === 'expressed';
+  const color = isFelt ? FELT_COLOR : isExpressed ? EXPRESSED_COLOR : FLAG_COLOR;
+  const Icon = mode === 'masking' ? ArrowUpRight : null;
   return (
-    <div className="mt-9">
-      <div className="grid gap-8 rounded-[28px] bg-[#FBFAF7] p-6 md:p-8 lg:grid-cols-[0.92fr_1.08fr]">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: FLAG_COLOR }}>{maskingLabel}</p>
-          <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.75rem, 3vw, 2.35rem)', lineHeight: 1.06, letterSpacing: '-0.03em', marginBottom: 0, color: '#15110F' }}>
-          Your Alignment for {domain}: {alignmentLabel}
-          </h3>
-          <p className="mt-5 text-[16px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{alignmentText}</p>
+    <div className="rounded-[20px] bg-[#FBFAF7] p-4">
+      <div className="flex items-start gap-3">
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[15px]" style={{ backgroundColor: isFelt ? '#F1EFE9' : isExpressed ? '#EEF3F7' : '#F7E7ED', color }}>
+          {Icon ? <Icon size={23} strokeWidth={2.1} /> : <AlignmentSignalIcon mode={mode} color={color} />}
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.45, delay: 0.08 }}
-          className="relative overflow-hidden rounded-[24px] bg-white p-6 shadow-[0_22px_48px_-42px_rgba(0,0,0,0.5)]"
-        >
-          <div className="mb-7 flex items-center justify-between gap-5">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.15em] font-bold text-[#8B8682]">When the gap becomes costly</p>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
-                Mild gaps are normal. This becomes important when the distance is wide enough that maintaining the presentation starts costing energy.
-              </p>
-            </div>
-            <motion.div
-              className="grid h-16 w-16 shrink-0 place-items-center rounded-full"
-              style={{ backgroundColor: `${FLAG_COLOR}12`, color: FLAG_COLOR }}
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <Activity size={34} strokeWidth={1.8} />
-            </motion.div>
-          </div>
-
-          <div className="relative pb-8 pt-3">
-            <div className="h-2 rounded-full bg-[#EDEAE3]">
-              <div className="h-full rounded-full" style={{ width: '45%', backgroundColor: `${color}55` }} />
-              <div className="-mt-2 ml-[45%] h-2 rounded-full" style={{ width: '55%', backgroundColor: `${FLAG_COLOR}30` }} />
-            </div>
-            <motion.div
-              className="absolute top-0 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full bg-white text-sm font-bold shadow-[0_16px_35px_-26px_rgba(0,0,0,0.6)]"
-              style={{ left: `${costPosition}%`, color: FLAG_COLOR, border: `2px solid ${FLAG_COLOR}` }}
-              animate={{ scale: [1, 1.08, 1] }}
-              transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              {absoluteGap}
-            </motion.div>
-            <div className="mt-8 flex justify-between gap-4 text-[10px] uppercase tracking-[0.13em] font-bold text-[#9B958C]">
-              <span>Everyday social adjustment</span>
-              <span className="text-right" style={{ color: FLAG_COLOR }}>Structural cost</span>
-            </div>
-          </div>
-
-          <p className="mt-3 text-[15px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>
-            {alignmentExtended || fallbackImpact(domain)}
-          </p>
-        </motion.div>
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
+          <p className="mt-1 text-sm leading-snug text-[#4D4945]" style={{ fontWeight: 300 }}>{body}</p>
+        </div>
       </div>
     </div>
+  );
+}
+
+function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed' | 'masking'; color: string }) {
+  const isFelt = mode === 'felt';
+  return (
+    <svg viewBox="0 0 48 48" className="h-9 w-9" aria-hidden="true">
+      <circle cx="24" cy="24" r="16" fill={isFelt ? '#FFFFFF' : color} />
+      <circle cx="24" cy="24" r="7.5" fill={isFelt ? color : '#FFFFFF'} />
+    </svg>
   );
 }
 
@@ -1215,6 +1097,10 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
   onActive: () => void;
   onClear: () => void;
 }) {
+  const scorePosition = dim.name === 'Self'
+    ? { left: '7%', top: '42%' }
+    : { left: '54%', top: '42%' };
+
   return (
     <motion.div
       id={`safety-${dim.name.toLowerCase()}`}
@@ -1241,11 +1127,12 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
 
           <div className="relative mt-10 h-72">
             <motion.div
-              className="absolute right-4 -top-8 z-20"
+              className="absolute z-20"
+              style={scorePosition}
               animate={{ y: [0, -5, 0], scale: [1, 1.035, 1] }}
               transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <RadialScore value={dim.score} color={color} size={112} />
+              <RadialScore value={dim.score} color={color} size={104} />
             </motion.div>
             <SafetyDimensionSymbol selected={dim.name} value={dim.score} color={color} />
           </div>
@@ -1253,12 +1140,12 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
 
         <div>
           <div className="flex items-center justify-start">
-            <div className="inline-flex rounded-[24px] bg-[#F7F5EF] px-5 py-4">
+            <div className="inline-flex items-center gap-5 rounded-[24px] bg-[#F7F5EF] px-5 py-4">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.15em] font-bold text-[#8B8682]">Your level</p>
                 <p className="mt-1 text-[#15110F]" style={{ fontFamily: SERIF, fontSize: 34, lineHeight: 1 }}>{dim.band}</p>
-                <LevelIndicator band={dim.band} color={color} />
               </div>
+              <LevelIndicator band={dim.band} color={color} />
             </div>
           </div>
           <p className="mt-7 text-[#1A1614] leading-relaxed text-[16px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
@@ -1292,38 +1179,11 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
   );
 }
 
-function SafetyDimensionSymbol({ selected, value, color }: { selected: string; value: number; color: string }) {
+function SafetyDimensionSymbol({ selected, color }: { selected: string; value: number; color: string }) {
   const isSelf = selected === 'Self';
-  const accentPath = isSelf
-    ? 'M42 222 C28 184, 39 140, 72 113 C104 87, 147 90, 178 116'
-    : 'M150 116 C184 89, 228 91, 260 120 C294 151, 300 199, 276 236';
   return (
     <div className="absolute inset-0">
       <svg viewBox="0 0 320 280" className="h-full w-full overflow-visible" aria-hidden="true">
-        <motion.path
-          d={accentPath}
-          fill="none"
-          stroke={color}
-          strokeWidth="28"
-          strokeLinecap="round"
-          opacity="0.09"
-          animate={{ opacity: [0.07, 0.13, 0.07] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.path
-          d={accentPath}
-          fill="none"
-          stroke={color}
-          strokeWidth="14"
-          strokeLinecap="round"
-          pathLength="1"
-          strokeDasharray="1"
-          initial={{ strokeDashoffset: 1 }}
-          whileInView={{ strokeDashoffset: 1 - value / 100 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          opacity="0.28"
-        />
         <g transform="translate(262 18) scale(-0.24 0.24)" opacity="0.94" strokeLinejoin="round">
           <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={isSelf ? color : '#F4F1EA'} stroke={isSelf ? '#2C7C70' : '#BFB8AD'} strokeWidth="8" opacity={isSelf ? 0.88 : 0.46} />
           <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={!isSelf ? color : '#F4F1EA'} stroke={!isSelf ? '#2C7C70' : '#BFB8AD'} strokeWidth="8" opacity={!isSelf ? 0.86 : 0.46} />
@@ -1347,21 +1207,24 @@ function LevelIndicator({ band, color }: { band: string; color: string }) {
     5;
 
   return (
-    <div className="mt-3 flex items-end gap-1.5" aria-hidden="true">
+    <div className="flex h-20 flex-col-reverse justify-between gap-1.5" aria-hidden="true">
       {Array.from({ length: 5 }).map((_, index) => {
         const on = index < active;
+        const isBalance = index === 3;
+        const isExcess = index === 4;
         return (
           <motion.span
             key={index}
             className="block rounded-full"
             style={{
-              width: index === active - 1 ? 18 : 10,
-              height: 5 + index * 2,
-              backgroundColor: on ? color : '#DDD7CE',
-              opacity: on ? 0.95 : 0.72,
+              width: isExcess ? 24 : isBalance ? 30 : 16 + index * 3,
+              height: 7,
+              backgroundColor: on ? (isExcess ? FLAG_COLOR : color) : '#DDD7CE',
+              opacity: on ? (isExcess ? 0.86 : 0.95) : 0.72,
+              transform: isExcess ? 'skewX(-14deg)' : undefined,
             }}
-            initial={{ scaleY: 0.4, opacity: 0 }}
-            whileInView={{ scaleY: 1, opacity: on ? 0.95 : 0.72 }}
+            initial={{ scaleX: 0.4, opacity: 0 }}
+            whileInView={{ scaleX: 1, opacity: on ? (isExcess ? 0.86 : 0.95) : 0.72 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.28, delay: index * 0.04 }}
           />
