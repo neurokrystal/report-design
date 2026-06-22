@@ -33,4 +33,9 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+
+  // Honour the PORT assigned by the preview harness (autoPort); fall back to 5173.
+  server: {
+    port: process.env.PORT ? Number(process.env.PORT) : 5173,
+  },
 })

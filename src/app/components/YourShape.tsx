@@ -123,6 +123,15 @@ export function YourShape() {
         {/* Right Column: the Dimensional symbol as three solid sections */}
         <div className="flex justify-center lg:justify-end">
           <svg viewBox="0 0 998 880" className="w-full max-w-[460px] h-auto overflow-visible">
+            <defs>
+              <radialGradient id="sharpPeakGlow" cx="50%" cy="25%" r="58%">
+                <stop offset="0%" stopColor="#E8551D" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="#E8551D" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="499" cy="278" rx="210" ry="245" fill="url(#sharpPeakGlow)" />
+            <path d="M499 18 C496 160, 497 304, 499 518" fill="none" stroke="#E8551D" strokeWidth="5" strokeLinecap="round" opacity="0.22" />
+            <path d="M362 548 C418 506, 469 489, 499 489 C530 489, 582 506, 638 548" fill="none" stroke="#E8551D" strokeWidth="4" strokeLinecap="round" opacity="0.2" />
             {/* ── The symbol (mirrored to match section 2) ── */}
             <g transform="translate(998,0) scale(-1,1)">
               {/* Play — neutral, one solid section */}
@@ -137,21 +146,10 @@ export function YourShape() {
               <path d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z" fill={CH} />
             </g>
 
-            {/* ── Readouts (un-mirrored so text is upright) ── */}
-            {/* Challenge — high, inside the coloured peak */}
-            <text x={MX(500)} y="220" textAnchor="middle" fill="#FFFFFF" fontSize="20" fontWeight="700" letterSpacing="2.5" opacity="0.95">CHALLENGE</text>
-            <text x={MX(500)} y="300" textAnchor="middle" fill="#FFFFFF" fontSize="68" fontWeight="700" letterSpacing="-1">78</text>
-            <text x={MX(500)} y="342" textAnchor="middle" fill="#FFFFFF" fontSize="22" fontWeight="600" opacity="0.92">High</text>
-
-            {/* Safety — low, on the neutral left leg */}
-            <text x={MX(700)} y="650" textAnchor="middle" fill="#5C574F" fontSize="24" fontWeight="700" letterSpacing="2">SAFETY</text>
-            <text x={MX(700)} y="716" textAnchor="middle" fill="#3D3833" fontSize="56" fontWeight="700" letterSpacing="-1">27</text>
-            <text x={MX(700)} y="750" textAnchor="middle" fill="#6A6560" fontSize="22" fontWeight="600">Very Low</text>
-
-            {/* Play — low, on the neutral right leg */}
-            <text x={MX(280)} y="650" textAnchor="middle" fill="#5C574F" fontSize="24" fontWeight="700" letterSpacing="2">PLAY</text>
-            <text x={MX(280)} y="716" textAnchor="middle" fill="#3D3833" fontSize="56" fontWeight="700" letterSpacing="-1">41</text>
-            <text x={MX(280)} y="750" textAnchor="middle" fill="#6A6560" fontSize="22" fontWeight="600">Low</text>
+            {/* ── Labels only: the numbers were introduced in the domain section. ── */}
+            <text x={MX(500)} y="276" textAnchor="middle" fill="#FFFFFF" fontSize="22" fontWeight="800" letterSpacing="3.5" opacity="0.96">CHALLENGE</text>
+            <text x={MX(700)} y="705" textAnchor="middle" fill="#5C574F" fontSize="22" fontWeight="800" letterSpacing="3">SAFETY</text>
+            <text x={MX(280)} y="705" textAnchor="middle" fill="#5C574F" fontSize="22" fontWeight="800" letterSpacing="3">PLAY</text>
           </svg>
         </div>
       </div>

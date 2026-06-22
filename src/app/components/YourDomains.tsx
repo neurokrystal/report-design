@@ -170,8 +170,12 @@ export function YourDomains() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -8 }}
               transition={{ duration: 0.25 }}
-              className="justify-self-center lg:justify-self-start rounded-2xl bg-[#F4F1EA] px-5 py-4 max-w-[280px]"
+              className="relative justify-self-center lg:justify-self-start rounded-2xl bg-[#F4F1EA] px-5 py-4 max-w-[280px]"
             >
+              <span
+                className="absolute -left-2 top-6 h-4 w-4 rotate-45 bg-[#F4F1EA]"
+                aria-hidden="true"
+              />
               <p style={{ color: '#4D4945', fontSize: '13.5px', lineHeight: 1.6, fontWeight: 300, margin: 0 }}>
                 A dimension is a more specific reading inside a foundation. It shows where that foundation is supported, strained, expressed, or quietly compensated for.
               </p>
@@ -364,11 +368,11 @@ function DomainSymbol({
 }) {
   const symbolTransform =
     activeDomain === 'Safety'
-      ? 'rotateY(18deg) rotateX(5deg) rotateZ(-1deg) translateX(-6px) scale(1.04)'
+      ? 'rotateY(-18deg) rotateX(-5deg) rotateZ(-1deg) translateX(-6px) scale(1.055)'
       : activeDomain === 'Play'
-        ? 'rotateY(-18deg) rotateX(5deg) rotateZ(1deg) translateX(6px) scale(1.04)'
+        ? 'rotateY(18deg) rotateX(-5deg) rotateZ(1deg) translateX(6px) scale(1.055)'
         : activeDomain === 'Challenge'
-          ? 'rotateX(16deg) translateY(8px) scale(1.055)'
+          ? 'rotateX(18deg) translateY(-10px) scale(1.07)'
           : 'rotateX(0deg) rotateY(0deg) scale(1)';
 
   const groupStyle = (domain: 'Safety' | 'Play' | 'Challenge') => {
@@ -377,7 +381,8 @@ function DomainSymbol({
     return {
       transformBox: 'fill-box' as const,
       transformOrigin: 'center',
-      transition: 'filter 650ms ease, opacity 650ms ease',
+      transition: 'filter 650ms ease, opacity 650ms ease, transform 650ms cubic-bezier(0.22, 1, 0.36, 1)',
+      transform: active ? 'translateZ(28px) scale(1.025)' : 'translateZ(0) scale(1)',
       filter: active ? 'brightness(1.08) saturate(1.12) drop-shadow(0 12px 10px rgba(26,22,20,0.14))' : undefined,
       opacity: activeDomain && !active ? 0.72 : 1,
       cursor: 'pointer',
@@ -478,6 +483,7 @@ function DimensionColumn({ domain, index }: { domain: DomainEntry; index: number
           <DimensionCard
             key={dim.name}
             dimension={dim}
+            domainKey={domain.key}
             domainColor={domain.color}
             index={index * 2 + i}
           />
@@ -546,18 +552,35 @@ function DomainMarker({
   );
 }
 
-function DimensionCard({ dimension: dim, domainColor, index }: { dimension: DimEntry; domainColor: string; index: number }) {
+function DimensionCard({ dimension: dim, domainKey, domainColor, index }: { dimension: DimEntry; domainKey: string; domainColor: string; index: number }) {
+  const targetId = `${domainKey.toLowerCase()}-${dim.name.toLowerCase()}`;
   return (
     <motion.div
+      role="button"
+      tabIndex={0}
+      onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }}
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
+      whileHover={{
+        y: -4,
+        scale: 1.006,
+        backgroundColor: `${domainColor}07`,
+        borderColor: `${domainColor}38`,
+        transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+      }}
       transition={{
         opacity: { delay: index * 0.08, duration: 0.4 },
         scale: { delay: index * 0.08, duration: 0.4 },
         y: { delay: index * 0.08, duration: 0.4 },
       }}
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E3DD' }}
-      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-[0_16px_36px_-30px_rgba(26,22,20,0.48)] hover:z-20 transition-shadow duration-300 group relative overflow-hidden transform-gpu"
+      className="bg-white border border-[#E5E3DD] rounded-[1.5rem] flex flex-col min-h-[420px] shadow-sm hover:shadow-[0_18px_42px_-32px_rgba(26,22,20,0.42)] hover:z-20 transition-shadow duration-300 group relative overflow-hidden transform-gpu cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       {/* Domain accent — the colour means "this dimension belongs to this domain" */}
       <div className="h-1 w-full" style={{ backgroundColor: domainColor }} />

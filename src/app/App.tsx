@@ -7,6 +7,7 @@ import { DomainSection } from './components/DomainSection';
 import { HowFoundationsWork } from './components/HowFoundationsWork';
 import { FoundationDirection } from './components/FoundationDirection';
 import { WhenReady } from './components/WhenReady';
+import { DesignNotes } from './components/DesignNotes';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('orientation');
@@ -73,6 +74,10 @@ export default function App() {
 
           <div id="when-ready" className="mt-28">
             <WhenReady />
+          </div>
+
+          <div id="design-notes" className="mt-28">
+            <DesignNotes />
           </div>
         </div>
       </main>

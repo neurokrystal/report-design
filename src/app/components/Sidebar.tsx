@@ -38,6 +38,7 @@ const sections = [
   { id: 'foundations-together', label: '7. Foundations Together' },
   { id: 'direction',            label: '8. Your Direction' },
   { id: 'when-ready',           label: "9. When You're Ready" },
+  { id: 'design-notes',         label: '10. Design Notes' },
 ];
 
 export function Sidebar({ activeSection, onNavigate }: SidebarProps) {

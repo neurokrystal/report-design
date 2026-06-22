@@ -324,18 +324,16 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
               <p className="mt-5 max-w-sm text-[#4D4945] leading-relaxed" style={{ fontWeight: 300 }}>
                 Alignment compares what is felt inside with what is expressed outside, then shows the distance between the two.
               </p>
-              <AlignmentMeaningStrip domain={domain} felt={felt} expressed={expressed} />
             </div>
           </div>
 
           <DomainAlignmentBridge overall={score} felt={felt} expressed={expressed} color={color} />
         </div>
+        <AlignmentContextRow domain={domain} felt={felt} expressed={expressed} />
         <AlignmentInsights
           domain={domain}
           color={color}
           alignmentText={content.alignmentText}
-          feltText={content.feltText}
-          expressedText={content.expressedText}
           alignmentExtended={content.alignmentExtended}
           felt={felt}
           expressed={expressed}
@@ -815,46 +813,55 @@ function DomainAlignmentBridge({ overall, felt, expressed, color }: {
   const gap = expressed - felt;
   const absoluteGap = Math.abs(gap);
   const alignmentLabel = absoluteGap <= 4 ? 'Very aligned' : absoluteGap <= 9 ? 'Slightly misaligned' : absoluteGap <= 14 ? 'Misaligned' : 'Very misaligned';
-  const gapLines = Math.max(1, Math.abs(measurementLineCount(expressed) - measurementLineCount(felt)));
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] border bg-white p-7" style={{ borderColor: `${color}24` }}>
+    <div className="relative overflow-hidden rounded-[28px] border bg-white p-7 md:p-8" style={{ borderColor: `${color}24` }}>
       <div
         className="absolute -right-20 -top-24 h-72 w-72 rounded-full pointer-events-none"
         style={{ background: `radial-gradient(circle, ${FLAG_COLOR}12 0%, transparent 70%)` }}
       />
       <div className="relative">
-        <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 items-end">
+        <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end">
           <VolumeColumn label="Overall" value={overall} color="#6F6A64" />
           <VolumeColumn label="Felt" value={felt} color={FELT_COLOR} />
           <VolumeColumn label="Expressed" value={expressed} color={EXPRESSED_COLOR} />
-          <GapColumn value={absoluteGap} label={alignmentLabel} lines={gapLines} />
+          <GapColumn value={absoluteGap} label={alignmentLabel} felt={felt} expressed={expressed} />
         </div>
       </div>
     </div>
   );
 }
 
-function AlignmentMeaningStrip({ domain, felt, expressed }: {
+function AlignmentContextRow({ domain, felt, expressed }: {
   domain: 'Safety' | 'Play' | 'Challenge';
   felt: number;
   expressed: number;
 }) {
+  const upward = expressed > felt;
+  const same = expressed === felt;
   return (
-    <div className="mt-7 grid gap-3">
+    <div className="mt-6 grid gap-4 md:grid-cols-3">
       <AlignmentMeaningCard
-        label={`Felt ${domain}`}
-        body="The inside reading: what is actually available in your system."
+        label="Felt"
+        body={`What is actually available inside your ${domain} system.`}
         value={felt}
         color={FELT_COLOR}
         mode="felt"
       />
       <AlignmentMeaningCard
-        label={`Expressed ${domain}`}
-        body="The outside reading: what other people can see, receive, or infer."
+        label="Expressed"
+        body={`What other people can see, receive, or infer from your ${domain}.`}
         value={expressed}
         color={EXPRESSED_COLOR}
         mode="expressed"
+      />
+      <MaskingDirectionCard
+        direction={same ? 'Matched signal' : upward ? 'Upward masking' : 'Downward masking'}
+        body={same
+          ? 'What you show is closely matched to what you feel.'
+          : upward
+            ? `You are showing more ${domain} than you are actually feeling inside.`
+            : `You are showing less ${domain} than you are actually carrying inside.`}
       />
     </div>
   );
@@ -868,7 +875,7 @@ function AlignmentMeaningCard({ label, body, value, color, mode = 'felt' }: {
   mode?: 'felt' | 'expressed';
 }) {
   return (
-    <div className="relative overflow-hidden rounded-[20px] border bg-white/82 p-4 shadow-[0_18px_42px_-38px_rgba(0,0,0,0.45)]" style={{ borderColor: `${color}22` }}>
+    <div className="relative overflow-hidden rounded-[20px] bg-white/84 p-4 shadow-[0_18px_42px_-38px_rgba(0,0,0,0.45)]">
       <div className="flex items-center gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[16px]" style={{ backgroundColor: mode === 'felt' ? '#F1EFE9' : '#EEF3F7' }}>
           <AlignmentSignalIcon mode={mode} color={color} />
@@ -896,29 +903,44 @@ function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed'; colo
   const isFelt = mode === 'felt';
   return (
     <svg viewBox="0 0 48 48" className="h-10 w-10" aria-hidden="true">
-      <circle cx="24" cy="24" r="15" fill="none" stroke={isFelt ? '#FFFFFF' : color} strokeWidth="8" />
-      <circle cx="24" cy="24" r="8" fill={isFelt ? color : '#FFFFFF'} />
+      <circle cx="24" cy="24" r="16" fill={isFelt ? '#FFFFFF' : color} />
+      <circle cx="24" cy="24" r="7.5" fill={isFelt ? color : '#FFFFFF'} />
     </svg>
   );
 }
 
-function measurementLineCount(value: number) {
-  return Math.max(1, Math.min(22, Math.round(value / 4.5)));
+function MaskingDirectionCard({ direction, body }: { direction: string; body: string }) {
+  const upward = direction === 'Upward masking';
+  const Icon = upward ? ArrowUpRight : direction === 'Downward masking' ? ArrowDownRight : Compass;
+  return (
+    <div className="relative overflow-hidden rounded-[20px] bg-[#FFF8FA] p-4 shadow-[0_18px_42px_-38px_rgba(0,0,0,0.45)]">
+      <div className="flex items-center gap-4">
+        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[16px] bg-[#F7E7ED]" style={{ color: FLAG_COLOR }}>
+          <Icon size={25} strokeWidth={2.1} />
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color: FLAG_COLOR }}>Masking direction</p>
+          <p className="mt-1 text-sm leading-snug text-[#4D4945]" style={{ fontWeight: 300 }}>{direction}</p>
+        </div>
+      </div>
+      <p className="mt-4 text-sm leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>{body}</p>
+    </div>
+  );
 }
 
 function VolumeColumn({ label, value, color }: { label: string; value: number; color: string }) {
-  const segments = 22;
-  const filled = measurementLineCount(value);
+  const segments = 12;
+  const filled = Math.max(1, Math.min(segments, Math.round((value / 100) * segments)));
   return (
     <div className="flex flex-col items-center">
       <p className="mb-3 text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
-      <div className="flex h-48 flex-col-reverse justify-start gap-1.5">
+      <div className="flex h-56 flex-col-reverse justify-start gap-2">
         {Array.from({ length: segments }).map((_, index) => {
           const on = index < filled;
           return (
             <motion.div
               key={index}
-              className="h-3 w-14 rounded-full"
+              className="h-3.5 w-16 rounded-full"
               style={{ backgroundColor: on ? color : '#E7E3DB' }}
               initial={{ opacity: 0.25, scaleX: 0.65 }}
               whileInView={{ opacity: on ? 1 : 0.6, scaleX: 1 }}
@@ -933,9 +955,12 @@ function VolumeColumn({ label, value, color }: { label: string; value: number; c
   );
 }
 
-function GapColumn({ value, label, lines }: { value: number; label: string; lines: number }) {
-  const segments = 8;
-  const filled = Math.max(1, Math.min(segments, lines));
+function GapColumn({ value, label, felt, expressed }: { value: number; label: string; felt: number; expressed: number }) {
+  const feltTop = 100 - felt;
+  const expressedTop = 100 - expressed;
+  const top = Math.min(feltTop, expressedTop);
+  const height = Math.max(12, Math.abs(expressedTop - feltTop));
+  const upward = expressed > felt;
   return (
     <motion.div
       className="relative flex flex-col items-center rounded-[22px] bg-[#FFF8FA] px-4 py-5"
@@ -944,34 +969,53 @@ function GapColumn({ value, label, lines }: { value: number; label: string; line
       transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
     >
       <p className="text-[10px] uppercase tracking-[0.15em] font-bold" style={{ color: FLAG_COLOR }}>Gap</p>
-      <div className="my-3 flex h-48 flex-col-reverse justify-start gap-1.5">
-        {Array.from({ length: segments }).map((_, index) => {
-          const on = index < filled;
-          return (
-          <motion.div
-            key={index}
-            className="h-3 w-14 rounded-full"
-              style={{ backgroundColor: on ? FLAG_COLOR : '#F1DCE4' }}
-              initial={{ opacity: 0.25, scaleX: 0.55 }}
-              whileInView={{ opacity: on ? 1 : 0.48, scaleX: 1 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.22, delay: index * 0.018 }}
-          />
-          );
-        })}
+      <div className="relative my-3 h-56 w-24">
+        <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-[#F2DCE4]" />
+        <motion.div
+          className="absolute left-1/2 w-14 -translate-x-1/2 rounded-full"
+          style={{ top: `${feltTop}%`, height: 4, backgroundColor: FELT_COLOR }}
+          initial={{ scaleX: 0.4, opacity: 0 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.35 }}
+        />
+        <motion.div
+          className="absolute left-1/2 w-14 -translate-x-1/2 rounded-full"
+          style={{ top: `${expressedTop}%`, height: 4, backgroundColor: EXPRESSED_COLOR }}
+          initial={{ scaleX: 0.4, opacity: 0 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.35, delay: 0.08 }}
+        />
+        <motion.div
+          className="absolute left-1/2 w-10 -translate-x-1/2 rounded-full"
+          style={{
+            top: `${top}%`,
+            height: `${height}%`,
+            background: `linear-gradient(${upward ? 'to top' : 'to bottom'}, ${FLAG_COLOR}55, ${FLAG_COLOR}10)`,
+            border: `1px solid ${FLAG_COLOR}38`,
+          }}
+          initial={{ scaleY: 0.2, opacity: 0 }}
+          whileInView={{ scaleY: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ backgroundColor: FLAG_COLOR }} />
+          <span className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rounded-full" style={{ backgroundColor: FLAG_COLOR }} />
+        </motion.div>
+        <div className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[0_16px_35px_-28px_rgba(0,0,0,0.5)]">
+          <span className="text-[#15110F] leading-none" style={{ fontFamily: SERIF, fontSize: 33 }}>{value}</span>
+        </div>
       </div>
-      <p className="text-[#15110F] leading-none" style={{ fontFamily: SERIF, fontSize: 35 }}>{value}</p>
-      <p className="mt-2 text-[9px] uppercase tracking-[0.14em] font-bold text-center" style={{ color: FLAG_COLOR }}>{label}</p>
+      <p className="mt-1 text-[9px] uppercase tracking-[0.14em] font-bold text-center" style={{ color: FLAG_COLOR }}>{label}</p>
     </motion.div>
   );
 }
 
-function AlignmentInsights({ domain, color, alignmentText, feltText, expressedText, alignmentExtended, felt, expressed }: {
+function AlignmentInsights({ domain, color, alignmentText, alignmentExtended, felt, expressed }: {
   domain: 'Safety' | 'Play' | 'Challenge';
   color: string;
   alignmentText: string;
-  feltText: string;
-  expressedText: string;
   alignmentExtended: string | null;
   felt: number;
   expressed: number;
@@ -979,84 +1023,69 @@ function AlignmentInsights({ domain, color, alignmentText, feltText, expressedTe
   const gap = expressed - felt;
   const absoluteGap = Math.abs(gap);
   const alignmentLabel = absoluteGap <= 4 ? 'Very aligned' : absoluteGap <= 9 ? 'Slightly misaligned' : absoluteGap <= 14 ? 'Misaligned' : 'Very misaligned';
-  const items = [
-    {
-      label: 'What this means',
-      body: alignmentText,
-      Icon: Gauge,
-    },
-    {
-      label: 'How this shows up',
-      body: `Inside: ${firstSentence(feltText)} Outside: ${firstSentence(expressedText)}`,
-      Icon: Eye,
-    },
-    {
-      label: 'The impact',
-      body: alignmentExtended || fallbackImpact(domain),
-      Icon: Activity,
-    },
-  ];
+  const maskingLabel = gap > 0 ? 'Upward masking' : gap < 0 ? 'Downward masking' : 'Matched signal';
+  const costPosition = Math.min(94, Math.max(8, (absoluteGap / 20) * 100));
 
   return (
     <div className="mt-9">
-      <div className="mb-5 max-w-3xl">
-        <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(1.65rem, 2.6vw, 2.15rem)', lineHeight: 1.08, letterSpacing: '-0.028em', margin: 0, color: '#15110F' }}>
+      <div className="grid gap-8 rounded-[28px] bg-[#FBFAF7] p-6 md:p-8 lg:grid-cols-[0.92fr_1.08fr]">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: FLAG_COLOR }}>{maskingLabel}</p>
+          <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.75rem, 3vw, 2.35rem)', lineHeight: 1.06, letterSpacing: '-0.03em', marginBottom: 0, color: '#15110F' }}>
           Your Alignment for {domain}: {alignmentLabel}
-        </h3>
-      </div>
-      <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
+          </h3>
+          <p className="mt-5 text-[16px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{alignmentText}</p>
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.45 }}
-          className="relative p-0 lg:pr-6 cursor-default"
+          transition={{ duration: 0.45, delay: 0.08 }}
+          className="relative overflow-hidden rounded-[24px] bg-white p-6 shadow-[0_22px_48px_-42px_rgba(0,0,0,0.5)]"
         >
-          <p className="text-[17px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{items[0].body}</p>
-        </motion.div>
-
-        <div className="grid gap-5">
-          {items.slice(1).map(({ label, body, Icon }, index) => (
-        <motion.div
-          key={label}
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.45, delay: (index + 1) * 0.08 }}
-          whileHover={{ y: -4 }}
-              className="group/insight relative grid overflow-hidden rounded-[24px] border bg-white cursor-default sm:grid-cols-[118px_1fr]"
-          style={{ borderColor: `${color}22` }}
-        >
-              <div className="relative grid min-h-[128px] place-items-center overflow-hidden" style={{ backgroundColor: index === 0 ? '#EEF8F4' : '#F3F7FB', color: index === 1 ? FLAG_COLOR : color }}>
+          <div className="mb-7 flex items-center justify-between gap-5">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.15em] font-bold text-[#8B8682]">When the gap becomes costly</p>
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+                Mild gaps are normal. This becomes important when the distance is wide enough that maintaining the presentation starts costing energy.
+              </p>
+            </div>
             <motion.div
-                  className="absolute h-20 w-20 rounded-[42%]"
-                  style={{ backgroundColor: index === 1 ? `${FLAG_COLOR}14` : `${color}18` }}
-              animate={{ rotate: [0, 8, -6, 0], scale: [1, 1.06, 1] }}
-              transition={{ duration: 6 + index, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <motion.div
-                  className="relative grid h-16 w-16 place-items-center rounded-full bg-white/70 shadow-[0_18px_40px_-32px_rgba(0,0,0,0.45)]"
-              whileHover={{ scale: 1.08 }}
-              transition={{ type: 'spring', stiffness: 360, damping: 24 }}
+              className="grid h-16 w-16 shrink-0 place-items-center rounded-full"
+              style={{ backgroundColor: `${FLAG_COLOR}12`, color: FLAG_COLOR }}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
             >
-                  <Icon size={38} strokeWidth={1.7} />
+              <Activity size={34} strokeWidth={1.8} />
             </motion.div>
           </div>
-          <div className="p-6">
-                <p className="text-[12px] uppercase tracking-[0.15em] font-bold" style={{ color: index === 1 ? FLAG_COLOR : color }}>{label}</p>
-            <p className="mt-3 text-[15px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>{body}</p>
+
+          <div className="relative pb-8 pt-3">
+            <div className="h-2 rounded-full bg-[#EDEAE3]">
+              <div className="h-full rounded-full" style={{ width: '45%', backgroundColor: `${color}55` }} />
+              <div className="-mt-2 ml-[45%] h-2 rounded-full" style={{ width: '55%', backgroundColor: `${FLAG_COLOR}30` }} />
+            </div>
+            <motion.div
+              className="absolute top-0 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full bg-white text-sm font-bold shadow-[0_16px_35px_-26px_rgba(0,0,0,0.6)]"
+              style={{ left: `${costPosition}%`, color: FLAG_COLOR, border: `2px solid ${FLAG_COLOR}` }}
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              {absoluteGap}
+            </motion.div>
+            <div className="mt-8 flex justify-between gap-4 text-[10px] uppercase tracking-[0.13em] font-bold text-[#9B958C]">
+              <span>Everyday social adjustment</span>
+              <span className="text-right" style={{ color: FLAG_COLOR }}>Structural cost</span>
+            </div>
           </div>
+
+          <p className="mt-3 text-[15px] text-[#1A1614] leading-relaxed" style={{ fontWeight: 300 }}>
+            {alignmentExtended || fallbackImpact(domain)}
+          </p>
         </motion.div>
-      ))}
-        </div>
       </div>
     </div>
   );
-}
-
-function firstSentence(text: string) {
-  const match = text.match(/.*?[.!?](\s|$)/);
-  return (match ? match[0] : text).trim();
 }
 
 function DomainDimensionCard({ dim, domain, color, tint, index, active, onActive, onClear }: {
@@ -1211,19 +1240,26 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
           </h3>
 
           <div className="relative mt-10 h-72">
+            <motion.div
+              className="absolute right-4 -top-8 z-20"
+              animate={{ y: [0, -5, 0], scale: [1, 1.035, 1] }}
+              transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <RadialScore value={dim.score} color={color} size={112} />
+            </motion.div>
             <SafetyDimensionSymbol selected={dim.name} value={dim.score} color={color} />
           </div>
         </div>
 
         <div>
-          <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center justify-start">
             <div className="inline-flex rounded-[24px] bg-[#F7F5EF] px-5 py-4">
               <div>
-              <p className="text-[10px] uppercase tracking-[0.15em] font-bold text-[#8B8682]">Your level</p>
-              <p className="mt-1 text-[#15110F]" style={{ fontFamily: SERIF, fontSize: 34, lineHeight: 1 }}>{dim.band}</p>
+                <p className="text-[10px] uppercase tracking-[0.15em] font-bold text-[#8B8682]">Your level</p>
+                <p className="mt-1 text-[#15110F]" style={{ fontFamily: SERIF, fontSize: 34, lineHeight: 1 }}>{dim.band}</p>
+                <LevelIndicator band={dim.band} color={color} />
               </div>
             </div>
-            <RadialScore value={dim.score} color={color} size={112} />
           </div>
           <p className="mt-7 text-[#1A1614] leading-relaxed text-[16px]" style={{ fontWeight: 300 }}>{dim.lead}</p>
         </div>
@@ -1258,36 +1294,35 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
 
 function SafetyDimensionSymbol({ selected, value, color }: { selected: string; value: number; color: string }) {
   const isSelf = selected === 'Self';
-  const circle = isSelf
-    ? { cx: 94, cy: 176, r: 68 }
-    : { cx: 210, cy: 176, r: 68 };
+  const accentPath = isSelf
+    ? 'M42 222 C28 184, 39 140, 72 113 C104 87, 147 90, 178 116'
+    : 'M150 116 C184 89, 228 91, 260 120 C294 151, 300 199, 276 236';
   return (
     <div className="absolute inset-0">
       <svg viewBox="0 0 320 280" className="h-full w-full overflow-visible" aria-hidden="true">
-        <circle
-          cx={circle.cx}
-          cy={circle.cy}
-          r={circle.r}
+        <motion.path
+          d={accentPath}
           fill="none"
           stroke={color}
-          strokeWidth="30"
-          opacity="0.08"
+          strokeWidth="28"
+          strokeLinecap="round"
+          opacity="0.09"
+          animate={{ opacity: [0.07, 0.13, 0.07] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.circle
-          cx={circle.cx}
-          cy={circle.cy}
-          r={circle.r}
+        <motion.path
+          d={accentPath}
           fill="none"
           stroke={color}
-          strokeWidth="30"
+          strokeWidth="14"
           strokeLinecap="round"
           pathLength="1"
           strokeDasharray="1"
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: value / 100 }}
+          initial={{ strokeDashoffset: 1 }}
+          whileInView={{ strokeDashoffset: 1 - value / 100 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          opacity="0.18"
+          opacity="0.28"
         />
         <g transform="translate(262 18) scale(-0.24 0.24)" opacity="0.94" strokeLinejoin="round">
           <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={isSelf ? color : '#F4F1EA'} stroke={isSelf ? '#2C7C70' : '#BFB8AD'} strokeWidth="8" opacity={isSelf ? 0.88 : 0.46} />
@@ -1302,6 +1337,40 @@ function SafetyDimensionSymbol({ selected, value, color }: { selected: string; v
   );
 }
 
+function LevelIndicator({ band, color }: { band: string; color: string }) {
+  const normalized = band.toLowerCase();
+  const active =
+    normalized.includes('very') ? 1 :
+    normalized === 'low' ? 2 :
+    normalized.includes('almost') ? 3 :
+    normalized.includes('balanced') ? 4 :
+    5;
+
+  return (
+    <div className="mt-3 flex items-end gap-1.5" aria-hidden="true">
+      {Array.from({ length: 5 }).map((_, index) => {
+        const on = index < active;
+        return (
+          <motion.span
+            key={index}
+            className="block rounded-full"
+            style={{
+              width: index === active - 1 ? 18 : 10,
+              height: 5 + index * 2,
+              backgroundColor: on ? color : '#DDD7CE',
+              opacity: on ? 0.95 : 0.72,
+            }}
+            initial={{ scaleY: 0.4, opacity: 0 }}
+            whileInView={{ scaleY: 1, opacity: on ? 0.95 : 0.72 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.28, delay: index * 0.04 }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function SixDimensionScale({ active, color }: { active: string; color: string }) {
   return (
     <div className="relative overflow-hidden rounded-[24px] border bg-white p-6" style={{ borderColor: `${color}22` }}>
@@ -1309,17 +1378,17 @@ function SixDimensionScale({ active, color }: { active: string; color: string })
         <p className="text-[12px] uppercase tracking-[0.16em] font-bold text-[#1A1614]">Your six dimensions</p>
         <p className="text-[10px] uppercase tracking-[0.13em] font-bold text-[#A09A91]">Balance line</p>
       </div>
-      <div className="relative h-64">
+      <div className="relative h-72">
         <div className="absolute left-0 right-0 top-1/2 border-t border-dashed border-[#CFC8BE]" />
-        <div className="absolute inset-0 grid grid-cols-6 gap-5 items-end">
+        <div className="absolute inset-0 grid grid-cols-6 gap-6 items-end">
           {allDimensionScores.map((item) => {
             const selected = item.name === active;
             return (
               <div key={item.name} className="flex h-full flex-col items-center justify-end gap-3">
-                <div className="relative flex h-48 w-full items-end justify-center">
-                  <div className="absolute bottom-0 h-full w-7 rounded-full bg-[#F1EEE8]" />
+                <div className="relative flex h-56 w-full items-end justify-center">
+                  <div className="absolute bottom-0 h-full w-9 rounded-full bg-[#F1EEE8]" />
                   <motion.div
-                    className="relative z-10 w-7 rounded-full"
+                    className="relative z-10 w-9 rounded-full"
                     style={{ backgroundColor: selected ? color : '#D6D0C8' }}
                     initial={{ height: 0 }}
                     whileInView={{ height: `${item.score}%` }}
