@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flag, ArrowLeft, ArrowRight, Sparkles, Wrench } from 'lucide-react';
+import { Flag, ArrowLeft, ArrowRight, Sparkles, Sprout } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 import lowFuture from "../../imports/10__Low_Future.svg";
@@ -16,6 +16,7 @@ import highPerception from "../../imports/50__Perception.svg";
 import highSelf from "../../imports/50__Self.svg";
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
+const NAV_ORANGE = '#FF5A1F';
 
 // Domain palette per brief
 const DC = '#E8551D'; // Challenge
@@ -126,22 +127,28 @@ export function YourDomains() {
   const [view, setView] = useState<'domains' | 'dimensions'>('domains');
   const [activeDomain, setActiveDomain] = useState<string | null>(null);
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
-  const [showFlagReturn, setShowFlagReturn] = useState(false);
+  const [returnTarget, setReturnTarget] = useState<{ id: string; label: string } | null>(null);
 
-  const returnToFlags = () => {
-    document.getElementById('flagged-attention')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setShowFlagReturn(false);
+  const navigateWithReturn = (targetId: string, returnId: string, returnLabel: string, block: ScrollLogicalPosition = 'start') => {
+    setReturnTarget({ id: returnId, label: returnLabel });
+    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block });
+  };
+
+  const returnToOrigin = () => {
+    if (!returnTarget) return;
+    document.getElementById(returnTarget.id)?.scrollIntoView({ behavior: 'smooth', block: returnTarget.id === 'flagged-attention' ? 'center' : 'start' });
+    setReturnTarget(null);
   };
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-16 relative z-0">
       {/* Header */}
       <div>
-        <p style={{ color: '#DC4C0C', fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>02</p>
+        <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>02 Overview</p>
         <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
           Your Domains
         </h1>
-        <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px', marginBottom: '32px' }} />
+        <div style={{ width: '40px', height: '3px', backgroundColor: NAV_ORANGE, marginTop: '30px', marginBottom: '32px' }} />
       </div>
 
       {/* Toggle */}
@@ -192,7 +199,7 @@ export function YourDomains() {
               className="relative justify-self-center lg:justify-self-start rounded-2xl bg-[#F4F1EA] px-5 py-4 max-w-[280px]"
             >
               <span
-                className="absolute -left-3 top-[2.15rem] h-5 w-5 -translate-y-1/2 rotate-45 bg-[#F4F1EA]"
+                className="absolute -left-3 top-1/2 h-5 w-5 -translate-y-1/2 rotate-45 bg-[#F4F1EA]"
                 aria-hidden="true"
               />
               <p style={{ color: '#4D4945', fontSize: '13.5px', lineHeight: 1.6, fontWeight: 300, margin: 0 }}>
@@ -263,7 +270,7 @@ export function YourDomains() {
               </div>
               <div className="space-y-6">
                 {domainData.map((d, i) => (
-                  <DomainCard key={d.key} domain={d} index={i} />
+                  <DomainCard key={d.key} domain={d} index={i} onNavigate={navigateWithReturn} />
                 ))}
               </div>
             </motion.div>
@@ -278,7 +285,7 @@ export function YourDomains() {
             >
               <div className="grid md:grid-cols-3 gap-6 items-start">
                 {domainData.map((domain, domainIndex) => (
-                  <DimensionColumn key={domain.key} domain={domain} index={domainIndex} />
+                  <DimensionColumn key={domain.key} domain={domain} index={domainIndex} onNavigate={navigateWithReturn} />
                 ))}
               </div>
               <DimensionComparisonPanel />
@@ -338,24 +345,24 @@ export function YourDomains() {
               text={f.text}
               linkLabel={f.linkLabel}
               targetId={f.targetId}
-              onNavigate={() => setShowFlagReturn(true)}
+              onNavigate={() => navigateWithReturn(f.targetId, 'flagged-attention', 'Back to your attention')}
             />
           ))}
         </div>
       </div>
 
       <AnimatePresence>
-        {showFlagReturn && (
+        {returnTarget && (
           <motion.button
             type="button"
-            onClick={returnToFlags}
+            onClick={returnToOrigin}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
             className="fixed bottom-7 right-7 z-50 inline-flex items-center gap-2 rounded-full bg-[#1A1614] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_-24px_rgba(26,22,20,0.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/40"
           >
             <ArrowLeft size={16} strokeWidth={2.4} />
-            Back to flags
+            {returnTarget.label}
           </motion.button>
         )}
       </AnimatePresence>
@@ -363,16 +370,17 @@ export function YourDomains() {
   );
 }
 
-function DomainCard({ domain: d, index }: { domain: DomainEntry; index: number }) {
+function DomainCard({ domain: d, index, onNavigate }: { domain: DomainEntry; index: number; onNavigate: (targetId: string, returnId: string, returnLabel: string) => void }) {
+  const targetId = d.key.toLowerCase();
   return (
     <motion.div
       role="button"
       tabIndex={0}
-      onClick={() => document.getElementById(d.key.toLowerCase())?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+      onClick={() => onNavigate(targetId, 'your-domains', 'Back to your domains')}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
-          document.getElementById(d.key.toLowerCase())?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          onNavigate(targetId, 'your-domains', 'Back to your domains');
         }
       }}
       initial={{ opacity: 0, x: 20 }}
@@ -532,7 +540,7 @@ function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; 
   );
 }
 
-function DimensionColumn({ domain, index }: { domain: DomainEntry; index: number }) {
+function DimensionColumn({ domain, index, onNavigate }: { domain: DomainEntry; index: number; onNavigate: (targetId: string, returnId: string, returnLabel: string) => void }) {
   const dimensionOrder: Record<string, string[]> = {
     Safety: ['Self', 'Others'],
     Play: ['Senses', 'Perception'],
@@ -568,6 +576,9 @@ function DimensionColumn({ domain, index }: { domain: DomainEntry; index: number
             domainKey={domain.key}
             domainColor={domain.color}
             index={index * 2 + i}
+            onNavigate={(targetId) => {
+              onNavigate(targetId, 'your-domains', 'Back to your dimensions');
+            }}
           />
         ))}
       </div>
@@ -634,17 +645,17 @@ function DomainMarker({
   );
 }
 
-function DimensionCard({ dimension: dim, domainKey, domainColor, index }: { dimension: DimEntry; domainKey: string; domainColor: string; index: number }) {
+function DimensionCard({ dimension: dim, domainKey, domainColor, index, onNavigate }: { dimension: DimEntry; domainKey: string; domainColor: string; index: number; onNavigate: (targetId: string) => void }) {
   const targetId = `${domainKey.toLowerCase()}-${dim.name.toLowerCase()}`;
   return (
     <motion.div
       role="button"
       tabIndex={0}
-      onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+      onClick={() => onNavigate(targetId)}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
-          document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          onNavigate(targetId);
         }
       }}
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -754,18 +765,18 @@ function DimensionComparisonPanel() {
           <div>
             <p className="text-[12px] uppercase tracking-[0.17em] font-bold text-[#1A1614]">Your six dimensions</p>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#6F6A64]">
-              These six readings show where your profile is working with more ease and where it needs the most attention. Higher, steadier dimensions can carry the system; lower ones show where growth would give the whole shape more support.
+              These six readings show where your profile has more support and where strengthening one dimension would help the whole shape. Higher, steadier dimensions can carry you; lower ones point to the foundation that would most reward attention.
             </p>
           </div>
         </div>
-        <div className="relative h-72">
+        <div className="relative h-64">
           <div className="absolute inset-0 grid grid-cols-6 gap-5 items-end">
             {dims.map((dim) => (
-              <div key={dim.name} className="flex h-full flex-col items-center justify-end gap-4">
+              <motion.div key={dim.name} className="group flex h-full flex-col items-center justify-end gap-4" whileHover={{ y: -6 }} transition={{ type: 'spring', stiffness: 420, damping: 34 }}>
                 <div className="relative flex h-48 w-full items-end justify-center">
-                  <div className="absolute bottom-0 h-full w-8 rounded-full bg-[#F1EEE8]" />
+                  <div className="absolute bottom-0 h-full w-9 rounded-full bg-[#F1EEE8] transition-colors duration-300 group-hover:bg-[#EAE4DA]" />
                   <motion.div
-                    className="relative z-10 w-8 rounded-full"
+                    className="relative z-10 w-9 rounded-full transition-[filter] duration-300 group-hover:brightness-110"
                     style={{ backgroundColor: dim.domainColor }}
                     initial={{ height: 0 }}
                     whileInView={{ height: `${dim.score}%` }}
@@ -776,22 +787,22 @@ function DimensionComparisonPanel() {
                 <div className="text-center">
                   <p className="text-[11px] uppercase tracking-[0.08em] font-bold" style={{ color: dim.domainColor }}>{dim.name}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
       <div className="grid gap-4 content-center">
-        <DimensionNote title="Working best" dim={mostResourced} />
-        <DimensionNote title="Needs most work" dim={mostStrained} />
+        <DimensionNote title="Strongest support" dim={mostResourced} />
+        <DimensionNote title="Needs more support" dim={mostStrained} />
       </div>
     </div>
   );
 }
 
 function DimensionNote({ title, dim }: { title: string; dim: DimEntry & { domain: string; domainColor: string } }) {
-  const isResource = title === 'Working best';
-  const Icon = isResource ? Sparkles : Wrench;
+  const isResource = title === 'Strongest support';
+  const Icon = isResource ? Sparkles : Sprout;
   return (
     <div className="rounded-[22px] bg-[#F8F6F1] p-5">
       <div className="mb-4 flex items-center justify-between gap-4">
@@ -802,7 +813,7 @@ function DimensionNote({ title, dim }: { title: string; dim: DimEntry & { domain
             color: isResource ? '#DC4C0C' : '#42A68E',
             backgroundColor: isResource ? '#FFF1EA' : '#EAF7F3',
           }}
-          animate={isResource ? { scale: [1, 1.08, 1], rotate: [0, -4, 3, 0] } : { y: [0, -3, 0] }}
+          animate={isResource ? { scale: [1, 1.1, 1], rotate: [0, -5, 4, 0] } : { y: [0, -3, 0], scale: [1, 1.06, 1] }}
           transition={{ duration: isResource ? 4.2 : 3.8, repeat: Infinity, ease: 'easeInOut' }}
         >
           <Icon size={24} strokeWidth={2.1} />
@@ -836,7 +847,6 @@ function FlagItem({ number, text, linkLabel, targetId, onNavigate }: FlagItemPro
       type="button"
       onClick={() => {
         onNavigate();
-        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }}
       className="group grid w-full gap-4 rounded-2xl p-3 text-left transition-colors hover:bg-[#FDFCFA]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/35 md:grid-cols-[48px_1fr]"
       aria-label={`Go to ${linkLabel}`}

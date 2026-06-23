@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import {
   AlertCircle,
+  ArrowLeft,
   ArrowDownRight,
   ArrowUpRight,
   Activity,
@@ -31,6 +32,7 @@ import lowOthersNew from '../../imports/10_Low_Others_new.svg';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const FLAG_COLOR = '#DC4C0C';
+const NAV_ORANGE = '#FF5A1F';
 const ALIGNMENT_ACCENT = '#2F9A86';
 const ALIGNMENT_INK = '#0F473D';
 const ALIGNMENT_TRACK = '#E3DED5';
@@ -102,7 +104,11 @@ const domainContent = {
     },
     feltText: "At this level, your nervous system is rarely off duty. Even in moments that should feel safe, there is a quiet vigilance running underneath: the sense that something needs watching, that ease might not last, that you have to stay ready. Rest does not fully restore you. Your inner voice is often the loudest in the room, and it is seldom on your side. You may not call any of this anxiety, because it does not look dramatic from the outside. It is the texture you have learned to live in.",
     expressedText: "Outwardly, you express Safety at 35. You hold yourself together. You arrive on time, you meet your obligations, you keep your composure under pressure. Most people around you would describe you as steady, even reliable. What they do not see is what the steadiness costs, or that the composure is held by effort rather than ease.",
-    alignmentText: "Your felt Safety reads 22; your expressed Safety reads 35. This is a significant upward divergence. You appear more settled than you actually feel, and the gap is wide enough that it is no longer just a normal piece of social adjustment. It has become structural: your outside signal is doing more work than your inside state can honestly support. People may experience you as calm, capable, and composed, while your system is privately carrying vigilance, strain, or the sense that you have to keep yourself together. That mismatch costs energy because it asks you to maintain a version of Safety that is visible before it is fully available. Over time, this can make support harder to receive, because the people around you respond to the steadiness they can see rather than the steadiness you actually need.",
+    alignmentText: [
+      "Your felt Safety reads 22; your expressed Safety reads 35. This is a significant upward divergence. You appear more settled than you actually feel, and the gap is wide enough that it is no longer just a normal piece of social adjustment.",
+      "It has become structural: your outside signal is doing more work than your inside state can honestly support. People may experience you as calm, capable, and composed, while your system is privately carrying vigilance, strain, or the sense that you have to keep yourself together.",
+      "That mismatch costs energy because it asks you to maintain a version of Safety that is visible before it is fully available. Over time, this can make support harder to receive, because the people around you respond to the steadiness they can see rather than the steadiness you actually need.",
+    ],
     alignmentExtended: "The cost of carrying this gap is not only the energy of the performance. It is the slow erosion of the link between your inner experience and the people around you. The colleagues, friends, and partners who think you are fine are not wrong; you are showing them fine. But fine is not what is happening. The longer the gap persists, the harder it becomes to be received as you actually are.",
     isAlignmentFlagged: true,
     dimensions: [
@@ -235,15 +241,16 @@ export function DomainSection({ domain, score, band, felt, expressed, color }: D
 // ── Sub-components ──
 
 function SectionHeader({ domain }: { domain: 'Safety' | 'Play' | 'Challenge' }) {
+  const label = `${domain === 'Safety' ? '04' : domain === 'Play' ? '05' : '06'} Deep Dive`;
   return (
     <div id={`${domain.toLowerCase()}-overview`}>
-      <p style={{ color: '#DC4C0C', fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>
-        {domain === 'Safety' ? '04' : domain === 'Play' ? '05' : '06'}
+      <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>
+        {label}
       </p>
       <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', margin: 0 }}>
         {domain}
       </h1>
-      <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px' }} />
+      <div style={{ width: '40px', height: '3px', backgroundColor: NAV_ORANGE, marginTop: '30px' }} />
     </div>
   );
 }
@@ -259,7 +266,17 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
   tint: string;
 }) {
   const [activeDimension, setActiveDimension] = useState<string | null>(null);
+  const [returnTarget, setReturnTarget] = useState<{ id: string; label: string } | null>(null);
   const dimensions = content.dimensions;
+  const navigateToDimension = (id: string) => {
+    setReturnTarget({ id: `${domain.toLowerCase()}-overview`, label: `Back to ${domain} overview` });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  const returnToOrigin = () => {
+    if (!returnTarget) return;
+    document.getElementById(returnTarget.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setReturnTarget(null);
+  };
 
   return (
     <div className="space-y-16">
@@ -274,6 +291,7 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
           dimensions={dimensions}
           active={activeDimension}
           onActive={setActiveDimension}
+          onNavigateDimension={navigateToDimension}
         />
       ) : (
         <motion.div
@@ -359,11 +377,24 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
           />
         ))}
       </div>
+      {returnTarget && (
+        <motion.button
+          type="button"
+          onClick={returnToOrigin}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 16 }}
+          className="fixed bottom-7 right-7 z-50 inline-flex items-center gap-2 rounded-full bg-[#1A1614] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_-24px_rgba(26,22,20,0.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
+        >
+          <ArrowLeft size={16} strokeWidth={2.4} />
+          {returnTarget.label}
+        </motion.button>
+      )}
     </div>
   );
 }
 
-function SafetyDomainHero({ content, score, band, color, dimensions, active, onActive }: {
+function SafetyDomainHero({ content, score, band, color, dimensions, active, onActive, onNavigateDimension }: {
   content: any;
   score: number;
   band: string;
@@ -371,6 +402,7 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
   dimensions: any[];
   active: string | null;
   onActive: (dim: string | null) => void;
+  onNavigateDimension: (targetId: string) => void;
 }) {
   return (
     <motion.div className="relative py-4 md:py-8" {...reveal}>
@@ -435,7 +467,7 @@ function SafetyDomainHero({ content, score, band, color, dimensions, active, onA
               <motion.button
                 key={dim.name}
                 type="button"
-                onClick={() => document.getElementById(`safety-${dim.name.toLowerCase()}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                onClick={() => onNavigateDimension(`safety-${dim.name.toLowerCase()}`)}
                 onMouseEnter={() => onActive(dim.name)}
                 onFocus={() => onActive(dim.name)}
                 onMouseLeave={() => onActive(null)}
@@ -719,6 +751,8 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
 
 function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Play' | 'Challenge'; color: string; tint: string }) {
   if (domain !== 'Safety') return null;
+  const selfPoints = ['Managed calm', 'Earned ease', 'Always checking'];
+  const othersPoints = ['Steady presence', 'Quietly capable', 'Under pressure'];
 
   return (
     <motion.div
@@ -726,24 +760,37 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.24 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-[28px] p-6 md:p-8"
-      style={{ backgroundColor: '#FFFFFF', boxShadow: '0 20px 54px -48px rgba(26,22,20,0.5)' }}
+      className="space-y-7"
     >
       <div className="grid gap-5 md:grid-cols-2">
-        <div className="rounded-[22px] p-5" style={{ backgroundColor: tint }}>
+        <div className="rounded-[24px] p-6 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]" style={{ backgroundColor: tint }}>
           <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>How you see yourself</p>
-          <p className="mt-3 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-            You may experience your Safety as something you have to manufacture. Calm can feel earned rather than given, and ease may arrive only after you have checked, managed, or proven that nothing will go wrong.
-          </p>
+          <div className="mt-5 grid gap-3">
+            {selfPoints.map((point) => (
+              <div key={point} className="flex items-center gap-3">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-white text-[#2F9A86]">
+                  <Check size={16} strokeWidth={2.4} />
+                </span>
+                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="rounded-[22px] bg-[#FBFAF7] p-5">
+        <div className="rounded-[24px] bg-[#FBFAF7] p-6 shadow-[0_18px_46px_-42px_rgba(26,22,20,0.38)]">
           <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">How others see you</p>
-          <p className="mt-3 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-            Others are more likely to see the composure than the cost of holding it. They may read you as steady, capable, or quietly in control, without realising that your system is working harder underneath.
-          </p>
+          <div className="mt-5 grid gap-3">
+            {othersPoints.map((point) => (
+              <div key={point} className="flex items-center gap-3">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-white text-[#8B8682]">
+                  <Eye size={16} strokeWidth={2.2} />
+                </span>
+                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="mt-6 max-w-4xl space-y-4">
+      <div className="mx-auto max-w-3xl space-y-5">
         <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
           At this level, Safety is not absent, but it is conditional. It comes online when you know what is expected, when you can manage the environment, or when you have enough evidence that nothing will demand too much from you. The difficulty is that this kind of Safety does not fully rest the body. It keeps you functioning, but it does not always let you soften.
         </p>
@@ -870,7 +917,7 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
   domain: 'Safety' | 'Play' | 'Challenge';
   felt: number;
   expressed: number;
-  alignmentText: string;
+  alignmentText: string | string[];
 }) {
   const gap = expressed - felt;
   const absoluteGap = Math.abs(gap);
@@ -882,6 +929,7 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
       ? `You show more ${domain} than you feel.`
       : `You show less ${domain} than you feel.`;
   const maskingLabel = upward ? 'Upward masking' : gap < 0 ? 'Downward masking' : 'Integrated signal';
+  const alignmentParagraphs = Array.isArray(alignmentText) ? alignmentText : [alignmentText];
 
   return (
     <div className="relative mt-8 overflow-hidden rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${ALIGNMENT_ACCENT}18` }}>
@@ -897,20 +945,22 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
         <div className="grid content-center gap-3">
           <AlignmentInfoTile
             label={`Expressed ${domain}`}
-            body={`What other people can see, receive, or infer from your ${domain}.`}
+            body={upward
+              ? `Your expressed ${domain} is ${expressed}: steadier and more available on the outside than your system feels inside.`
+              : `Your expressed ${domain} is ${expressed}: this is what other people can currently see, receive, or infer from you.`}
             mode="expressed"
           />
           <AlignmentInfoTile
             label={`Felt ${domain}`}
-            body={`What is actually available inside your ${domain} system.`}
+            body={`Your felt ${domain} is ${felt}: the inside reading of what is actually available in your system right now.`}
             mode="felt"
           />
           <AlignmentInfoTile
             label="How you're masking"
             body={upward
-              ? `Your outside signal is running ahead of your inside ${domain}.`
+              ? `There is a mild-to-clear gap between what you feel and what you show; your outside signal is running ahead.`
               : gap < 0
-                ? `Your inside ${domain} is stronger than what you show outwardly.`
+                ? `There is a gap between what you feel and what you show; your inside ${domain} is stronger than what appears outwardly.`
                 : `Your inside and outside signals are moving together.`}
             mode="masking"
           />
@@ -922,15 +972,19 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
           <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: ALIGNMENT_ACCENT }}>
             {maskingLabel} · {alignmentLabel}
           </p>
-          <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.75rem, 3.2vw, 2.55rem)', lineHeight: 1.02, letterSpacing: '-0.035em', color: '#15110F' }}>
+          <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.75rem, 3.2vw, 2.55rem)', lineHeight: 1.14, letterSpacing: '-0.035em', color: '#15110F' }}>
             {verdict}
           </h3>
         </div>
         <div>
           <AlignmentSeverityCue gap={absoluteGap} label={alignmentLabel} />
-          <p className="mt-5 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-            {alignmentText}
-          </p>
+          <div className="mt-5 space-y-4">
+            {alignmentParagraphs.map((paragraph, index) => (
+              <p key={index} className="text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+                {paragraph}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -943,21 +997,26 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
   expressed: number;
   gap: number;
 }) {
-  const separation = Math.min(38, 6 + gap * 1.45);
-  const topY = 138 - separation / 2;
-  const bottomY = 170 + separation / 2;
-  const expressedPath = `M 54 ${topY} A 116 116 0 0 1 286 ${topY}`;
-  const feltPath = `M 54 ${bottomY} A 116 116 0 0 0 286 ${bottomY}`;
-  const closedExpressedPath = 'M 54 154 A 116 116 0 0 1 286 154';
-  const closedFeltPath = 'M 54 154 A 116 116 0 0 0 286 154';
+  const separation = Math.min(58, 18 + gap * 1.7);
+  const topY = 154 - separation / 2;
+  const bottomY = 218 + separation / 2;
+  const expressedPath = `M 58 ${topY} A 142 142 0 0 1 342 ${topY}`;
+  const feltPath = `M 58 ${bottomY} A 142 142 0 0 0 342 ${bottomY}`;
+  const closedExpressedPath = 'M 58 186 A 142 142 0 0 1 342 186';
+  const closedFeltPath = 'M 58 186 A 142 142 0 0 0 342 186';
   const gapCenterY = (topY + bottomY) / 2;
 
   return (
-    <svg viewBox="0 0 360 340" className="h-[330px] w-full max-w-[440px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
+    <svg viewBox="0 0 420 400" className="h-[372px] w-full max-w-[520px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
       <defs>
         <filter id="alignmentSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.09" />
         </filter>
+        <linearGradient id="alignmentGapWash" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.16" />
+          <stop offset="52%" stopColor="#FFFFFF" stopOpacity="0.9" />
+          <stop offset="100%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.16" />
+        </linearGradient>
       </defs>
       <motion.path
         d={expressedPath}
@@ -1009,26 +1068,30 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
         strokeDasharray="1"
         transition={{ duration: 1.05, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       />
-      <text x="170" y={topY - 35} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 20, letterSpacing: '0', fill: ALIGNMENT_INK }}>Expressed</text>
-      <text x="170" y={bottomY + 75} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 20, letterSpacing: '0', fill: ALIGNMENT_INK }}>Felt</text>
+      <text x="200" y={topY - 38} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 23, letterSpacing: '0', fill: ALIGNMENT_INK }}>Expressed</text>
+      <text x="200" y={topY - 16} textAnchor="middle" style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.18em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()}</text>
+      <text x="200" y={bottomY + 74} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 23, letterSpacing: '0', fill: ALIGNMENT_INK }}>Felt</text>
+      <text x="200" y={bottomY + 96} textAnchor="middle" style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.18em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()}</text>
       <motion.g
         initial={{ opacity: 0, y: -4 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.45 }}
         transition={{ duration: 0.72, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
-        style={{ transformOrigin: `170px ${gapCenterY}px` }}
+        style={{ transformOrigin: `200px ${gapCenterY}px` }}
       >
-        {[54, 286].map((x) => (
+        {[92, 308].map((x) => (
           <g key={x}>
-            <path d={`M${x} ${topY + 11} L${x - 5} ${topY + 20} H${x + 5} Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
-            <path d={`M${x} ${bottomY - 11} L${x - 5} ${bottomY - 20} H${x + 5} Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
-            <path d={`M${x} ${topY + 23} L${x} ${bottomY - 23}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.2" strokeDasharray="3 5" opacity="0.26" />
+            <path d={`M${x} ${gapCenterY - 22} L${x} ${topY + 16}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
+            <path d={`M${x} ${topY + 16} L${x - 7} ${topY + 28} M${x} ${topY + 16} L${x + 7} ${topY + 28}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
+            <path d={`M${x} ${gapCenterY + 22} L${x} ${bottomY - 16}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
+            <path d={`M${x} ${bottomY - 16} L${x - 7} ${bottomY - 28} M${x} ${bottomY - 16} L${x + 7} ${bottomY - 28}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
           </g>
         ))}
-        <path d={`M170 ${gapCenterY - 33} L164 ${gapCenterY - 24} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
-        <path d={`M170 ${gapCenterY + 33} L164 ${gapCenterY + 24} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
-        <text x="170" y={gapCenterY - 9} textAnchor="middle" style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()} GAP</text>
-        <text x="170" y={gapCenterY + 27} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 38, fill: ALIGNMENT_INK }}>{gap}</text>
+        <rect x="148" y={gapCenterY - 56} width="104" height="112" rx="28" fill="url(#alignmentGapWash)" stroke={`${ALIGNMENT_ACCENT}48`} />
+        <path d={`M200 ${gapCenterY - 70} L191 ${gapCenterY - 56} H209 Z`} fill={ALIGNMENT_ACCENT} opacity="0.3" />
+        <path d={`M200 ${gapCenterY + 70} L191 ${gapCenterY + 56} H209 Z`} fill={ALIGNMENT_ACCENT} opacity="0.3" />
+        <text x="200" y={gapCenterY - 18} textAnchor="middle" style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()} GAP</text>
+        <text x="200" y={gapCenterY + 32} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 52, fill: ALIGNMENT_INK }}>{gap}</text>
       </motion.g>
     </svg>
   );
@@ -1256,15 +1319,15 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
       viewport={{ once: true, amount: 0.16 }}
       whileHover={{ y: -5 }}
       transition={{ type: 'spring', stiffness: 360, damping: 34, delay: index * 0.04 }}
-      className="group/safety-dim relative overflow-hidden rounded-[30px] bg-white p-7 md:p-9 cursor-default"
+      className="group/safety-dim relative scroll-mt-24 overflow-hidden rounded-[30px] bg-white p-7 md:p-9 cursor-default"
     >
       <div
         className="absolute -right-20 -bottom-24 h-80 w-80 rounded-full pointer-events-none"
         style={{ background: `radial-gradient(circle, ${color}12 0%, transparent 70%)` }}
       />
-      <div className="relative grid lg:grid-cols-[0.44fr_0.56fr] gap-8 lg:gap-14 items-start">
+      <div className="relative grid lg:grid-cols-[0.44fr_0.56fr] gap-8 lg:gap-14 items-center">
         <div>
-          <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(3.5rem, 7vw, 6.2rem)', fontWeight: 600, color: '#0F0F0F', letterSpacing: '-0.06em', lineHeight: 0.88, margin: 0 }}>
+          <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(3.5rem, 7vw, 6.2rem)', fontWeight: 600, color: '#0F0F0F', letterSpacing: '-0.04em', lineHeight: 0.98, margin: 0 }}>
             {dim.name}
           </h3>
 
@@ -1274,7 +1337,7 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
           </div>
         </div>
 
-        <div>
+        <div className="lg:self-center">
           <div className="flex items-center justify-start">
             <div className="inline-flex items-center gap-5 rounded-[24px] bg-[#F7F5EF] px-5 py-4">
               <div>
@@ -1330,13 +1393,13 @@ function DimensionReportBlock({ dim, color, tint }: { dim: any; color: string; t
     ];
 
   return (
-    <div className="relative mt-8 rounded-[26px] p-6 md:p-7" style={{ background: `linear-gradient(135deg, ${tint} 0%, #FFFFFF 78%)` }}>
+    <div className="relative mt-10 border-t border-[#E9E4DA] pt-8">
       <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>
         A closer reading of {dim.name}
       </p>
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+      <div className="mt-5 grid max-w-4xl gap-x-8 gap-y-5 lg:grid-cols-2">
         {paragraphs.map((paragraph, index) => (
-          <p key={index} className="text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+          <p key={index} className={`text-[15px] leading-relaxed text-[#1A1614] ${index === 0 ? 'lg:col-span-2' : ''}`} style={{ fontWeight: 300 }}>
             {paragraph}
           </p>
         ))}
@@ -1362,8 +1425,8 @@ function SafetyDimensionSymbol({ selected, value, color }: { selected: string; v
 
 function DimensionSliceMarker({ selected, value, color }: { selected: string; value: number; color: string }) {
   const isSelf = selected === 'Self';
-  const dotPosition = isSelf ? { left: '35%', top: '55%' } : { left: '28%', top: '60%' };
-  const labelPosition = isSelf ? { left: '-2%', top: '14%' } : { left: '-2%', top: '18%' };
+  const dotPosition = isSelf ? { left: '26%', top: '54%' } : { left: '30%', top: '61%' };
+  const labelPosition = isSelf ? { left: '0%', top: '10%' } : { left: '0%', top: '14%' };
   const radius = 31;
   const circumference = 2 * Math.PI * radius;
   const dash = circumference * (value / 100);
@@ -1377,18 +1440,18 @@ function DimensionSliceMarker({ selected, value, color }: { selected: string; va
         transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute z-20 grid h-[86px] w-[86px] place-items-center rounded-full bg-white/92 shadow-[0_18px_34px_-28px_rgba(0,0,0,0.55)] backdrop-blur-sm"
+        className="absolute z-20 grid h-[82px] w-[82px] place-items-center rounded-full bg-white/92 shadow-[0_18px_34px_-28px_rgba(0,0,0,0.55)] backdrop-blur-sm"
         style={{ ...labelPosition }}
         initial={{ opacity: 0, y: 8 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
       >
-        <svg className="absolute inset-0 -rotate-90" width="86" height="86" aria-hidden="true">
-          <circle cx="43" cy="43" r={radius} fill="none" stroke="#EFEAE2" strokeWidth="7" />
+        <svg className="absolute inset-0 -rotate-90" width="82" height="82" aria-hidden="true">
+          <circle cx="41" cy="41" r={radius} fill="none" stroke="#EFEAE2" strokeWidth="7" />
           <motion.circle
-            cx="43"
-            cy="43"
+            cx="41"
+            cy="41"
             r={radius}
             fill="none"
             stroke={color}
@@ -1401,7 +1464,7 @@ function DimensionSliceMarker({ selected, value, color }: { selected: string; va
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           />
         </svg>
-        <span className="tabular-nums" style={{ fontFamily: SERIF, fontSize: 30, lineHeight: 1, color }}>{value}</span>
+        <span className="tabular-nums" style={{ fontFamily: SERIF, fontSize: 29, lineHeight: 1, color }}>{value}</span>
       </motion.div>
     </>
   );
@@ -1434,7 +1497,7 @@ function LevelIndicator({ band, color }: { band: string; color: string }) {
             >
               <svg viewBox="0 0 32 8" className="h-full w-full overflow-visible" aria-hidden="true">
                 <motion.path
-                  d="M2 5 L8 3 L14 5 L20 3 L26 5 L30 4"
+                  d="M2 5 L8 4 L14 5 L20 4 L26 5 L30 4.5"
                   fill="none"
                   stroke={on ? ALIGNMENT_ACCENT : '#DDD7CE'}
                   strokeWidth="4"
@@ -1477,11 +1540,16 @@ function SixDimensionScale({ active, color }: { active: string; color: string })
           {allDimensionScores.map((item) => {
             const selected = item.name === active;
             return (
-              <div key={item.name} className="flex h-full flex-col items-center justify-end gap-3">
+              <motion.div
+                key={item.name}
+                className="group flex h-full flex-col items-center justify-end gap-3"
+                whileHover={{ y: -6 }}
+                transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+              >
                 <div className="relative flex h-56 w-full items-end justify-center">
-                  <div className="absolute bottom-0 h-full w-9 rounded-full bg-[#F1EEE8]" />
+                  <div className="absolute bottom-0 h-full w-10 rounded-full bg-[#F1EEE8] transition-colors duration-300 group-hover:bg-[#EAE4DA]" />
                   <motion.div
-                    className="relative z-10 w-9 rounded-full"
+                    className="relative z-10 w-10 rounded-full transition-[filter,box-shadow] duration-300 group-hover:brightness-110"
                     style={{ backgroundColor: selected ? color : '#D6D0C8' }}
                     initial={{ height: 0 }}
                     whileInView={{ height: `${item.score}%` }}
@@ -1490,7 +1558,7 @@ function SixDimensionScale({ active, color }: { active: string; color: string })
                   />
                 </div>
                 <p className="text-center text-[10px] uppercase tracking-[0.08em] font-bold" style={{ color: selected ? color : '#9A948D' }}>{item.name}</p>
-              </div>
+              </motion.div>
             );
           })}
         </div>

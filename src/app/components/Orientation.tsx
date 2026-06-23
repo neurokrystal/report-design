@@ -2,6 +2,7 @@ import { Layers, Clock } from 'lucide-react';
 
 // Shared header style used by every section
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
+const NAV_ORANGE = '#FF5A1F';
 
 // ── Correct three-diamond mark (equal rhombuses, triangular arrangement) ──
 function DimensionalShapeIcon({ color, size = 68 }: { color: string; size?: number }) {
@@ -82,13 +83,13 @@ export function Orientation() {
 
         {/* Section number — left-aligned with title */}
         <p style={{
-          color: '#DC4C0C',
+          color: NAV_ORANGE,
           fontWeight: 800,
           letterSpacing: '0.06em',
           fontSize: '14px',
           marginBottom: '30px',
         }}>
-          01
+          01 Overview
         </p>
 
         {/* Heading */}
@@ -106,7 +107,7 @@ export function Orientation() {
         </h1>
 
         {/* Orange divider line */}
-        <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px', marginBottom: '32px' }} />
+        <div style={{ width: '40px', height: '3px', backgroundColor: NAV_ORANGE, marginTop: '30px', marginBottom: '32px' }} />
 
         {/* Intro paragraph — below the divider */}
         <p style={{ fontWeight: 300, fontSize: '15px', lineHeight: 1.7, color: '#1A1614', marginBottom: '40px', maxWidth: '520px' }}>
@@ -114,7 +115,7 @@ export function Orientation() {
         </p>
 
         {/* Concept cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '48px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '34px', marginBottom: '48px' }}>
           {concepts.map((c) => (
             <ConceptCard key={c.title} renderIcon={c.renderIcon} title={c.title} body={c.body} accent={c.accent} />
           ))}
@@ -130,8 +131,8 @@ export function Orientation() {
       </div>
 
       {/* ── RIGHT GRAPHIC (40%) ── */}
-      <div className="hidden lg:block lg:col-span-2 sticky top-8 h-[calc(100vh-4rem)] overflow-hidden" style={{ backgroundColor: '#F0EDE8' }}>
-        <div className="h-full w-full translate-y-10 scale-[0.9]">
+      <div className="hidden lg:block lg:col-span-2 sticky top-8 h-[calc(100vh-4rem)] overflow-hidden translate-x-20 xl:translate-x-28" style={{ backgroundColor: '#F0EDE8' }}>
+        <div className="h-full w-full translate-y-20 scale-[0.7]">
           <DimensionalGraphic />
         </div>
       </div>
@@ -176,7 +177,7 @@ function SoftPentagonBg({ color, size }: { color: string; size: number }) {
 function ConceptCard({ renderIcon, title, body, accent }: ConceptCardProps) {
   const iconSize = 112;
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '32px' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '38px' }}>
       {/* Icon — soft pentagon background */}
       <div style={{
         flexShrink: 0,

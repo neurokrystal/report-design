@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
+const NAV_ORANGE = '#FF5A1F';
 
 // Three solid domain sections — Challenge highlighted, Safety + Play neutral.
 const CH = '#E8551D';        // Challenge — highlighted
@@ -65,7 +66,7 @@ export function YourShape() {
     <div className="space-y-12">
       {/* Header */}
       <div>
-        <p style={{ color: '#DC4C0C', fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>03</p>
+        <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>03 Overview</p>
         <div className="relative inline-flex items-center gap-3">
           <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
             Your Shape
@@ -98,7 +99,7 @@ export function YourShape() {
             )}
           </AnimatePresence>
         </div>
-        <div style={{ width: '40px', height: '3px', backgroundColor: '#DC4C0C', marginTop: '30px', marginBottom: '32px' }} />
+        <div style={{ width: '40px', height: '3px', backgroundColor: NAV_ORANGE, marginTop: '30px', marginBottom: '32px' }} />
       </div>
 
       {/* Dual column — heading + description on the left, the shape on the right */}
@@ -113,7 +114,7 @@ export function YourShape() {
             letterSpacing: '-0.035em',
             lineHeight: 1.08,
           }}>
-            Together, your domains form a sharp peak.
+            Together, your domains form a Sharp Peak.
           </h2>
           <div className="grid gap-3 pt-1">
             {[
