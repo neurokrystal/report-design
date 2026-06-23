@@ -7,6 +7,13 @@
       "runtimeArgs": ["run", "dev"],
       "port": 5173,
       "autoPort": true
+    },
+    {
+      "name": "skin",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "../skin-progress-tracker", "run", "dev"],
+      "port": 5174,
+      "autoPort": true
     }
   ]
 }
