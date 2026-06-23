@@ -113,7 +113,7 @@ export function YourShape() {
             letterSpacing: '-0.035em',
             lineHeight: 1.08,
           }}>
-            Your domains come together into a sharp peak.
+            Together, your domains form a sharp peak.
           </h2>
           <div className="grid gap-3 pt-1">
             {[

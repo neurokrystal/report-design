@@ -1,0 +1,18 @@
+<svg width="409" height="338" viewBox="0 0 409 338" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M171.661 197.703L203.922 253.602L171.611 309.503H42.5645L107.088 197.703H171.661Z" stroke="#ACACAC"/>
+<path d="M301.909 197.703L366.434 309.604H237.388L205.075 253.653L237.337 197.703H301.909Z" stroke="#ACACAC"/>
+<path d="M269.023 140.799L236.713 196.7H172.189L139.877 140.799L204.5 28.999L269.023 140.799Z" stroke="#ACACAC"/>
+<circle cx="204.5" cy="29.5" r="2.5" fill="#ACACAC"/>
+<circle cx="139.5" cy="140.5" r="2.5" fill="#ACACAC"/>
+<circle cx="106.68" cy="196.905" r="2.5" transform="rotate(-74.9823 106.68 196.905)" fill="#ACACAC"/>
+<circle cx="2.5" cy="2.5" r="2.5" transform="matrix(-0.259118 -0.965846 -0.965846 0.259118 305.094 198.828)" fill="#ACACAC"/>
+<circle cx="269.5" cy="140.5" r="2.5" fill="#ACACAC"/>
+<circle cx="171.648" cy="309.507" r="2.5" transform="rotate(-74.9823 171.648 309.507)" fill="#ACACAC"/>
+<circle cx="2.5" cy="2.5" r="2.5" transform="matrix(-0.259118 -0.965846 -0.965846 0.259118 240.125 311.43)" fill="#ACACAC"/>
+<circle cx="366.5" cy="309.5" r="2.5" fill="#ACACAC"/>
+<circle cx="2.5" cy="2.5" r="2.5" transform="matrix(-1 0 0 1 45 307)" fill="#ACACAC"/>
+<line x1="204.5" y1="30" x2="204.5" y2="197" stroke="#ACACAC"/>
+<line x1="365.375" y1="308.933" x2="220.749" y2="225.433" stroke="#ACACAC"/>
+<line y1="-0.5" x2="167" y2="-0.5" transform="matrix(0.866025 -0.5 -0.5 -0.866025 43.375 308.5)" stroke="#ACACAC"/>
+<path d="M188.531 224.973L147.246 249.065L202.342 248.895L188.531 224.973Z" fill="#42A68E"/>
+</svg>

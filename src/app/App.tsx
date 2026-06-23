@@ -31,6 +31,8 @@ export default function App() {
             <YourShape />
           </div>
 
+          <JourneyMarker />
+
           <div id="safety" className="mt-28">
             <DomainSection
               domain="Safety"
@@ -82,5 +84,28 @@ export default function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+function JourneyMarker() {
+  return (
+    <section className="mt-28 rounded-[30px] bg-[#1A1614] px-8 py-10 text-white shadow-[0_26px_70px_-52px_rgba(26,22,20,0.72)]">
+      <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#FFBB30]">Part 2 · Domain deep dive</p>
+      <div className="mt-4 grid gap-6 md:grid-cols-[0.95fr_1.05fr] md:items-end">
+        <h2
+          style={{
+            fontFamily: '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif',
+            fontSize: 'clamp(2rem, 3.4vw, 3rem)',
+            lineHeight: 1,
+            letterSpacing: '-0.04em',
+          }}
+        >
+          Now we go inside the foundations.
+        </h2>
+        <p className="text-[15px] leading-relaxed text-white/78" style={{ fontWeight: 300 }}>
+          You have seen the domains, dimensions, and overall shape. The next part reads each domain as a lived system: what your level means, where alignment is flagged, and how the dimensions underneath are carrying the profile.
+        </p>
+      </div>
+    </section>
   );
 }

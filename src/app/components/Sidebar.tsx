@@ -117,9 +117,19 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
             const num = section.label.match(/^\d+/)?.[0] ?? '';
             const name = section.label.replace(/^\d+\.\s*/, '');
             const items = subMenus[section.id];
+            const groupLabel =
+              section.id === 'orientation' ? 'Overview' :
+              section.id === 'safety' ? 'Deep dive' :
+              section.id === 'foundations-together' ? 'Integration' :
+              '';
 
             return (
               <li key={section.id}>
+                {groupLabel && (
+                  <p className="px-3 pb-1 pt-4 text-[9px] font-bold uppercase tracking-[0.18em] text-[#B2ACA5]">
+                    {groupLabel}
+                  </p>
+                )}
                 <button
                   onClick={() => {
                     onNavigate(section.id);

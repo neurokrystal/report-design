@@ -130,8 +130,10 @@ export function Orientation() {
       </div>
 
       {/* ── RIGHT GRAPHIC (40%) ── */}
-      <div className="hidden lg:block lg:col-span-2 sticky top-0 h-screen overflow-hidden" style={{ backgroundColor: '#F0EDE8' }}>
-        <DimensionalGraphic />
+      <div className="hidden lg:block lg:col-span-2 sticky top-8 h-[calc(100vh-4rem)] overflow-hidden" style={{ backgroundColor: '#F0EDE8' }}>
+        <div className="h-full w-full translate-y-10 scale-[0.9]">
+          <DimensionalGraphic />
+        </div>
       </div>
 
     </div>

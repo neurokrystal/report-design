@@ -48,6 +48,18 @@ const dimIcons: Record<string, string> = {
   Past: highPast,
 };
 
+const dimensionSymbolAssets = import.meta.glob('../../imports/generated-dimensions/*.svg', { eager: true, import: 'default' }) as Record<string, string>;
+
+function roundedDimensionScore(score: number) {
+  return Math.min(100, Math.max(0, Math.round(score / 10) * 10));
+}
+
+function getDimensionSymbolAsset(name: string, score: number) {
+  const rounded = roundedDimensionScore(score);
+  const key = `../../imports/generated-dimensions/${name}_${rounded}.svg`;
+  return dimensionSymbolAssets[key] || dimIcons[name];
+}
+
 const safetyDimIcons: Record<string, string> = {
   Self: lowSelfNew,
   Others: lowOthersNew,
@@ -90,7 +102,7 @@ const domainContent = {
     },
     feltText: "At this level, your nervous system is rarely off duty. Even in moments that should feel safe, there is a quiet vigilance running underneath: the sense that something needs watching, that ease might not last, that you have to stay ready. Rest does not fully restore you. Your inner voice is often the loudest in the room, and it is seldom on your side. You may not call any of this anxiety, because it does not look dramatic from the outside. It is the texture you have learned to live in.",
     expressedText: "Outwardly, you express Safety at 35. You hold yourself together. You arrive on time, you meet your obligations, you keep your composure under pressure. Most people around you would describe you as steady, even reliable. What they do not see is what the steadiness costs, or that the composure is held by effort rather than ease.",
-    alignmentText: "Your felt Safety reads 22; your expressed Safety reads 35. This is a significant upward divergence. You appear more settled than you actually feel, and the gap is wide enough that it is no longer a small piece of social management. It is structural. You have learned to look safer than you are, and the effort of that maintenance is a hidden cost most readings would not surface.",
+    alignmentText: "Your felt Safety reads 22; your expressed Safety reads 35. This is a significant upward divergence. You appear more settled than you actually feel, and the gap is wide enough that it is no longer just a normal piece of social adjustment. It has become structural: your outside signal is doing more work than your inside state can honestly support. People may experience you as calm, capable, and composed, while your system is privately carrying vigilance, strain, or the sense that you have to keep yourself together. That mismatch costs energy because it asks you to maintain a version of Safety that is visible before it is fully available. Over time, this can make support harder to receive, because the people around you respond to the steadiness they can see rather than the steadiness you actually need.",
     alignmentExtended: "The cost of carrying this gap is not only the energy of the performance. It is the slow erosion of the link between your inner experience and the people around you. The colleagues, friends, and partners who think you are fine are not wrong; you are showing them fine. But fine is not what is happening. The longer the gap persists, the harder it becomes to be received as you actually are.",
     isAlignmentFlagged: true,
     dimensions: [
@@ -574,8 +586,8 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
   ];
 
   return (
-    <div className="rounded-[28px] border bg-white p-6 md:p-8" style={{ borderColor: `${color}28` }}>
-      <div className="relative pb-10 pt-3">
+    <div className="space-y-7">
+      <div className="relative rounded-[28px] p-6 md:p-8" style={{ background: `linear-gradient(135deg, ${tint} 0%, #FDFCFA 64%, #FFFFFF 100%)` }}>
         <svg className="h-44 w-full overflow-visible" viewBox="0 0 820 176" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <linearGradient id={`${domain}ContinuumSweep`} x1="0%" y1="0%" x2="100%" y2="0%">
@@ -599,13 +611,16 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
           <motion.path
             d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50"
             fill="none"
-            stroke={`url(#${domain}ContinuumSweep)`}
+            stroke={color}
             strokeWidth="13"
             strokeLinecap="round"
             pathLength="1"
-            strokeDasharray="0.18 1"
-            animate={{ strokeDashoffset: [1, 1 - marker / 100, 1 - marker / 100] }}
-            transition={{ duration: 4.6, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.72, 1] }}
+            strokeDasharray="1"
+            animate={{
+              strokeDashoffset: [1, 1 - marker / 100, 1 - marker / 100, 1],
+              opacity: [0.18, 0.88, 0.74, 0.18],
+            }}
+            transition={{ duration: 5.2, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.62, 0.78, 1] }}
           />
           <motion.path
             d="M596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54"
@@ -642,7 +657,7 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
           whileInView={{ scale: 1, opacity: 1 }}
           animate={{ scale: [1, 1, 1.17, 1.04, 1], boxShadow: ['0 18px 38px -28px rgba(0,0,0,0.6)', '0 18px 38px -28px rgba(0,0,0,0.6)', `0 20px 54px -18px ${color}90`, `0 18px 44px -24px ${color}66`, '0 18px 38px -28px rgba(0,0,0,0.6)'] }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ scale: { duration: 4.6, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.7, 0.82, 0.92, 1] }, boxShadow: { duration: 4.6, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.7, 0.82, 0.92, 1] } }}
+          transition={{ scale: { duration: 5.2, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.62, 0.76, 0.88, 1] }, boxShadow: { duration: 5.2, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.62, 0.76, 0.88, 1] } }}
         >
           <span className="text-sm font-semibold">{score}</span>
         </motion.div>
@@ -697,7 +712,46 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
           </motion.div>
         ))}
       </div>
+      <SafetyLevelReflection domain={domain} color={color} tint={tint} />
     </div>
+  );
+}
+
+function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Play' | 'Challenge'; color: string; tint: string }) {
+  if (domain !== 'Safety') return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.24 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="rounded-[28px] p-6 md:p-8"
+      style={{ backgroundColor: '#FFFFFF', boxShadow: '0 20px 54px -48px rgba(26,22,20,0.5)' }}
+    >
+      <div className="grid gap-5 md:grid-cols-2">
+        <div className="rounded-[22px] p-5" style={{ backgroundColor: tint }}>
+          <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>How you see yourself</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+            You may experience your Safety as something you have to manufacture. Calm can feel earned rather than given, and ease may arrive only after you have checked, managed, or proven that nothing will go wrong.
+          </p>
+        </div>
+        <div className="rounded-[22px] bg-[#FBFAF7] p-5">
+          <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">How others see you</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+            Others are more likely to see the composure than the cost of holding it. They may read you as steady, capable, or quietly in control, without realising that your system is working harder underneath.
+          </p>
+        </div>
+      </div>
+      <div className="mt-6 max-w-4xl space-y-4">
+        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+          At this level, Safety is not absent, but it is conditional. It comes online when you know what is expected, when you can manage the environment, or when you have enough evidence that nothing will demand too much from you. The difficulty is that this kind of Safety does not fully rest the body. It keeps you functioning, but it does not always let you soften.
+        </p>
+        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+          This is why very low Safety can look surprisingly competent. The system learns to produce steadiness from effort instead of ease. The growth direction is not to become less capable; it is to build a foundation where capability does not have to be purchased with constant vigilance.
+        </p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -897,8 +951,6 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
   const closedExpressedPath = 'M 54 154 A 116 116 0 0 1 286 154';
   const closedFeltPath = 'M 54 154 A 116 116 0 0 0 286 154';
   const gapCenterY = (topY + bottomY) / 2;
-  const gapColumnY = topY + 12;
-  const gapColumnHeight = Math.max(58, bottomY - topY + 64);
 
   return (
     <svg viewBox="0 0 360 340" className="h-[330px] w-full max-w-[440px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
@@ -906,13 +958,6 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
         <filter id="alignmentSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.09" />
         </filter>
-        <linearGradient id="gapColumnFade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0" />
-          <stop offset="18%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.1" />
-          <stop offset="50%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.18" />
-          <stop offset="82%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.1" />
-          <stop offset="100%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0" />
-        </linearGradient>
       </defs>
       <motion.path
         d={expressedPath}
@@ -964,21 +1009,26 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
         strokeDasharray="1"
         transition={{ duration: 1.05, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       />
-      <text x="170" y={topY - 36} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 18, letterSpacing: '0', fill: ALIGNMENT_INK }}>Expressed</text>
-      <text x="170" y={bottomY + 72} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 18, letterSpacing: '0', fill: ALIGNMENT_INK }}>Felt</text>
+      <text x="170" y={topY - 35} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 20, letterSpacing: '0', fill: ALIGNMENT_INK }}>Expressed</text>
+      <text x="170" y={bottomY + 75} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 20, letterSpacing: '0', fill: ALIGNMENT_INK }}>Felt</text>
       <motion.g
-        initial={{ opacity: 0, scaleY: 0.15 }}
-        whileInView={{ opacity: 1, scaleY: 1 }}
+        initial={{ opacity: 0, y: -4 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.45 }}
-        transition={{ duration: 0.78, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.72, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
         style={{ transformOrigin: `170px ${gapCenterY}px` }}
       >
-        <rect x="139" y={gapColumnY} width="62" height={gapColumnHeight} fill="url(#gapColumnFade)" />
-        <line x1="139" y1={gapCenterY} x2="201" y2={gapCenterY} stroke={ALIGNMENT_ACCENT} strokeWidth="1.4" opacity="0.38" />
-        <path d={`M170 ${gapCenterY - 31} L164 ${gapCenterY - 22} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.28" />
-        <path d={`M170 ${gapCenterY + 31} L164 ${gapCenterY + 22} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.28" />
-        <text x="170" y={gapCenterY - 8} textAnchor="middle" style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.16em', fill: ALIGNMENT_ACCENT }}>GAP</text>
-        <text x="170" y={gapCenterY + 24} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 34, fill: ALIGNMENT_INK }}>{gap}</text>
+        {[54, 286].map((x) => (
+          <g key={x}>
+            <path d={`M${x} ${topY + 11} L${x - 5} ${topY + 20} H${x + 5} Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
+            <path d={`M${x} ${bottomY - 11} L${x - 5} ${bottomY - 20} H${x + 5} Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
+            <path d={`M${x} ${topY + 23} L${x} ${bottomY - 23}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.2" strokeDasharray="3 5" opacity="0.26" />
+          </g>
+        ))}
+        <path d={`M170 ${gapCenterY - 33} L164 ${gapCenterY - 24} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
+        <path d={`M170 ${gapCenterY + 33} L164 ${gapCenterY + 24} H176 Z`} fill={ALIGNMENT_ACCENT} opacity="0.34" />
+        <text x="170" y={gapCenterY - 9} textAnchor="middle" style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()} GAP</text>
+        <text x="170" y={gapCenterY + 27} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 38, fill: ALIGNMENT_INK }}>{gap}</text>
       </motion.g>
     </svg>
   );
@@ -1058,10 +1108,9 @@ function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed' | 'ma
       )}
       {mode === 'masking' && (
         <>
-          <path d="M10 24 A14 14 0 1 1 38 24 A14 14 0 1 1 10 24" fill="none" stroke={color} strokeWidth="6" strokeLinecap="butt" opacity="0.9" />
-          <path d="M14 25 L34 23" fill="none" stroke="#FFFFFF" strokeWidth="5" strokeLinecap="round" />
-          <path d="M15 25 L33 23.2" fill="none" stroke={ALIGNMENT_ACCENT} strokeWidth="1.6" strokeLinecap="round" opacity="0.75" />
-          <path d="M13.5 20.5 V28.5 M34.5 19.5 V27.5" fill="none" stroke={ALIGNMENT_ACCENT} strokeWidth="1.4" strokeLinecap="round" opacity="0.45" />
+          <path d="M10 20 A14 14 0 0 1 38 20" fill="none" stroke={color} strokeWidth="6" strokeLinecap="butt" opacity="0.9" />
+          <path d="M10 29 A14 14 0 0 0 38 29" fill="none" stroke={color} strokeWidth="6" strokeLinecap="butt" opacity="0.9" />
+          <path d="M23 22 L25 22 M23 27 L25 27" stroke={ALIGNMENT_ACCENT} strokeWidth="2" strokeLinecap="round" opacity="0.55" />
         </>
       )}
     </svg>
@@ -1093,7 +1142,7 @@ function DomainDimensionCard({ dim, domain, color, tint, index, active, onActive
   }
 
   const DimIcon = getDimensionIcon(dim.name);
-  const icon = dimIcons[dim.name];
+  const icon = getDimensionSymbolAsset(dim.name, dim.score);
   const hasColumns = dim.working && dim.takeNote;
   const paragraphs = dim.text ? dim.text.split('\n\n') : [];
 
@@ -1262,32 +1311,59 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
           />
         </div>
       </div>
+      <DimensionReportBlock dim={dim} color={color} tint={tint} />
     </motion.div>
   );
 }
 
-function SafetyDimensionSymbol({ selected, color }: { selected: string; value: number; color: string }) {
-  const isSelf = selected === 'Self';
+function DimensionReportBlock({ dim, color, tint }: { dim: any; color: string; tint: string }) {
+  const paragraphs = dim.name === 'Self'
+    ? [
+      'For you, Self Safety is not simply about confidence. It is about whether your own system feels like a trustworthy place to return to when you have not performed, pleased, solved, or held everything together. At this level, that inner landing place is inconsistent. You may be deeply capable and still find it difficult to be gentle with yourself when there is no achievement to point to.',
+      'This can create a life where self-respect is real, but conditional. When you have earned it, you feel solid. When you are tired, disappointed, slow, uncertain, or unable to meet your own standard, the inner support can disappear quickly. The result is not laziness or fragility; it is a nervous system that has learned to use performance as proof that you deserve to be on your own side.',
+      'The growth direction is to build a form of Safety that remains available before the result is known. That means learning to stay with yourself while something is unfinished, while your output is imperfect, or while you are simply human. This is where the foundation becomes less brittle: not by lowering your standards, but by no longer making belonging to yourself depend on meeting them.',
+    ]
+    : [
+      'Others Safety describes how easily support can move toward you, not just away from you. At this level, you may be reliable, generous, and emotionally available to other people while still keeping your own needs unusually private. The relationship field may look connected, but the flow of care is not even.',
+      'This often means people trust you more than you let yourself rely on them. They may assume you are fine because you rarely signal otherwise, and because your steadiness has become part of the role you occupy. The cost is that your relationships may contain affection without enough mutual holding.',
+      'The growth direction is not to become dependent or exposed in a way that feels unsafe. It is to let the right people see a truer amount of what you carry, and to practise receiving without immediately calculating whether you have earned it.',
+    ];
+
+  return (
+    <div className="relative mt-8 rounded-[26px] p-6 md:p-7" style={{ background: `linear-gradient(135deg, ${tint} 0%, #FFFFFF 78%)` }}>
+      <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>
+        A closer reading of {dim.name}
+      </p>
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        {paragraphs.map((paragraph, index) => (
+          <p key={index} className="text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SafetyDimensionSymbol({ selected, value, color }: { selected: string; value: number; color: string }) {
+  const symbol = getDimensionSymbolAsset(selected, value);
   return (
     <div className="absolute inset-0">
-      <svg viewBox="0 0 320 280" className="h-full w-full overflow-visible" aria-hidden="true">
-        <g transform="translate(262 18) scale(-0.24 0.24)" opacity="0.94" strokeLinejoin="round">
-          <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={!isSelf ? color : '#F4F1EA'} stroke={!isSelf ? '#2C7C70' : '#BFB8AD'} strokeWidth="8" opacity={!isSelf ? 0.88 : 0.46} />
-          <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={isSelf ? color : '#F4F1EA'} stroke={isSelf ? '#2C7C70' : '#BFB8AD'} strokeWidth="8" opacity={isSelf ? 0.86 : 0.46} />
-          <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={color} opacity="0.42" />
-          <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H600.756L700.994 344.272L500.533 -2Z" fill="#F8F5EF" stroke="#BFB8AD" strokeWidth="8" opacity="0.36" />
-          <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F8F5EF" stroke="#BFB8AD" strokeWidth="8" opacity="0.36" />
-          <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F8F5EF" stroke="#BFB8AD" strokeWidth="8" opacity="0.36" />
-        </g>
-      </svg>
+      <img
+        src={symbol}
+        alt=""
+        aria-hidden="true"
+        className="h-full w-full object-contain opacity-90"
+        style={{ filter: `drop-shadow(0 18px 30px ${color}14)` }}
+      />
     </div>
   );
 }
 
 function DimensionSliceMarker({ selected, value, color }: { selected: string; value: number; color: string }) {
   const isSelf = selected === 'Self';
-  const dotPosition = isSelf ? { left: '31%', top: '66%' } : { left: '24%', top: '69%' };
-  const labelPosition = isSelf ? { left: '7%', top: '42%' } : { left: '7%', top: '48%' };
+  const dotPosition = isSelf ? { left: '35%', top: '55%' } : { left: '28%', top: '60%' };
+  const labelPosition = isSelf ? { left: '-2%', top: '14%' } : { left: '-2%', top: '18%' };
   const radius = 31;
   const circumference = 2 * Math.PI * radius;
   const dash = circumference * (value / 100);

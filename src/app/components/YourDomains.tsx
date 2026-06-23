@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flag, ArrowRight, Sparkles, Wrench } from 'lucide-react';
+import { Flag, ArrowLeft, ArrowRight, Sparkles, Wrench } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 import lowFuture from "../../imports/10__Low_Future.svg";
@@ -30,6 +30,18 @@ const dimIcons = {
   'Future': highFuture,
   'Past': highPast,
 };
+
+const dimensionSymbolAssets = import.meta.glob('../../imports/generated-dimensions/*.svg', { eager: true, import: 'default' }) as Record<string, string>;
+
+function roundedDimensionScore(score: number) {
+  return Math.min(100, Math.max(0, Math.round(score / 10) * 10));
+}
+
+function getDimensionSymbol(name: string, score: number) {
+  const rounded = roundedDimensionScore(score);
+  const key = `../../imports/generated-dimensions/${name}_${rounded}.svg`;
+  return dimensionSymbolAssets[key] || dimIcons[name as keyof typeof dimIcons];
+}
 
 interface DimEntry {
   name: string;
@@ -113,6 +125,13 @@ const flags = [
 export function YourDomains() {
   const [view, setView] = useState<'domains' | 'dimensions'>('domains');
   const [activeDomain, setActiveDomain] = useState<string | null>(null);
+  const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
+  const [showFlagReturn, setShowFlagReturn] = useState(false);
+
+  const returnToFlags = () => {
+    document.getElementById('flagged-attention')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setShowFlagReturn(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-16 relative z-0">
@@ -204,8 +223,14 @@ export function YourDomains() {
                 >
                   <DomainSymbol
                     activeDomain={activeDomain}
+                    selectedDomain={selectedDomain}
                     onActivate={setActiveDomain}
                     onClear={() => setActiveDomain(null)}
+                    onSelect={setSelectedDomain}
+                  />
+                  <DomainDescriptionPopover
+                    domain={selectedDomain}
+                    onClose={() => setSelectedDomain(null)}
                   />
                   <DomainMarker
                     label="Challenge"
@@ -264,6 +289,7 @@ export function YourDomains() {
 
       {/* Attention layer — flagged, but refined */}
       <div
+        id="flagged-attention"
         className="mt-20 max-w-4xl mx-auto relative overflow-hidden rounded-[1.5rem] p-7 lg:p-9"
         style={{
           backgroundColor: '#F1EFEB',
@@ -312,10 +338,27 @@ export function YourDomains() {
               text={f.text}
               linkLabel={f.linkLabel}
               targetId={f.targetId}
+              onNavigate={() => setShowFlagReturn(true)}
             />
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {showFlagReturn && (
+          <motion.button
+            type="button"
+            onClick={returnToFlags}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            className="fixed bottom-7 right-7 z-50 inline-flex items-center gap-2 rounded-full bg-[#1A1614] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_-24px_rgba(26,22,20,0.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/40"
+          >
+            <ArrowLeft size={16} strokeWidth={2.4} />
+            Back to flags
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -323,10 +366,19 @@ export function YourDomains() {
 function DomainCard({ domain: d, index }: { domain: DomainEntry; index: number }) {
   return (
     <motion.div
+      role="button"
+      tabIndex={0}
+      onClick={() => document.getElementById(d.key.toLowerCase())?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          document.getElementById(d.key.toLowerCase())?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }}
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.15, duration: 0.5 }}
-      className="relative bg-white border border-[#E5E3DD] p-7 rounded-[1.5rem] shadow-sm hover:shadow-lg transition-all duration-300 cursor-default overflow-hidden group"
+      className="relative bg-white border border-[#E5E3DD] p-7 rounded-[1.5rem] shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30"
     >
       <div 
         className="absolute top-0 left-0 bottom-0 w-2 transition-all duration-300 group-hover:w-3" 
@@ -359,24 +411,29 @@ function DomainCard({ domain: d, index }: { domain: DomainEntry; index: number }
 
 function DomainSymbol({
   activeDomain,
+  selectedDomain,
   onActivate,
   onClear,
+  onSelect,
 }: {
   activeDomain: string | null;
+  selectedDomain: string | null;
   onActivate: (domain: string) => void;
   onClear: () => void;
+  onSelect: (domain: string) => void;
 }) {
+  const visualDomain = activeDomain || selectedDomain;
   const symbolTransform =
-    activeDomain === 'Safety'
+    visualDomain === 'Safety'
       ? 'rotateY(-18deg) rotateX(-5deg) rotateZ(-1deg) translateX(-6px) scale(1.055)'
-      : activeDomain === 'Play'
+      : visualDomain === 'Play'
         ? 'rotateY(18deg) rotateX(-5deg) rotateZ(1deg) translateX(6px) scale(1.055)'
-        : activeDomain === 'Challenge'
+        : visualDomain === 'Challenge'
           ? 'rotateX(18deg) translateY(-10px) scale(1.07)'
           : 'rotateX(0deg) rotateY(0deg) scale(1)';
 
   const groupStyle = (domain: 'Safety' | 'Play' | 'Challenge') => {
-    const active = activeDomain === domain;
+    const active = visualDomain === domain;
 
     return {
       transformBox: 'fill-box' as const,
@@ -384,8 +441,9 @@ function DomainSymbol({
       transition: 'filter 650ms ease, opacity 650ms ease, transform 650ms cubic-bezier(0.22, 1, 0.36, 1)',
       transform: active ? 'translateZ(28px) scale(1.025)' : 'translateZ(0) scale(1)',
       filter: active ? 'brightness(1.08) saturate(1.12) drop-shadow(0 12px 10px rgba(26,22,20,0.14))' : undefined,
-      opacity: activeDomain && !active ? 0.72 : 1,
+      opacity: visualDomain && !active ? 0.72 : 1,
       cursor: 'pointer',
+      outline: 'none',
     };
   };
 
@@ -400,7 +458,7 @@ function DomainSymbol({
           transform: symbolTransform,
           transformStyle: 'preserve-3d',
           transition: 'transform 700ms cubic-bezier(0.22, 1, 0.36, 1), filter 700ms ease',
-          filter: activeDomain ? 'drop-shadow(0 26px 28px rgba(26,22,20,0.16))' : undefined,
+          filter: visualDomain ? 'drop-shadow(0 26px 28px rgba(26,22,20,0.16))' : undefined,
         }}
       >
         <g transform="translate(998,0) scale(-1,1)">
@@ -408,10 +466,8 @@ function DomainSymbol({
           style={groupStyle('Safety')}
           onMouseEnter={() => onActivate('Safety')}
           onMouseLeave={onClear}
-          onFocus={() => onActivate('Safety')}
-          onBlur={onClear}
-          tabIndex={0}
-          role="button"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => onSelect('Safety')}
           aria-label="Highlight Safety section"
         >
           <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill="#42A68E" />
@@ -422,10 +478,8 @@ function DomainSymbol({
           style={groupStyle('Challenge')}
           onMouseEnter={() => onActivate('Challenge')}
           onMouseLeave={onClear}
-          onFocus={() => onActivate('Challenge')}
-          onBlur={onClear}
-          tabIndex={0}
-          role="button"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => onSelect('Challenge')}
           aria-label="Highlight Challenge section"
         >
           <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z" fill="#F7601D" />
@@ -435,10 +489,8 @@ function DomainSymbol({
           style={groupStyle('Play')}
           onMouseEnter={() => onActivate('Play')}
           onMouseLeave={onClear}
-          onFocus={() => onActivate('Play')}
-          onBlur={onClear}
-          tabIndex={0}
-          role="button"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => onSelect('Play')}
           aria-label="Highlight Play section"
         >
           <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#FFBB30" />
@@ -447,6 +499,36 @@ function DomainSymbol({
         </g>
       </svg>
     </div>
+  );
+}
+
+function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; onClose: () => void }) {
+  const entry = domainData.find(item => item.key === domain);
+  if (!entry) return null;
+  const copy: Record<string, string> = {
+    Safety: 'Safety shows how much inner steadiness, ease, and trust your system can actually access.',
+    Play: 'Play shows how much aliveness, sensory richness, and flexible enjoyment are available to you.',
+    Challenge: 'Challenge shows how clearly your system can move toward meaning, direction, and chosen difficulty.',
+  };
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        key={entry.key}
+        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 10, scale: 0.98 }}
+        transition={{ duration: 0.22 }}
+        className="absolute left-1/2 top-full z-30 mt-9 w-[300px] -translate-x-1/2 rounded-[20px] border bg-white p-5 text-left shadow-[0_22px_48px_-32px_rgba(26,22,20,0.35)]"
+        style={{ borderColor: `${entry.color}3A` }}
+      >
+        <div className="mb-2 flex items-center justify-between gap-4">
+          <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: entry.color }}>{entry.label}</p>
+          <button type="button" onClick={onClose} className="text-xs text-[#8B8682] hover:text-[#1A1614]">Close</button>
+        </div>
+        <p className="text-sm leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>{copy[entry.key]}</p>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
@@ -617,7 +699,7 @@ function DimensionCard({ dimension: dim, domainKey, domainColor, index }: { dime
       
       <div className="h-[150px] flex justify-center items-center py-6 relative z-10">
         <ImageWithFallback 
-          src={dimIcons[dim.name as keyof typeof dimIcons]} 
+          src={getDimensionSymbol(dim.name, dim.score)}
           alt={dim.name} 
           className="h-36 object-contain drop-shadow-md"
         />
@@ -672,7 +754,7 @@ function DimensionComparisonPanel() {
           <div>
             <p className="text-[12px] uppercase tracking-[0.17em] font-bold text-[#1A1614]">Your six dimensions</p>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#6F6A64]">
-              A wider view of how each dimension is carrying the profile before you meet them one by one.
+              These six readings show where your profile is working with more ease and where it needs the most attention. Higher, steadier dimensions can carry the system; lower ones show where growth would give the whole shape more support.
             </p>
           </div>
         </div>
@@ -700,7 +782,7 @@ function DimensionComparisonPanel() {
         </div>
       </div>
       <div className="grid gap-4 content-center">
-        <DimensionNote title="Most resourced" dim={mostResourced} />
+        <DimensionNote title="Working best" dim={mostResourced} />
         <DimensionNote title="Needs most work" dim={mostStrained} />
       </div>
     </div>
@@ -708,7 +790,7 @@ function DimensionComparisonPanel() {
 }
 
 function DimensionNote({ title, dim }: { title: string; dim: DimEntry & { domain: string; domainColor: string } }) {
-  const isResource = title === 'Most resourced';
+  const isResource = title === 'Working best';
   const Icon = isResource ? Sparkles : Wrench;
   return (
     <div className="rounded-[22px] bg-[#F8F6F1] p-5">
@@ -741,13 +823,21 @@ interface FlagItemProps {
   text: string;
   linkLabel: string;
   targetId: string;
+  onNavigate: () => void;
 }
 
-function FlagItem({ number, text, linkLabel, targetId }: FlagItemProps) {
+function FlagItem({ number, text, linkLabel, targetId, onNavigate }: FlagItemProps) {
+  const [domainLabel, sectionLabel = 'Finding'] = linkLabel.split('·').map(part => part.trim());
+  const flagContext = `${linkLabel} ${targetId}`.toLowerCase();
+  const domainColor = flagContext.includes('challenge') ? DC : flagContext.includes('play') ? DP : DS;
+
   return (
     <button
       type="button"
-      onClick={() => document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' })}
+      onClick={() => {
+        onNavigate();
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }}
       className="group grid w-full gap-4 rounded-2xl p-3 text-left transition-colors hover:bg-[#FDFCFA]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/35 md:grid-cols-[48px_1fr]"
       aria-label={`Go to ${linkLabel}`}
     >
@@ -765,6 +855,12 @@ function FlagItem({ number, text, linkLabel, targetId }: FlagItemProps) {
         {number}
       </div>
       <div className="min-w-0">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5">
+          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: domainColor }} />
+          <span className="text-[9px] uppercase tracking-[0.16em] font-bold text-[#6F6A64]">
+            {domainLabel} · {sectionLabel}
+          </span>
+        </div>
         <p style={{ fontSize: '14.5px', color: '#1A1614', lineHeight: 1.65, fontWeight: 300, margin: 0 }}>
           {text}
         </p>
