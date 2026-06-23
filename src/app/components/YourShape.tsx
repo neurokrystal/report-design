@@ -66,7 +66,7 @@ export function YourShape() {
     <div className="space-y-12">
       {/* Header */}
       <div>
-        <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>03 Overview</p>
+        <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.16em', fontSize: '11px', marginBottom: '30px', textTransform: 'uppercase' }}>03 Overview</p>
         <div className="relative inline-flex items-center gap-3">
           <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
             Your Shape
@@ -195,10 +195,10 @@ export function YourShape() {
             {/* ── Labels only: the numbers were introduced in the domain section. ── */}
             <text x={MX(500)} y="270" textAnchor="middle" dominantBaseline="middle" fill="#FFFFFF" fontSize="28" fontWeight="800" letterSpacing="3.2" opacity="0.96">CHALLENGE</text>
             <text x={MX(500)} y="308" textAnchor="middle" dominantBaseline="middle" fill="#FFFFFF" fontSize="23" fontWeight="700" opacity="0.9">High</text>
-            <text x={MX(700)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="27" fontWeight="800" letterSpacing="3">SAFETY</text>
-            <text x={MX(700)} y="727" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="23" fontWeight="700" opacity="0.88">Very Low</text>
-            <text x={MX(280)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="27" fontWeight="800" letterSpacing="3">PLAY</text>
-            <text x={MX(280)} y="727" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="23" fontWeight="700" opacity="0.88">Low</text>
+            <text x={MX(745)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="29" fontWeight="800" letterSpacing="3">SAFETY</text>
+            <text x={MX(745)} y="729" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="24" fontWeight="700" opacity="0.88">Very Low</text>
+            <text x={MX(253)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="29" fontWeight="800" letterSpacing="3">PLAY</text>
+            <text x={MX(253)} y="729" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="24" fontWeight="700" opacity="0.88">Low</text>
           </svg>
         </div>
       </div>

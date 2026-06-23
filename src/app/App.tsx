@@ -19,21 +19,21 @@ export default function App() {
 
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto px-8 py-12">
-          <div id="orientation">
+          <div id="orientation" className="scroll-mt-24">
             <Orientation />
           </div>
 
-          <div id="your-domains" className="mt-28">
+          <div id="your-domains" className="mt-28 scroll-mt-24">
             <YourDomains />
           </div>
 
-          <div id="your-shape" className="mt-28">
+          <div id="your-shape" className="mt-28 scroll-mt-24">
             <YourShape />
           </div>
 
           <JourneyMarker />
 
-          <div id="safety" className="mt-28">
+          <div id="safety" className="mt-28 scroll-mt-24">
             <DomainSection
               domain="Safety"
               score={27}
@@ -44,7 +44,7 @@ export default function App() {
             />
           </div>
 
-          <div id="play" className="mt-28">
+          <div id="play" className="mt-28 scroll-mt-24">
             <DomainSection
               domain="Play"
               score={41}
@@ -55,7 +55,7 @@ export default function App() {
             />
           </div>
 
-          <div id="challenge" className="mt-28">
+          <div id="challenge" className="mt-28 scroll-mt-24">
             <DomainSection
               domain="Challenge"
               score={78}
@@ -66,19 +66,21 @@ export default function App() {
             />
           </div>
 
-          <div id="foundations-together" className="mt-28">
+          <IntegrationMarker />
+
+          <div id="foundations-together" className="mt-28 scroll-mt-24">
             <HowFoundationsWork />
           </div>
 
-          <div id="direction" className="mt-28">
+          <div id="direction" className="mt-28 scroll-mt-24">
             <FoundationDirection />
           </div>
 
-          <div id="when-ready" className="mt-28">
+          <div id="when-ready" className="mt-28 scroll-mt-24">
             <WhenReady />
           </div>
 
-          <div id="design-notes" className="mt-28">
+          <div id="design-notes" className="mt-28 scroll-mt-24">
             <DesignNotes />
           </div>
         </div>
@@ -105,6 +107,32 @@ function JourneyMarker() {
           </h2>
           <p className="text-[15px] leading-relaxed text-white/78" style={{ fontWeight: 300 }}>
             You have seen the domains, dimensions, and overall shape. The next part reads each domain as a lived system: what your level means, where alignment is flagged, and how the dimensions underneath are carrying the profile.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function IntegrationMarker() {
+  return (
+    <section className="relative left-1/2 mt-28 w-[calc(100vw-13rem)] -translate-x-1/2 bg-[#F4F1EA] px-8 py-14 shadow-[0_26px_70px_-58px_rgba(26,22,20,0.45)]">
+      <div className="mx-auto max-w-5xl">
+        <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#DC4C0C]">Part 3 · Integration</p>
+        <div className="mt-4 grid gap-8 md:grid-cols-[0.92fr_1.08fr] md:items-end">
+          <h2
+            style={{
+              fontFamily: '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif',
+              fontSize: 'clamp(2rem, 3.4vw, 3rem)',
+              lineHeight: 1,
+              letterSpacing: '-0.04em',
+              color: '#15110F',
+            }}
+          >
+            Now we bring the system back together.
+          </h2>
+          <p className="text-[15px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+            After the domain deep dive, the report returns to the whole architecture: how the foundations lean on each other, where the reading points, and what strengthening the base could change.
           </p>
         </div>
       </div>

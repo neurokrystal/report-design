@@ -85,9 +85,10 @@ export function Orientation() {
         <p style={{
           color: NAV_ORANGE,
           fontWeight: 800,
-          letterSpacing: '0.06em',
-          fontSize: '14px',
+          letterSpacing: '0.16em',
+          fontSize: '11px',
           marginBottom: '30px',
+          textTransform: 'uppercase',
         }}>
           01 Overview
         </p>
@@ -115,7 +116,7 @@ export function Orientation() {
         </p>
 
         {/* Concept cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '34px', marginBottom: '48px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '48px', marginBottom: '52px' }}>
           {concepts.map((c) => (
             <ConceptCard key={c.title} renderIcon={c.renderIcon} title={c.title} body={c.body} accent={c.accent} />
           ))}
@@ -131,8 +132,8 @@ export function Orientation() {
       </div>
 
       {/* ── RIGHT GRAPHIC (40%) ── */}
-      <div className="hidden lg:block lg:col-span-2 sticky top-8 h-[calc(100vh-4rem)] overflow-hidden translate-x-20 xl:translate-x-28" style={{ backgroundColor: '#F0EDE8' }}>
-        <div className="h-full w-full translate-y-20 scale-[0.7]">
+      <div className="hidden lg:block lg:col-span-2 sticky top-8 h-[calc(100vh-4rem)] overflow-hidden translate-x-32 xl:translate-x-44" style={{ backgroundColor: '#F0EDE8' }}>
+        <div className="h-full w-full translate-y-24 scale-[0.62]">
           <DimensionalGraphic />
         </div>
       </div>

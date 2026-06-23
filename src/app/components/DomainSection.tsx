@@ -106,7 +106,7 @@ const domainContent = {
     expressedText: "Outwardly, you express Safety at 35. You hold yourself together. You arrive on time, you meet your obligations, you keep your composure under pressure. Most people around you would describe you as steady, even reliable. What they do not see is what the steadiness costs, or that the composure is held by effort rather than ease.",
     alignmentText: [
       "Your felt Safety reads 22; your expressed Safety reads 35. This is a significant upward divergence. You appear more settled than you actually feel, and the gap is wide enough that it is no longer just a normal piece of social adjustment.",
-      "It has become structural: your outside signal is doing more work than your inside state can honestly support. People may experience you as calm, capable, and composed, while your system is privately carrying vigilance, strain, or the sense that you have to keep yourself together.",
+      "It has become structural: the version of Safety other people meet is steadier than the one your system can easily feel. People may experience you as calm, capable, and composed, while privately you may be carrying vigilance, strain, or the sense that you have to keep yourself together.",
       "That mismatch costs energy because it asks you to maintain a version of Safety that is visible before it is fully available. Over time, this can make support harder to receive, because the people around you respond to the steadiness they can see rather than the steadiness you actually need.",
     ],
     alignmentExtended: "The cost of carrying this gap is not only the energy of the performance. It is the slow erosion of the link between your inner experience and the people around you. The colleagues, friends, and partners who think you are fine are not wrong; you are showing them fine. But fine is not what is happening. The longer the gap persists, the harder it becomes to be received as you actually are.",
@@ -244,7 +244,7 @@ function SectionHeader({ domain }: { domain: 'Safety' | 'Play' | 'Challenge' }) 
   const label = `${domain === 'Safety' ? '04' : domain === 'Play' ? '05' : '06'} Deep Dive`;
   return (
     <div id={`${domain.toLowerCase()}-overview`}>
-      <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>
+      <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.16em', fontSize: '11px', marginBottom: '28px', textTransform: 'uppercase' }}>
         {label}
       </p>
       <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', margin: 0 }}>
@@ -640,20 +640,16 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
             strokeDashoffset={1 - marker / 100}
             opacity="0.72"
           />
-          <motion.path
-            d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50"
-            fill="none"
-            stroke={color}
-            strokeWidth="13"
-            strokeLinecap="round"
-            pathLength="1"
-            strokeDasharray="1"
-            animate={{
-              strokeDashoffset: [1, 1 - marker / 100, 1 - marker / 100, 1],
-              opacity: [0.18, 0.88, 0.74, 0.18],
-            }}
-            transition={{ duration: 5.2, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.62, 0.78, 1] }}
-          />
+          <motion.g
+            style={{
+              offsetPath: 'path("M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50")',
+              offsetDistance: '0%',
+            } as any}
+            animate={{ offsetDistance: ['0%', `${marker}%`, `${marker}%`], opacity: [0, 1, 0] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.72, 1] }}
+          >
+            <circle r="6" fill="#FFFFFF" stroke={color} strokeWidth="4" />
+          </motion.g>
           <motion.path
             d="M596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54"
             fill="none"
@@ -762,9 +758,22 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="space-y-7"
     >
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="mx-auto max-w-3xl space-y-5">
+        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+          At this level, Safety is not absent, but it is conditional. It comes online when you know what is expected, when you can manage the environment, or when you have enough evidence that nothing will demand too much from you. The difficulty is that this kind of Safety does not fully rest the body. It keeps you functioning, but it does not always let you soften.
+        </p>
+        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+          This is why very low Safety can look surprisingly competent. The system learns to produce steadiness from effort instead of ease. The growth direction is not to become less capable; it is to build a foundation where capability does not have to be purchased with constant vigilance.
+        </p>
+      </div>
+      <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
         <div className="rounded-[24px] p-6 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]" style={{ backgroundColor: tint }}>
-          <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>How you see yourself</p>
+          <div className="mb-4 flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-white text-[#2F9A86]">
+              <Check size={17} strokeWidth={2.4} />
+            </span>
+            <p className="text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>How you see yourself</p>
+          </div>
           <div className="mt-5 grid gap-3">
             {selfPoints.map((point) => (
               <div key={point} className="flex items-center gap-3">
@@ -777,7 +786,12 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
           </div>
         </div>
         <div className="rounded-[24px] bg-[#FBFAF7] p-6 shadow-[0_18px_46px_-42px_rgba(26,22,20,0.38)]">
-          <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">How others see you</p>
+          <div className="mb-4 flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-white text-[#8B8682]">
+              <Eye size={17} strokeWidth={2.2} />
+            </span>
+            <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">How others see you</p>
+          </div>
           <div className="mt-5 grid gap-3">
             {othersPoints.map((point) => (
               <div key={point} className="flex items-center gap-3">
@@ -789,14 +803,6 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
             ))}
           </div>
         </div>
-      </div>
-      <div className="mx-auto max-w-3xl space-y-5">
-        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-          At this level, Safety is not absent, but it is conditional. It comes online when you know what is expected, when you can manage the environment, or when you have enough evidence that nothing will demand too much from you. The difficulty is that this kind of Safety does not fully rest the body. It keeps you functioning, but it does not always let you soften.
-        </p>
-        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-          This is why very low Safety can look surprisingly competent. The system learns to produce steadiness from effort instead of ease. The growth direction is not to become less capable; it is to build a foundation where capability does not have to be purchased with constant vigilance.
-        </p>
       </div>
     </motion.div>
   );
@@ -946,21 +952,21 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText }: {
           <AlignmentInfoTile
             label={`Expressed ${domain}`}
             body={upward
-              ? `Your expressed ${domain} is ${expressed}: steadier and more available on the outside than your system feels inside.`
-              : `Your expressed ${domain} is ${expressed}: this is what other people can currently see, receive, or infer from you.`}
+              ? `Your expressed ${domain} is low, but still reads steadier and more available than what you feel internally.`
+              : `Your expressed ${domain} is low, so others may only see a quieter version of what is actually available inside.`}
             mode="expressed"
           />
           <AlignmentInfoTile
             label={`Felt ${domain}`}
-            body={`Your felt ${domain} is ${felt}: the inside reading of what is actually available in your system right now.`}
+            body={`Your felt ${domain} is very low, which means internal steadiness is harder to access and support may not fully land.`}
             mode="felt"
           />
           <AlignmentInfoTile
             label="How you're masking"
             body={upward
-              ? `There is a mild-to-clear gap between what you feel and what you show; your outside signal is running ahead.`
+              ? `There is a mild-to-clear gap between what you feel and what others can read; the outside looks steadier than the inside.`
               : gap < 0
-                ? `There is a gap between what you feel and what you show; your inside ${domain} is stronger than what appears outwardly.`
+                ? `There is a gap between what you feel and what others can read; the inside is stronger than what appears outwardly.`
                 : `Your inside and outside signals are moving together.`}
             mode="masking"
           />
@@ -1012,11 +1018,6 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
         <filter id="alignmentSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.09" />
         </filter>
-        <linearGradient id="alignmentGapWash" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.16" />
-          <stop offset="52%" stopColor="#FFFFFF" stopOpacity="0.9" />
-          <stop offset="100%" stopColor={ALIGNMENT_ACCENT} stopOpacity="0.16" />
-        </linearGradient>
       </defs>
       <motion.path
         d={expressedPath}
@@ -1068,10 +1069,8 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
         strokeDasharray="1"
         transition={{ duration: 1.05, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       />
-      <text x="200" y={topY - 38} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 23, letterSpacing: '0', fill: ALIGNMENT_INK }}>Expressed</text>
-      <text x="200" y={topY - 16} textAnchor="middle" style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.18em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()}</text>
-      <text x="200" y={bottomY + 74} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 23, letterSpacing: '0', fill: ALIGNMENT_INK }}>Felt</text>
-      <text x="200" y={bottomY + 96} textAnchor="middle" style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.18em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()}</text>
+      <text x="200" y={topY - 28} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 24, letterSpacing: '0', fill: ALIGNMENT_INK }}>Expressed</text>
+      <text x="200" y={bottomY + 82} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 24, letterSpacing: '0', fill: ALIGNMENT_INK }}>Felt</text>
       <motion.g
         initial={{ opacity: 0, y: -4 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -1079,19 +1078,28 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap }: {
         transition={{ duration: 0.72, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
         style={{ transformOrigin: `200px ${gapCenterY}px` }}
       >
-        {[92, 308].map((x) => (
+        {[58, 342].map((x) => (
           <g key={x}>
-            <path d={`M${x} ${gapCenterY - 22} L${x} ${topY + 16}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
-            <path d={`M${x} ${topY + 16} L${x - 7} ${topY + 28} M${x} ${topY + 16} L${x + 7} ${topY + 28}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
-            <path d={`M${x} ${gapCenterY + 22} L${x} ${bottomY - 16}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
-            <path d={`M${x} ${bottomY - 16} L${x - 7} ${bottomY - 28} M${x} ${bottomY - 16} L${x + 7} ${bottomY - 28}`} stroke={ALIGNMENT_ACCENT} strokeWidth="1.7" strokeLinecap="round" opacity="0.5" />
+            <motion.polygon
+              points={`${x - 6},${topY + 31} ${x + 6},${topY + 31} ${x},${topY + 18}`}
+              fill={ALIGNMENT_ACCENT}
+              opacity="0.46"
+              animate={{ y: [0, -3, 0] }}
+              transition={{ duration: 2.1, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.polygon
+              points={`${x - 6},${bottomY - 31} ${x + 6},${bottomY - 31} ${x},${bottomY - 18}`}
+              fill={ALIGNMENT_ACCENT}
+              opacity="0.46"
+              animate={{ y: [0, 3, 0] }}
+              transition={{ duration: 2.1, repeat: Infinity, ease: 'easeInOut', delay: 0.18 }}
+            />
           </g>
         ))}
-        <rect x="148" y={gapCenterY - 56} width="104" height="112" rx="28" fill="url(#alignmentGapWash)" stroke={`${ALIGNMENT_ACCENT}48`} />
-        <path d={`M200 ${gapCenterY - 70} L191 ${gapCenterY - 56} H209 Z`} fill={ALIGNMENT_ACCENT} opacity="0.3" />
-        <path d={`M200 ${gapCenterY + 70} L191 ${gapCenterY + 56} H209 Z`} fill={ALIGNMENT_ACCENT} opacity="0.3" />
-        <text x="200" y={gapCenterY - 18} textAnchor="middle" style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()} GAP</text>
-        <text x="200" y={gapCenterY + 32} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 52, fill: ALIGNMENT_INK }}>{gap}</text>
+        <circle cx="200" cy={gapCenterY} r="52" fill="#DFF0EA" />
+        <circle cx="200" cy={gapCenterY} r="52" fill="none" stroke="#FFFFFF" strokeWidth="5" opacity="0.86" />
+        <text x="200" y={gapCenterY - 15} textAnchor="middle" style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.13em', fill: ALIGNMENT_ACCENT }}>{domain.toUpperCase()} GAP</text>
+        <text x="200" y={gapCenterY + 33} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 54, fill: ALIGNMENT_INK }}>{gap}</text>
       </motion.g>
     </svg>
   );
@@ -1173,7 +1181,6 @@ function AlignmentSignalIcon({ mode, color }: { mode: 'felt' | 'expressed' | 'ma
         <>
           <path d="M10 20 A14 14 0 0 1 38 20" fill="none" stroke={color} strokeWidth="6" strokeLinecap="butt" opacity="0.9" />
           <path d="M10 29 A14 14 0 0 0 38 29" fill="none" stroke={color} strokeWidth="6" strokeLinecap="butt" opacity="0.9" />
-          <path d="M23 22 L25 22 M23 27 L25 27" stroke={ALIGNMENT_ACCENT} strokeWidth="2" strokeLinecap="round" opacity="0.55" />
         </>
       )}
     </svg>
@@ -1337,7 +1344,7 @@ function SafetyDimensionJourney({ dim, color, tint, index, active, onActive, onC
           </div>
         </div>
 
-        <div className="lg:self-center">
+        <div className="lg:self-end lg:pb-4">
           <div className="flex items-center justify-start">
             <div className="inline-flex items-center gap-5 rounded-[24px] bg-[#F7F5EF] px-5 py-4">
               <div>
@@ -1393,13 +1400,13 @@ function DimensionReportBlock({ dim, color, tint }: { dim: any; color: string; t
     ];
 
   return (
-    <div className="relative mt-10 border-t border-[#E9E4DA] pt-8">
+    <div className="relative mt-10 pt-2">
       <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>
-        A closer reading of {dim.name}
+        Understanding your dimension of {dim.name}
       </p>
-      <div className="mt-5 grid max-w-4xl gap-x-8 gap-y-5 lg:grid-cols-2">
+      <div className="mt-5 grid max-w-4xl gap-x-12 gap-y-5 lg:grid-cols-2">
         {paragraphs.map((paragraph, index) => (
-          <p key={index} className={`text-[15px] leading-relaxed text-[#1A1614] ${index === 0 ? 'lg:col-span-2' : ''}`} style={{ fontWeight: 300 }}>
+          <p key={index} className="text-[15px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
             {paragraph}
           </p>
         ))}
@@ -1425,48 +1432,27 @@ function SafetyDimensionSymbol({ selected, value, color }: { selected: string; v
 
 function DimensionSliceMarker({ selected, value, color }: { selected: string; value: number; color: string }) {
   const isSelf = selected === 'Self';
-  const dotPosition = isSelf ? { left: '26%', top: '54%' } : { left: '30%', top: '61%' };
-  const labelPosition = isSelf ? { left: '0%', top: '10%' } : { left: '0%', top: '14%' };
-  const radius = 31;
-  const circumference = 2 * Math.PI * radius;
-  const dash = circumference * (value / 100);
+  const position = isSelf ? { left: '24.4%', top: '52.4%' } : { left: '30%', top: '61%' };
 
   return (
-    <>
-      <motion.div
-        className="absolute z-20 h-[18px] w-[18px] rounded-full"
-        style={{ ...dotPosition, backgroundColor: color, boxShadow: `0 0 0 13px ${color}18` }}
-        animate={{ scale: [1, 1.2, 1], opacity: [0.9, 1, 0.9], boxShadow: [`0 0 0 10px ${color}12`, `0 0 0 20px ${color}1F`, `0 0 0 10px ${color}12`] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute z-20 grid h-[82px] w-[82px] place-items-center rounded-full bg-white/92 shadow-[0_18px_34px_-28px_rgba(0,0,0,0.55)] backdrop-blur-sm"
-        style={{ ...labelPosition }}
-        initial={{ opacity: 0, y: 8 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <svg className="absolute inset-0 -rotate-90" width="82" height="82" aria-hidden="true">
-          <circle cx="41" cy="41" r={radius} fill="none" stroke="#EFEAE2" strokeWidth="7" />
-          <motion.circle
-            cx="41"
-            cy="41"
-            r={radius}
-            fill="none"
-            stroke={color}
-            strokeWidth="7"
-            strokeLinecap="round"
-            strokeDasharray={`${dash} ${circumference - dash}`}
-            initial={{ strokeDashoffset: dash }}
-            whileInView={{ strokeDashoffset: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          />
-        </svg>
-        <span className="tabular-nums" style={{ fontFamily: SERIF, fontSize: 29, lineHeight: 1, color }}>{value}</span>
-      </motion.div>
-    </>
+    <motion.div
+      className="absolute z-20 grid h-[48px] w-[48px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[3px] border-white shadow-[0_18px_38px_-24px_rgba(0,0,0,0.55)]"
+      style={{ ...position, backgroundColor: color, boxShadow: `0 0 0 12px ${color}18, 0 18px 38px -24px rgba(0,0,0,0.55)` }}
+      initial={{ opacity: 0, scale: 0.88 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, amount: 0.4 }}
+      animate={{
+        scale: [1, 1.06, 1],
+        boxShadow: [
+          `0 0 0 8px ${color}10, 0 18px 38px -24px rgba(0,0,0,0.55)`,
+          `0 0 0 22px ${color}18, 0 20px 44px -24px ${color}66`,
+          `0 0 0 8px ${color}10, 0 18px 38px -24px rgba(0,0,0,0.55)`,
+        ],
+      }}
+      transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      <span className="tabular-nums text-white" style={{ fontFamily: SERIF, fontSize: 24, lineHeight: 1 }}>{value}</span>
+    </motion.div>
   );
 }
 

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flag, ArrowLeft, ArrowRight, Sparkles, Sprout } from 'lucide-react';
+import { Flag, ArrowLeft, ArrowRight, Sparkles, Sprout, X } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 import lowFuture from "../../imports/10__Low_Future.svg";
@@ -144,7 +144,7 @@ export function YourDomains() {
     <div className="min-h-screen flex flex-col justify-center py-16 relative z-0">
       {/* Header */}
       <div>
-        <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.06em', fontSize: '14px', marginBottom: '30px' }}>02 Overview</p>
+        <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.16em', fontSize: '11px', marginBottom: '28px', textTransform: 'uppercase' }}>02 Overview</p>
         <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
           Your Domains
         </h1>
@@ -199,7 +199,7 @@ export function YourDomains() {
               className="relative justify-self-center lg:justify-self-start rounded-2xl bg-[#F4F1EA] px-5 py-4 max-w-[280px]"
             >
               <span
-                className="absolute -left-3 top-1/2 h-5 w-5 -translate-y-1/2 rotate-45 bg-[#F4F1EA]"
+                className="absolute -left-3 top-[31px] h-5 w-5 -translate-y-1/2 rotate-45 bg-[#F4F1EA]"
                 aria-hidden="true"
               />
               <p style={{ color: '#4D4945', fontSize: '13.5px', lineHeight: 1.6, fontWeight: 300, margin: 0 }}>
@@ -224,6 +224,7 @@ export function YourDomains() {
             >
               <div className="flex justify-center lg:justify-center px-8 lg:px-0">
                 <div
+                  data-domain-symbol="true"
                   className="relative w-full max-w-[260px] lg:max-w-[320px] mx-auto lg:mx-0 group mt-16 lg:mt-12 mb-16 lg:mb-0"
                   onMouseLeave={() => setActiveDomain(null)}
                   style={{ perspective: '900px' }}
@@ -511,7 +512,20 @@ function DomainSymbol({
 }
 
 function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; onClose: () => void }) {
+  const popoverRef = useRef<HTMLDivElement>(null);
   const entry = domainData.find(item => item.key === domain);
+  useEffect(() => {
+    if (!domain) return;
+    const onPointerDown = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      if (popoverRef.current?.contains(target)) return;
+      if (target.closest('[data-domain-symbol="true"]')) return;
+      onClose();
+    };
+    window.addEventListener('mousedown', onPointerDown);
+    return () => window.removeEventListener('mousedown', onPointerDown);
+  }, [domain, onClose]);
   if (!entry) return null;
   const copy: Record<string, string> = {
     Safety: 'Safety shows how much inner steadiness, ease, and trust your system can actually access.',
@@ -522,6 +536,7 @@ function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; 
   return (
     <AnimatePresence>
       <motion.div
+        ref={popoverRef}
         key={entry.key}
         initial={{ opacity: 0, y: 10, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -532,7 +547,9 @@ function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; 
       >
         <div className="mb-2 flex items-center justify-between gap-4">
           <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: entry.color }}>{entry.label}</p>
-          <button type="button" onClick={onClose} className="text-xs text-[#8B8682] hover:text-[#1A1614]">Close</button>
+          <button type="button" onClick={onClose} className="-mr-2 -mt-2 grid h-9 w-9 place-items-center rounded-full text-[#8B8682] transition-colors hover:bg-[#F4F1EA] hover:text-[#1A1614]" aria-label="Close domain description">
+            <X size={15} strokeWidth={2.4} />
+          </button>
         </div>
         <p className="text-sm leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>{copy[entry.key]}</p>
       </motion.div>
@@ -759,7 +776,7 @@ function DimensionComparisonPanel() {
   const mostStrained = dims.reduce((lowest, dim) => dim.score < lowest.score ? dim : lowest, dims[0]);
 
   return (
-    <div className="mt-10 grid gap-6 rounded-[28px] border border-[#E5E3DD] bg-white p-7 shadow-[0_18px_48px_-42px_rgba(26,22,20,0.5)] lg:grid-cols-[1fr_280px]">
+    <div className="mt-10 grid gap-6 rounded-[28px] border border-[#E5E3DD] bg-white p-7 shadow-[0_18px_48px_-42px_rgba(26,22,20,0.5)] lg:grid-cols-[1fr_300px]">
       <div>
         <div className="mb-7 flex items-end justify-between gap-4">
           <div>
@@ -804,11 +821,15 @@ function DimensionNote({ title, dim }: { title: string; dim: DimEntry & { domain
   const isResource = title === 'Strongest support';
   const Icon = isResource ? Sparkles : Sprout;
   return (
-    <div className="rounded-[22px] bg-[#F8F6F1] p-5">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-[#8B8682]">{title}</p>
+    <div className="relative min-h-[150px] overflow-hidden rounded-[26px] bg-[#F8F6F1] p-6">
+      <div className="flex h-full items-center justify-between gap-5">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.14em] font-bold text-[#8B8682]">{title}</p>
+          <p className="mt-7" style={{ fontFamily: SERIF, fontSize: 30, lineHeight: 1, color: '#15110F' }}>{dim.name}</p>
+          <p className="mt-2 text-sm text-[#6F6A64]">{dim.band}</p>
+        </div>
         <motion.span
-          className="grid h-12 w-12 place-items-center rounded-full"
+          className="grid h-14 w-14 shrink-0 place-items-center rounded-full"
           style={{
             color: isResource ? '#DC4C0C' : '#42A68E',
             backgroundColor: isResource ? '#FFF1EA' : '#EAF7F3',
@@ -818,12 +839,6 @@ function DimensionNote({ title, dim }: { title: string; dim: DimEntry & { domain
         >
           <Icon size={24} strokeWidth={2.1} />
         </motion.span>
-      </div>
-      <div className="mt-3 flex items-center justify-between gap-4">
-        <div>
-          <p style={{ fontFamily: SERIF, fontSize: 28, lineHeight: 1, color: '#15110F' }}>{dim.name}</p>
-          <p className="mt-1 text-sm text-[#6F6A64]">{dim.band}</p>
-        </div>
       </div>
     </div>
   );
@@ -865,21 +880,16 @@ function FlagItem({ number, text, linkLabel, targetId, onNavigate }: FlagItemPro
         {number}
       </div>
       <div className="min-w-0">
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5">
-          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: domainColor }} />
-          <span className="text-[9px] uppercase tracking-[0.16em] font-bold text-[#6F6A64]">
-            {domainLabel} · {sectionLabel}
-          </span>
-        </div>
         <p style={{ fontSize: '14.5px', color: '#1A1614', lineHeight: 1.65, fontWeight: 300, margin: 0 }}>
           {text}
         </p>
         <span
-          className="inline-flex items-center gap-1 text-[#B64A18] hover:text-[#8E3510] transition-colors"
-          style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '0.06em', marginTop: '12px', background: 'none', border: 'none', padding: 0, cursor: 'pointer', pointerEvents: 'none' }}
+          className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/75 px-3 py-1.5 text-[#B64A18] transition-colors group-hover:bg-white"
+          style={{ fontSize: '9.5px', fontWeight: 800, letterSpacing: '0.14em', cursor: 'pointer', pointerEvents: 'none', textTransform: 'uppercase' }}
           aria-hidden="true"
         >
-          {linkLabel}
+          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: domainColor }} />
+          {domainLabel} · {sectionLabel}
           <ArrowRight size={12} strokeWidth={2.5} className="group-hover:translate-x-0.5 transition-transform" />
         </span>
       </div>
