@@ -29,6 +29,7 @@ import lowSafetySymbol from '../../imports/Low_Safety.svg';
 import safetyDimensionsSymbol from '../../imports/Safety_dimensions.svg';
 import lowSelfNew from '../../imports/10_Low_Self_new.svg';
 import lowOthersNew from '../../imports/10_Low_Others_new.svg';
+import { getScoreFillPath } from '../data/symbolFillPaths';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const FLAG_COLOR = '#DC4C0C';
@@ -63,6 +64,11 @@ function scoreBand(score: number) {
   if (score <= 72) return 'balanced';
   if (score <= 86) return 'high';
   return 'very high';
+}
+
+function contrastAccent(color: string): string {
+  if (color === '#FFAB00') return '#D49200';
+  return color;
 }
 
 function getDimensionSymbolAsset(name: string, score: number) {
@@ -157,7 +163,11 @@ const domainContent = {
     },
     feltText: "Your inner life has narrowed. The textures that would normally arrive without effort, the small flickers of curiosity, the body responding to a piece of music, the moment of being absorbed in something for its own sake, show up less than they used to, and you may not have noticed. You can describe your days, but fewer of them have flavour.",
     expressedText: "Outwardly, you express Play at 47. You laugh in the right places, you enjoy meals with people, you do the things that look like rest and pleasure. From a distance, your life appears to contain enjoyment. It does, just less than it appears to, and less than is available to you.",
-    alignmentText: "Your felt Play reads 38; your expressed Play reads 47. This is a mild upward divergence. You express slightly more ease and pleasure than you currently feel. The gap is not architecturally significant on its own, but read alongside your Safety alignment, it suggests a consistent pattern. You are working harder than is visible to look more settled than you are.",
+    alignmentText: [
+      "Your felt Play reads 38; your expressed Play reads 47. This is a mild upward divergence. You express slightly more ease and pleasure than you currently feel.",
+      "The gap is not architecturally significant on its own, but read alongside your Safety alignment, it suggests a consistent pattern. You are working harder than is visible to look more settled than you are.",
+      "This kind of gap tends to be invisible to others and quietly tiring for you. The people around you see someone who enjoys life. What they do not see is the effort that enjoyment sometimes takes.",
+    ],
     alignmentExtended: null,
     isAlignmentFlagged: false,
     dimensions: [
@@ -165,13 +175,19 @@ const domainContent = {
         name: 'Senses',
         score: 39,
         band: 'Low',
+        lead: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.",
         text: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.\n\nThis is not numbness. It is a body running a low-power mode it adopted to manage something. The disengagement is not a flaw in you. It is the result of asking your senses to do less so something else could carry more.",
+        working: "You still show up physically. You exercise, you eat well enough, you manage. The body is not neglected, it is simply on a shorter leash. Functionality is intact, and people around you would say you take reasonable care of yourself.",
+        takeNote: "The richness has narrowed. Pleasure arrives as information rather than experience, and the body's invitation to feel has been turned down so low you may not notice it is missing until something briefly turns it back up.",
       },
       {
         name: 'Perception',
         score: 43,
         band: 'Almost Balanced',
+        lead: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.",
         text: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.\n\nThis is a quieter dimension in your reading, neither the strongest nor the most depleted. The mental capacity is still there. It is the body's invitation to engage that has narrowed, and Perception, with less to receive from the senses, is generating less than it otherwise would.",
+        working: "You can still reframe, hold nuance, and shift perspective when the situation calls for it. Cognitive flexibility has not left. It is available when summoned, and your ability to hold complexity under pressure remains reliable.",
+        takeNote: "The generative side of perception, the part that produces new angles unprompted, has quieted. You are interpreting the world more than playing with it, and the difference is felt in how few surprises your own thinking offers you lately.",
       },
     ],
   },
@@ -193,7 +209,11 @@ const domainContent = {
     },
     feltText: "Direction is one of the most settled things in your life. You know what you are doing, you know why you are doing it, and the connection between your effort and your meaning is strong. Pursuit feels good in your body. Forward motion regulates you in a way that few other things do. When you set a goal that matters, your system organises around it quickly, and that organisation is itself a source of relief.",
     expressedText: "Outwardly, you express Challenge at 77, almost exactly what you feel. Others would describe you as driven, focused, often ambitious. They would say you are someone who follows through. The match between the inner and outer experience here is real. This is the part of your architecture where what you feel and what you show are the same thing.",
-    alignmentText: "Your felt Challenge reads 75; your expressed Challenge reads 77. This is an aligned reading. The drive you are showing the world is the drive you actually feel. There is no performance here. In a reading otherwise marked by alignment gaps, this domain is doing something important. It is the part of you that is fully whole, and the part you can most reliably trust.",
+    alignmentText: [
+      "Your felt Challenge reads 75; your expressed Challenge reads 77. This is an aligned reading. The drive you are showing the world is the drive you actually feel. There is no performance here.",
+      "In a reading otherwise marked by alignment gaps, this domain is doing something important. It is the part of you that is fully whole, and the part you can most reliably trust.",
+      "When alignment is this close, the domain becomes a reference point. If you ever wonder whether you are performing or being real, look at how Challenge feels versus how it shows. That match tells you something trustworthy about yourself.",
+    ],
     alignmentExtended: null,
     isAlignmentFlagged: false,
     dimensions: [
@@ -201,13 +221,19 @@ const domainContent = {
         name: 'Past',
         score: 51,
         band: 'Almost Balanced',
+        lead: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.",
         text: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.\n\nThis is not a depleted dimension. It is a foundation that is functional and not yet finished. What is interesting in your reading is that your Future runs significantly higher than your Past, meaning you are oriented forward more strongly than you are anchored backward.",
+        working: "You are not stuck in your history. The past does not paralyse you or define you against your will. You can narrate where you have been with clarity, and most of it has been digested enough to carry without distortion.",
+        takeNote: "Integration is partial. Some chapters sit on the shelf described but not fully authored into your identity. The risk is not that the past controls you, but that the unfinished pieces quietly shape decisions you believe are only about the future.",
       },
       {
         name: 'Future',
         score: 82,
         band: 'High',
+        lead: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.",
         text: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.\n\nThis is also, read against your other scores, the most architecturally interesting part of your reading. Your Future dimension is doing significant work, pulling you forward into a life that has not yet arrived while your Safety foundations sit thin underneath. Strong forward orientation is a real resource here. It can also become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does.",
+        working: "Direction is clear, genuinely chosen, and well-resourced. You are not wandering. Your forward motion is one of the most intact parts of your architecture and one of the places you can most reliably trust yourself.",
+        takeNote: "Strong forward pull can become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does. When Future runs this far ahead of Safety, the question is whether the drive is building the life or outrunning the ground it stands on.",
         flagged: true,
       },
     ],
@@ -296,6 +322,8 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
         content={content}
         score={score}
         band={band}
+        felt={felt}
+        expressed={expressed}
         color={color}
         dimensions={dimensions}
         active={activeDimension}
@@ -357,11 +385,13 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
   );
 }
 
-function SafetyDomainHero({ domain, content, score, band, color, dimensions, active, onActive, onNavigateDimension }: {
+function SafetyDomainHero({ domain, content, score, band, felt, expressed, color, dimensions, active, onActive, onNavigateDimension }: {
   domain: 'Safety' | 'Play' | 'Challenge';
   content: any;
   score: number;
   band: string;
+  felt: number;
+  expressed: number;
   color: string;
   dimensions: any[];
   active: string | null;
@@ -384,15 +414,13 @@ function SafetyDomainHero({ domain, content, score, band, color, dimensions, act
           </div>
         </div>
 
-        <div className="relative min-h-[450px]">
+        <div className="relative min-h-[480px]">
           <motion.div
-            className="absolute left-1/2 -top-12 -translate-x-1/2"
+            className="absolute left-1/2 -top-8 -translate-x-1/2"
             animate={{ y: [0, -5, 0], rotate: [0, -1.2, 0.8, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
-            {domain === 'Safety'
-              ? <SafetyFocusSymbol color={color} size={340} />
-              : <DomainGlyph domain={domain} color={color} size={330} />}
+            <DomainFocusSymbol domain={domain} score={score} gap={Math.abs(expressed - felt)} color={color} />
           </motion.div>
 
           <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 560 450" preserveAspectRatio="none">
@@ -498,7 +526,7 @@ function SafetyScoreCard({ domain, score, band, color }: { domain: string; score
               transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
             />
           </svg>
-          <CountUp to={score} className="relative tabular-nums block" style={{ color: '#8FE9D5', fontSize: 42, lineHeight: 1, fontWeight: 400 }} />
+          <CountUp to={score} className="relative tabular-nums block" style={{ color: domain === 'Safety' ? '#8FE9D5' : domain === 'Play' ? '#FFD97A' : '#FF8F6B', fontSize: 42, lineHeight: 1, fontWeight: 400 }} />
         </div>
         <div className="min-w-0">
           <p className="text-[12px] uppercase tracking-[0.18em] font-bold" style={{ color }}>Overall {domain}</p>
@@ -511,24 +539,101 @@ function SafetyScoreCard({ domain, score, band, color }: { domain: string; score
   );
 }
 
-function SafetyFocusSymbol({ color, size = 250 }: { color: string; size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 998 862" aria-hidden="true" className="drop-shadow-[0_26px_42px_rgba(66,166,142,0.12)] overflow-visible">
-      <defs>
-        <linearGradient id="safetyNeutralFade" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#F8F5EF" />
-          <stop offset="100%" stopColor="#E7E1D8" />
-        </linearGradient>
-      </defs>
-      <g transform="translate(998,0) scale(-1,1)">
-        <motion.path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={color} stroke="#297E70" strokeWidth="7" strokeLinejoin="round" opacity="0.82" initial={{ opacity: 0 }} whileInView={{ opacity: 0.82 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7 }} />
-        <motion.path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={color} stroke="#297E70" strokeWidth="7" strokeLinejoin="round" opacity="0.54" initial={{ opacity: 0 }} whileInView={{ opacity: 0.54 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.7, delay: 0.08 }} />
-        <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={color} opacity="0.54" />
+const SAFETY_FILLS = [
+  "M197.977 241.564L161.527 241.453L160.342 242.139L160.735 241.451L159.944 241.449L161.129 240.765L179.257 209.145L197.977 241.564Z",
+  "M188.279 224.973H188.281L202.093 248.895L148.119 249.062L147.272 249.546L147.553 249.063L146.996 249.065L147.837 248.574L174.968 201.916L188.279 224.973Z",
+  "M172.53 197.693L204.53 253.118L202.773 256.441L135.505 256.385L134.561 256.927L134.873 256.384H134.248L135.188 255.837L168.773 197.553L172.53 197.693Z",
+  "M172.529 197.692L204.529 253.117L198.329 263.986L122.355 263.922L121.547 264.387L121.814 263.922H121.28L122.083 263.454L160.016 197.627L172.529 197.692Z",
+  "M172.529 197.694L204.529 253.118L193.981 271.533L109.211 271.461L108.535 271.85L108.759 271.461H108.312L108.984 271.069L151.308 197.621L172.529 197.694Z",
+  "M172.53 197.692L204.53 253.118L189.915 278.803L97.1777 278.724L95.6826 279.588L96.1807 278.723H95.1836L96.6777 277.859L142.979 197.508L172.53 197.692Z",
+  "M172.53 197.693L188.279 224.973H188.281L204.53 253.118L185.194 286.625L82.917 286.538L82.5098 286.772L82.6445 286.538H82.376L82.7793 286.303L133.844 197.686L172.53 197.693Z",
+  "M172.53 197.692L204.53 253.118L180.891 294.172L69.7656 294.078L69.4971 294.232L69.585 294.078H69.4082L69.6748 293.922L125.157 197.639L172.53 197.692Z",
+  "M172.53 197.693L188.279 224.972H188.281L204.531 253.117L176.88 301.225L59.0654 300.729L57.5781 301.589L58.0713 300.726L57.0781 300.722L58.5645 299.863L117.043 197.586L172.53 197.693Z",
+  "M204.53 253.118L171.245 309.863L42 310.005L106.744 198.146L172.53 197.693L204.53 253.118Z",
+];
+const SAFETY_OVERFLOWS = [
+  "M41.6984 309.7L106.798 197H100.298L31.8984 315.5H168.598L171.898 309.7H41.6984Z",
+  "M41.7016 310.408L106.802 197.508H93.8016L22.1016 321.708H165.402L171.902 310.408H41.7016Z",
+  "M106.798 197.805H87.2984L12.3984 327.504H162.198L171.898 310.604H41.6984L106.798 197.805Z",
+];
+const PLAY_FILLS = [
+  "M247.88 241.453L248.672 241.449L247.488 240.766L229.359 209.145L210.64 241.565L247.089 241.455L248.275 242.139L247.88 241.453Z",
+  "M261.063 249.062L261.619 249.063L260.778 248.573L233.648 201.914L206.523 248.893L260.496 249.061L261.343 249.544L261.063 249.062Z",
+  "M273.743 256.383L274.368 256.382L273.427 255.835L239.843 197.551L236.086 197.692L204.086 253.116L205.842 256.439L273.11 256.384L274.055 256.925L273.743 256.383Z",
+  "M286.801 263.923L287.336 263.922L286.532 263.455L248.6 197.627L236.086 197.692L204.087 253.117L210.286 263.987L286.26 263.923L287.069 264.386L286.801 263.923Z",
+  "M299.631 271.07L257.308 197.621L236.086 197.694L204.086 253.118L214.634 271.533L299.405 271.463L300.08 271.85L299.857 271.462L300.304 271.461L299.631 271.07Z",
+  "M311.937 277.86L265.637 197.508L236.086 197.693L204.085 253.119L218.701 278.803L311.438 278.725L312.933 279.588L312.435 278.724L313.433 278.723L311.937 277.86Z",
+  "M325.971 286.539L326.24 286.538L325.836 286.304L274.772 197.686L236.086 197.693L220.336 224.973L220.334 224.972L204.085 253.117L223.422 286.625L325.699 286.54L326.106 286.772L325.971 286.539Z",
+  "M339.03 294.076L339.208 294.075L338.94 293.921L283.459 197.637L236.085 197.69L204.085 253.116L227.724 294.169L338.85 294.076L339.119 294.23L339.03 294.076Z",
+  "M350.546 300.725L351.537 300.72L350.053 299.863L291.573 197.584L236.085 197.691L204.085 253.115L231.736 301.222L349.552 300.729L351.038 301.586L350.546 300.725Z",
+  "M301.872 198.145L236.087 197.691L204.086 253.117L237.372 309.862L366.617 310.003L301.872 198.145Z",
+];
+const PLAY_OVERFLOWS = [
+  "M308.198 197.305H301.798L366.898 310.005H236.598L239.898 315.805H376.598L308.198 197.305Z",
+  "M386.901 320.997L315.202 196.797H302.202L367.302 309.697H237.102L243.602 320.997H386.901Z",
+  "M320.698 197.102H301.198L366.398 309.901H236.098L245.798 326.801H395.598L320.698 197.102Z",
+];
+const CHALLENGE_FILLS = [
+  "M204.647 165.79L222.967 197.297H185.53L203.85 165.79V164.418L204.248 165.104L204.647 164.418V165.79Z",
+  "M204.031 150.674L230.873 197.497H176.626L203.467 150.674L203.472 149.697L203.749 150.182L204.027 149.697L204.031 150.674Z",
+  "M238.249 194.014L236.248 197.196H204.248L204.249 197.497H171.749L169.749 194.314L203.934 135.22L203.936 134.697L238.249 194.014Z",
+  "M204.519 120.628L242.562 186.392L236.248 197.196H172.249L165.936 186.392L203.978 120.628L203.98 119.697L204.248 120.16L204.517 119.697L204.519 120.628Z",
+  "M204.475 105.476L246.922 178.854L236.248 197.195H172.249L161.575 178.854L204.021 105.476L204.024 104.697L204.248 105.084L204.473 104.697L204.475 105.476Z",
+  "M204.748 91.4238L251.185 171.697L236.249 197.196H172.248L157.312 171.697L203.749 91.4238V89.6973L204.248 90.5605L204.748 89.6973V91.4238Z",
+  "M204.384 75.1631L255.599 163.697L236.249 197.196H172.248L152.898 163.697L204.112 75.1631L204.114 74.6973L204.248 74.9287L204.383 74.6973L204.384 75.1631Z",
+  "M204.338 60.0068L259.982 156.197L236.249 197.196H172.248L148.515 156.197L204.158 60.0068L204.159 59.6973L204.248 59.8516L204.338 59.6973V60.0068Z",
+  "M204.748 47.4102L264.085 149.197L236.249 197.197H172.249L144.412 149.197L203.749 47.4102V45.6973L204.248 46.5537L204.748 45.6973V47.4102Z",
+  "M268.749 139.998L236.249 197.196H172.249L139.748 139.998L204.249 27.998L268.749 139.998Z",
+];
+const CHALLENGE_OVERFLOWS = [
+  "M204.498 28.606L269.598 141.406L272.898 135.906L204.498 17.4062L136.098 135.906L139.398 141.506L204.498 28.606Z",
+  "M269.601 141.103L276.101 129.803L204.501 5.70312L132.801 129.903L139.301 141.103L204.501 28.3032L269.601 141.103Z",
+  "M279.402 125.403L204.502 -4.296875L129.602 125.503L139.402 142.403L204.502 29.5029L269.602 142.303L279.402 125.403Z",
+];
 
-        <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H600.756L700.994 344.272L500.533 -2Z" fill="url(#safetyNeutralFade)" stroke="#D2CBC0" strokeWidth="7" strokeLinejoin="round" opacity="0.5" />
-        <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#F5F1E9" stroke="#D2CBC0" strokeWidth="7" strokeLinejoin="round" opacity="0.64" />
-        <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#F7F4EE" stroke="#D2CBC0" strokeWidth="7" strokeLinejoin="round" opacity="0.6" />
-      </g>
+const DOMAIN_OUTLINES: Record<string, string> = {
+  Safety: "M171.661 197.701L203.922 253.6L171.611 309.501H42.5645L107.088 197.701H171.661Z",
+  Play: "M301.909 197.701L366.434 309.602H237.388L205.075 253.651L237.337 197.701H301.909Z",
+  Challenge: "M269.023 140.797L236.713 196.698H172.189L139.877 140.797L204.5 28.9971L269.023 140.797Z",
+};
+
+function DomainFocusSymbol({ domain, score, gap, color, size = 440 }: {
+  domain: 'Safety' | 'Play' | 'Challenge';
+  score: number;
+  gap: number;
+  color: string;
+  size?: number;
+}) {
+  const bandIndex = Math.min(9, Math.floor((Math.max(1, score) - 1) / 10));
+  const gapIndex = gap <= 3 ? 0 : gap <= 6 ? 1 : gap <= 8 ? 2 : 3;
+
+  const fills = domain === 'Safety' ? SAFETY_FILLS : domain === 'Play' ? PLAY_FILLS : CHALLENGE_FILLS;
+  const overflows = domain === 'Safety' ? SAFETY_OVERFLOWS : domain === 'Play' ? PLAY_OVERFLOWS : CHALLENGE_OVERFLOWS;
+  const darkColor = domain === 'Safety' ? '#09795F' : domain === 'Play' ? '#A97200' : '#8C3109';
+
+  const fillPath = fills[bandIndex];
+  const overflowPath = bandIndex >= 8 && gapIndex > 0 ? overflows[gapIndex - 1] : null;
+  const h = Math.round(size * (338 / 409));
+  const otherDomains = (['Safety', 'Play', 'Challenge'] as const).filter(d => d !== domain);
+  const shadowColor = domain === 'Safety' ? 'rgba(66,166,142,0.14)' : domain === 'Play' ? 'rgba(255,171,0,0.14)' : 'rgba(220,76,12,0.14)';
+
+  return (
+    <svg width={size} height={h} viewBox="0 0 409 338" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ overflow: 'visible', filter: `drop-shadow(0 30px 52px ${shadowColor})` }}>
+      {otherDomains.map(d => {
+        const otherScore = d === 'Safety' ? 27 : d === 'Play' ? 41 : 78;
+        const neutralPath = getScoreFillPath(d, otherScore);
+        return neutralPath ? <path key={d} d={neutralPath} fill="#D8D3C8" /> : null;
+      })}
+      <path d={DOMAIN_OUTLINES.Safety} stroke="#CCCAC5" fill="none" />
+      <path d={DOMAIN_OUTLINES.Play} stroke="#CCCAC5" fill="none" />
+      <path d={DOMAIN_OUTLINES.Challenge} stroke="#CCCAC5" fill="none" />
+      <motion.path d={fillPath} fill={color} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} />
+      {overflowPath && (
+        <motion.path d={overflowPath} fill={darkColor} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7, delay: 0.15 }} />
+      )}
+      <circle cx="204.5" cy="29.498" r="2.5" fill="#CCCAC5" />
+      <circle cx="366.5" cy="309.498" r="2.5" fill="#CCCAC5" />
+      <circle cx="2.5" cy="2.5" r="2.5" transform="matrix(-1 0 0 1 45 306.998)" fill="#CCCAC5" />
     </svg>
   );
 }
@@ -570,90 +675,112 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
   tint: string;
   levels: any;
 }) {
+  const CONTINUUM_PATH = "M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54";
+  const pathRef = useRef<SVGPathElement>(null);
+  const [endPt, setEndPt] = useState<{ x: number; y: number } | null>(null);
+  const marker = Math.min(96, Math.max(4, score));
+
+  useEffect(() => {
+    const path = pathRef.current;
+    if (!path) return;
+    const total = path.getTotalLength();
+    const pt = path.getPointAtLength(total * marker / 100);
+    setEndPt({ x: pt.x, y: pt.y });
+  }, [marker]);
+
   const steps = [
     { label: 'Depleted', x: 68, y: 124 },
     { label: 'Balanced', x: 638, y: 48 },
     { label: 'Excess', x: 768, y: 52 },
   ];
   const activeIndex = score < 45 ? 0 : score < 70 ? 1 : 2;
-  const marker = Math.min(96, Math.max(4, score));
   const activeBody = activeIndex === 2 ? levels.excess.text : activeIndex === 1 ? levels.balanced.text : levels.low.text;
   const cards = [
     { label: 'Where you are', title: band, body: activeBody, Icon: MapPin },
     { label: 'Where you could be', title: 'Balanced', body: levels.balanced.text, Icon: Scale },
   ];
 
+  const markerLeftPct = endPt ? (endPt.x / 820) * 100 : marker;
+  const markerTopPct = endPt ? (endPt.y / 176) * 100 : 50;
+
   return (
     <div className="space-y-7">
       <div className="relative rounded-[28px] p-6 md:p-8" style={{ background: `linear-gradient(135deg, ${tint} 0%, #FDFCFA 64%, #FFFFFF 100%)` }}>
-        <svg className="h-44 w-full overflow-visible" viewBox="0 0 820 176" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id={`${domain}ContinuumSweep`} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor={color} stopOpacity="0" />
-              <stop offset="48%" stopColor={color} stopOpacity="0.88" />
-              <stop offset="100%" stopColor={color} stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54" fill="none" stroke="#EDEAE3" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-          <path
-            d="M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50"
-            fill="none"
-            stroke={color}
-            strokeWidth="10"
-            strokeLinecap="round"
-            pathLength="1"
-            strokeDasharray="1"
-            strokeDashoffset={1 - marker / 100}
-            opacity="0.72"
-          />
-          <motion.g
+        <div className="relative">
+          <svg className="h-44 w-full overflow-visible" viewBox="0 0 820 176" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <radialGradient id={`${domain}Spark`} cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="white" stopOpacity="1" />
+                <stop offset="35%" stopColor={color} stopOpacity="0.9" />
+                <stop offset="100%" stopColor={color} stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <path d={CONTINUUM_PATH} fill="none" stroke="#EDEAE3" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              ref={pathRef}
+              d={CONTINUUM_PATH}
+              fill="none"
+              stroke={color}
+              strokeWidth="10"
+              strokeLinecap="round"
+              pathLength="1"
+              strokeDasharray="1"
+              strokeDashoffset={1 - marker / 100}
+              opacity="0.72"
+            />
+            <motion.g
+              style={{
+                offsetPath: `path("${CONTINUUM_PATH}")`,
+                offsetDistance: '0%',
+              } as any}
+              animate={{
+                offsetDistance: ['0%', `${marker}%`, `${marker}%`],
+                opacity: [0, 1, 0],
+              }}
+              transition={{ duration: 3.6, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.65, 1] }}
+            >
+              <circle r="6" fill="white" opacity="0.95" />
+              <circle r="14" fill={`url(#${domain}Spark)`} opacity="0.8" />
+            </motion.g>
+            <motion.path
+              d="M596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54"
+              fill="none"
+              stroke="#D8D3CA"
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            />
+            <motion.ellipse
+              cx="638"
+              cy="50"
+              rx="96"
+              ry="34"
+              fill={color}
+              opacity="0.08"
+              animate={{ opacity: [0.08, 0.14, 0.08], scale: [1, 1.03, 1] }}
+              transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </svg>
+          <motion.div
+            className="absolute grid h-14 w-14 place-items-center rounded-full bg-white shadow-[0_18px_38px_-28px_rgba(0,0,0,0.6)]"
             style={{
-              offsetPath: 'path("M34 126 C190 126, 264 100, 382 74 C462 56, 516 48, 596 50")',
-              offsetDistance: '0%',
-            } as any}
-            animate={{ offsetDistance: ['0%', `${marker}%`, `${marker}%`], opacity: [0, 1, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: [0.45, 0, 0.25, 1], times: [0, 0.72, 1] }}
+              left: `calc(${markerLeftPct}% - 28px)`,
+              top: `calc(${markerTopPct}% - 28px)`,
+              color,
+              border: `2px solid ${color}`,
+            }}
+            initial={{ scale: 0.7, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <ellipse rx="13" ry="4.5" fill={`url(#${domain}ContinuumSweep)`} />
-          </motion.g>
-          <motion.path
-            d="M596 50 C650 51, 676 47, 704 50 L724 43 L746 57 L768 45 L792 54"
-            fill="none"
-            stroke="#D8D3CA"
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true, amount: 0.45 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          />
-          <motion.ellipse
-            cx="638"
-            cy="50"
-            rx="96"
-            ry="34"
-            fill={color}
-            opacity="0.08"
-            animate={{ opacity: [0.08, 0.14, 0.08], scale: [1, 1.03, 1] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </svg>
-        <motion.div
-          className="absolute grid h-14 w-14 place-items-center rounded-full bg-white shadow-[0_18px_38px_-28px_rgba(0,0,0,0.6)]"
-          style={{
-            left: `calc(${marker}% - 28px)`,
-            top: `${118 - Math.min(72, score * 0.72)}px`,
-            color,
-            border: `2px solid ${color}`,
-          }}
-          initial={{ scale: 0.7, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <span className="text-sm font-semibold">{score}</span>
-        </motion.div>
+            <span className="text-sm font-semibold">{score}</span>
+          </motion.div>
+        </div>
         <div className="relative h-14">
           {steps.map((step, index) => (
             <div
@@ -711,9 +838,35 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
 }
 
 function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Play' | 'Challenge'; color: string; tint: string }) {
-  if (domain !== 'Safety') return null;
-  const selfPoints = ['Managed calm', 'Earned ease', 'Always checking'];
-  const othersPoints = ['Steady presence', 'Quietly capable', 'Under pressure'];
+  const reflectionData: Record<string, { paragraphs: string[]; selfPoints: string[]; othersPoints: string[] }> = {
+    Safety: {
+      paragraphs: [
+        "At this level, Safety is not absent, but it is conditional. It comes online when you know what is expected, when you can manage the environment, or when you have enough evidence that nothing will demand too much from you. The difficulty is that this kind of Safety does not fully rest the body. It keeps you functioning, but it does not always let you soften.",
+        "This is why very low Safety can look surprisingly competent. The system learns to produce steadiness from effort instead of ease. The growth direction is not to become less capable; it is to build a foundation where capability does not have to be purchased with constant vigilance.",
+      ],
+      selfPoints: ['Managed calm', 'Earned ease', 'Always checking'],
+      othersPoints: ['Steady presence', 'Quietly capable', 'Under pressure'],
+    },
+    Play: {
+      paragraphs: [
+        "At this level, Play is not entirely absent. You still laugh, still enjoy meals, still engage with the world around you. But the spontaneous aliveness, the kind that shows up without effort, has narrowed. Enjoyment is available when conditions are right. It is less available when they are not.",
+        "Low Play does not mean you are unhappy. It means the channel through which lightness enters has been turned down. The growth direction is not to force fun but to widen the aperture, to let sensory and creative experience back in without needing to justify it first.",
+      ],
+      selfPoints: ['Dutiful enjoyment', 'Measured lightness', 'Sensory restraint'],
+      othersPoints: ['Sociable', 'Easy company', 'Quietly contained'],
+    },
+    Challenge: {
+      paragraphs: [
+        "At this level, Challenge is one of your clearest resources. Direction is real, motivation is internally sourced, and your sense of purpose does not rely on external validation. You move toward difficulty because it means something to you, not because it is expected.",
+        "High Challenge becomes interesting when read against your other foundations. The drive is genuine, but if Safety sits low underneath, the forward motion may be doing double duty, pulling you into meaning while also helping you avoid the ground you are standing on. The growth direction is not to slow down, but to ensure the foundation can hold what you are building.",
+      ],
+      selfPoints: ['Clear direction', 'Chosen difficulty', 'Self-sourced drive'],
+      othersPoints: ['Driven', 'Focused', 'Always moving forward'],
+    },
+  };
+
+  const data = reflectionData[domain];
+  if (!data) return null;
 
   return (
     <motion.div
@@ -724,48 +877,40 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
       className="space-y-10 pt-5"
     >
       <div className="mx-auto max-w-3xl space-y-5">
-        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-          At this level, Safety is not absent, but it is conditional. It comes online when you know what is expected, when you can manage the environment, or when you have enough evidence that nothing will demand too much from you. The difficulty is that this kind of Safety does not fully rest the body. It keeps you functioning, but it does not always let you soften.
-        </p>
-        <p className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-          This is why very low Safety can look surprisingly competent. The system learns to produce steadiness from effort instead of ease. The growth direction is not to become less capable; it is to build a foundation where capability does not have to be purchased with constant vigilance.
-        </p>
+        {data.paragraphs.map((p, i) => (
+          <p key={i} className="text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>{p}</p>
+        ))}
       </div>
-      <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-2">
-        <div className="rounded-[26px] p-7 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]" style={{ backgroundColor: tint }}>
-          <div className="mb-5">
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-white text-[#2F9A86]">
-              <Check size={17} strokeWidth={2.4} />
+      <div className="mx-auto max-w-3xl rounded-[26px] bg-white p-8 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.4)]">
+        <div className="grid gap-0 md:grid-cols-[1fr_auto_1fr]">
+          <div className="flex flex-col items-center text-center">
+            <span className="grid h-11 w-11 place-items-center rounded-full text-[#2F9A86]" style={{ backgroundColor: tint }}>
+              <Check size={18} strokeWidth={2.4} />
             </span>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>How you see yourself</p>
+            <p className="mt-3 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color }}>How you see yourself</p>
+            <div className="mt-6 grid gap-3 text-left mx-auto">
+              {data.selfPoints.map((point) => (
+                <div key={point} className="flex items-center gap-3 justify-center">
+                  <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="mt-5 grid gap-3">
-            {selfPoints.map((point) => (
-              <div key={point} className="flex items-center gap-3">
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-white text-[#2F9A86]">
-                  <Check size={16} strokeWidth={2.4} />
-                </span>
-                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
-              </div>
-            ))}
+          <div className="hidden md:flex items-stretch justify-center px-6">
+            <div className="w-px bg-[#E5E3DD]" />
           </div>
-        </div>
-        <div className="rounded-[26px] bg-[#FBFAF7] p-7 shadow-[0_18px_46px_-42px_rgba(26,22,20,0.38)]">
-          <div className="mb-5">
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-white text-[#8B8682]">
-              <Eye size={17} strokeWidth={2.2} />
+          <div className="flex flex-col items-center text-center mt-8 md:mt-0">
+            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#F5F3EF] text-[#8B8682]">
+              <Eye size={18} strokeWidth={2.2} />
             </span>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">How others see you</p>
-          </div>
-          <div className="mt-5 grid gap-3">
-            {othersPoints.map((point) => (
-              <div key={point} className="flex items-center gap-3">
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-white text-[#8B8682]">
-                  <Eye size={16} strokeWidth={2.2} />
-                </span>
-                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
-              </div>
-            ))}
+            <p className="mt-3 text-[10px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">How others see you</p>
+            <div className="mt-6 grid gap-3 text-left mx-auto">
+              {data.othersPoints.map((point) => (
+                <div key={point} className="flex items-center gap-3 justify-center">
+                  <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -950,7 +1095,7 @@ function DomainAlignmentBridge({ domain, felt, expressed, alignmentText, color, 
 
       <div className="relative mt-10 grid gap-8 rounded-[24px] bg-[#FBFAF7] p-6 md:grid-cols-[0.88fr_1.12fr] md:p-8 lg:gap-12">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color }}>
+          <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: contrastAccent(color) }}>
             {maskingLabel} · {alignmentLabel}
           </p>
           <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.75rem, 3.2vw, 2.55rem)', lineHeight: 1.14, letterSpacing: '-0.035em', color: '#15110F' }}>
@@ -979,14 +1124,16 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap, color }: {
   gap: number;
   color: string;
 }) {
-  const separation = Math.min(58, 18 + gap * 1.7);
-  const topY = 154 - separation / 2;
-  const bottomY = 218 + separation / 2;
+  const separation = Math.min(80, 4 + gap * 3.2);
+  const centerY = 186;
+  const topY = centerY - separation / 2;
+  const bottomY = centerY + separation / 2;
   const expressedPath = `M 58 ${topY} A 142 142 0 0 1 342 ${topY}`;
   const feltPath = `M 58 ${bottomY} A 142 142 0 0 0 342 ${bottomY}`;
-  const closedExpressedPath = 'M 58 186 A 142 142 0 0 1 342 186';
-  const closedFeltPath = 'M 58 186 A 142 142 0 0 0 342 186';
-  const gapCenterY = (topY + bottomY) / 2;
+  const closedExpressedPath = `M 58 ${centerY} A 142 142 0 0 1 342 ${centerY}`;
+  const closedFeltPath = `M 58 ${centerY} A 142 142 0 0 0 342 ${centerY}`;
+  const gapCenterY = centerY;
+  const labelOffset = 46;
 
   return (
     <svg viewBox="0 0 420 400" className="h-[372px] w-full max-w-[520px] overflow-visible" aria-label="Felt and expressed alignment gap" role="img">
@@ -1045,8 +1192,8 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap, color }: {
         strokeDasharray="1"
         transition={{ duration: 1.05, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       />
-      <text x="200" y={topY - 28} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 24, letterSpacing: '0', fill: color }}>Expressed</text>
-      <text x="200" y={bottomY + 82} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 24, letterSpacing: '0', fill: color }}>Felt</text>
+      <text x="200" y={topY - labelOffset} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 24, letterSpacing: '0', fill: contrastAccent(color) }}>Expressed</text>
+      <text x="200" y={bottomY + labelOffset + 24} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 24, letterSpacing: '0', fill: contrastAccent(color) }}>Felt</text>
       <motion.g
         initial={{ opacity: 0, y: -4 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -1074,7 +1221,7 @@ function SplitAlignmentCircle({ domain, felt, expressed, gap, color }: {
         ))}
         <circle cx="200" cy={gapCenterY} r="66" fill={`${color}22`} />
         <circle cx="200" cy={gapCenterY} r="66" fill="none" stroke="#FFFFFF" strokeWidth="6" opacity="0.88" />
-        <text x="200" y={gapCenterY - 21} textAnchor="middle" style={{ fontSize: domain === 'Challenge' ? 9 : 10.5, fontWeight: 800, letterSpacing: '0.12em', fill: color }}>{domain.toUpperCase()} GAP</text>
+        <text x="200" y={gapCenterY - 21} textAnchor="middle" style={{ fontSize: domain === 'Challenge' ? 9 : 10.5, fontWeight: 800, letterSpacing: '0.12em', fill: contrastAccent(color) }}>{domain.toUpperCase()} GAP</text>
         <text x="200" y={gapCenterY + 35} textAnchor="middle" style={{ fontFamily: SERIF, fontSize: 58, fill: ALIGNMENT_INK }}>{gap}</text>
       </motion.g>
     </svg>
@@ -1110,7 +1257,7 @@ function AlignmentSeverityCue({ gap, label, color }: { gap: number; label: strin
       </div>
       <div className="mt-2 flex justify-between gap-3 text-[9px] uppercase tracking-[0.12em] font-bold text-[#9B958C]">
         <span>Not aligned</span>
-        <span style={{ color }}>Aligned</span>
+        <span style={{ color: contrastAccent(color) }}>Aligned</span>
       </div>
     </div>
   );
@@ -1130,7 +1277,7 @@ function AlignmentInfoTile({ label, body, mode, color, tint }: {
           <AlignmentSignalIcon mode={mode} color={color} />
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color }}>{label}</p>
+          <p className="text-[11px] uppercase tracking-[0.15em] font-bold" style={{ color: contrastAccent(color) }}>{label}</p>
           <p className="mt-1 text-sm leading-snug text-[#4D4945]" style={{ fontWeight: 300 }}>{body}</p>
         </div>
       </div>
@@ -1312,8 +1459,11 @@ function DimensionReportBlock({ dim, color, tint }: { dim: any; color: string; t
   );
 }
 
+const DIM_SCORES: Record<string, number> = { Self: 38, Others: 24, Senses: 39, Perception: 43, Past: 51, Future: 82 };
+
 function SafetyDimensionSymbol({ selected, value, color }: { selected: string; value: number; color: string }) {
   const symbol = getDimensionSymbolAsset(selected, value);
+  const otherDims = Object.keys(DIM_SCORES).filter(d => d !== selected);
   return (
     <div className="absolute inset-0">
       <img
@@ -1323,6 +1473,13 @@ function SafetyDimensionSymbol({ selected, value, color }: { selected: string; v
         className="h-full w-full object-contain opacity-90"
         style={{ filter: `drop-shadow(0 18px 30px ${color}14)` }}
       />
+      <svg viewBox="0 0 409 338" className="absolute inset-0 h-full w-full object-contain" style={{ pointerEvents: 'none' }}>
+        {otherDims.map(dim => {
+          const score = DIM_SCORES[dim] ?? 50;
+          const neutralPath = getScoreFillPath(dim, score);
+          return neutralPath ? <path key={dim} d={neutralPath} fill="#D8D3C8" /> : null;
+        })}
+      </svg>
     </div>
   );
 }
@@ -1335,8 +1492,8 @@ function DimensionSliceMarker({ selected, value, color }: { selected: string; va
   const markerPositions: Record<string, { left: string; top: string }> = {
     Self: toPct(106.68, 196.905),
     Others: toPct(171.648, 309.507),
-    Senses: toPct(302.6, 196.2),
-    Perception: toPct(237.388, 309.604),
+    Senses: toPct(237.388, 309.604),
+    Perception: toPct(302.6, 196.2),
     Past: toPct(139.5, 140.5),
     Future: toPct(269.5, 140.5),
   };
@@ -1433,7 +1590,7 @@ function SixDimensionScale({ active, color }: { active: string; color: string })
       <div className="mb-7 flex items-center justify-between gap-4">
         <p className="text-[12px] uppercase tracking-[0.16em] font-bold text-[#1A1614]">Your six dimensions</p>
       </div>
-      <div className="relative h-72">
+      <div className="relative h-80">
         <div className="absolute inset-0 grid grid-cols-6 gap-6 items-end">
           {allDimensionScores.map((item) => {
             const selected = item.name === active;
@@ -1444,7 +1601,7 @@ function SixDimensionScale({ active, color }: { active: string; color: string })
                 whileHover={{ y: -6 }}
                 transition={{ type: 'spring', stiffness: 420, damping: 34 }}
               >
-                <div className="relative flex h-56 w-full items-end justify-center">
+                <div className="relative flex h-64 w-full items-end justify-center">
                   <div className="absolute bottom-0 h-full w-10 rounded-full bg-[#F1EEE8] transition-colors duration-300 group-hover:bg-[#EAE4DA]" />
                   <motion.div
                     className="relative z-10 w-10 rounded-full transition-[filter,box-shadow] duration-300 group-hover:brightness-110"
@@ -1453,7 +1610,14 @@ function SixDimensionScale({ active, color }: { active: string; color: string })
                     whileInView={{ height: `${item.score}%` }}
                     viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  />
+                  >
+                    <span
+                      className="absolute inset-x-0 top-2 text-center text-[12px] tabular-nums font-bold text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
+                    >
+                      {item.score}
+                    </span>
+                  </motion.div>
                 </div>
                 <p className="text-center text-[10px] uppercase tracking-[0.08em] font-bold" style={{ color: selected ? color : '#9A948D' }}>{item.name}</p>
               </motion.div>

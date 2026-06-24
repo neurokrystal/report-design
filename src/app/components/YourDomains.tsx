@@ -225,7 +225,7 @@ export function YourDomains() {
               <div className="flex justify-center lg:justify-center px-8 lg:px-0">
                 <div
                   data-domain-symbol="true"
-                  className="relative w-full max-w-[260px] lg:max-w-[320px] mx-auto lg:mx-0 group mt-16 lg:mt-12 mb-16 lg:mb-0"
+                  className="relative w-full max-w-[260px] lg:max-w-[320px] mx-auto lg:mx-0 group mt-8 lg:mt-4 mb-20 lg:mb-4"
                   onMouseLeave={() => setActiveDomain(null)}
                   style={{ perspective: '900px' }}
                 >
@@ -236,37 +236,53 @@ export function YourDomains() {
                     onClear={() => setActiveDomain(null)}
                     onSelect={setSelectedDomain}
                   />
+                  <AnimatePresence>
+                    {!selectedDomain && (
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="mt-4 text-center text-[11px] uppercase tracking-[0.14em] font-bold text-[#9A948D]"
+                      >
+                        Your current state
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                   <DomainDescriptionPopover
                     domain={selectedDomain}
                     onClose={() => setSelectedDomain(null)}
                   />
-                  <DomainMarker
-                    label="Challenge"
-                    color={DC}
-                    active={activeDomain === 'Challenge'}
-                    delay={0}
-                    onEnter={() => setActiveDomain('Challenge')}
-                    onLeave={() => setActiveDomain(null)}
-                    className="absolute -top-12 left-1/2 -translate-x-1/2"
-                  />
-                  <DomainMarker
-                    label="Safety"
-                    color={DS}
-                    active={activeDomain === 'Safety'}
-                    delay={0.85}
-                    onEnter={() => setActiveDomain('Safety')}
-                    onLeave={() => setActiveDomain(null)}
-                    className="absolute top-[77%] -left-10 lg:-left-16"
-                  />
-                  <DomainMarker
-                    label="Play"
-                    color={DP}
-                    active={activeDomain === 'Play'}
-                    delay={1.7}
-                    onEnter={() => setActiveDomain('Play')}
-                    onLeave={() => setActiveDomain(null)}
-                    className="absolute top-[77%] -right-10 lg:-right-16"
-                  />
+                  <AnimatePresence mode="wait">
+                    {selectedDomain === 'Challenge' ? (
+                      <motion.div key="challenge-dims" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="contents">
+                        <DomainMarker label="Past" color={DC} active delay={0} onEnter={() => setActiveDomain('Challenge')} onLeave={() => setActiveDomain(null)} className="absolute -top-12 left-[30%] -translate-x-1/2" />
+                        <DomainMarker label="Future" color={DC} active delay={0} onEnter={() => setActiveDomain('Challenge')} onLeave={() => setActiveDomain(null)} className="absolute -top-12 left-[70%] -translate-x-1/2" />
+                      </motion.div>
+                    ) : (
+                      <DomainMarker key="challenge" label="Challenge" color={DC} active={activeDomain === 'Challenge'} delay={0} onEnter={() => setActiveDomain('Challenge')} onLeave={() => setActiveDomain(null)} className="absolute -top-12 left-1/2 -translate-x-1/2" />
+                    )}
+                  </AnimatePresence>
+                  <AnimatePresence mode="wait">
+                    {selectedDomain === 'Safety' ? (
+                      <motion.div key="safety-dims" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="contents">
+                        <DomainMarker label="Self" color={DS} active delay={0} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} className="absolute top-[62%] -left-10 lg:-left-16" />
+                        <DomainMarker label="Others" color={DS} active delay={0} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} className="absolute top-[90%] -left-2 lg:-left-6" />
+                      </motion.div>
+                    ) : (
+                      <DomainMarker key="safety" label="Safety" color={DS} active={activeDomain === 'Safety'} delay={0.85} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} className="absolute top-[77%] -left-10 lg:-left-16" />
+                    )}
+                  </AnimatePresence>
+                  <AnimatePresence mode="wait">
+                    {selectedDomain === 'Play' ? (
+                      <motion.div key="play-dims" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="contents">
+                        <DomainMarker label="Senses" color={DP} active delay={0} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} className="absolute top-[62%] -right-10 lg:-right-16" />
+                        <DomainMarker label="Perception" color={DP} active delay={0} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} className="absolute top-[90%] -right-2 lg:-right-6" />
+                      </motion.div>
+                    ) : (
+                      <DomainMarker key="play" label="Play" color={DP} active={activeDomain === 'Play'} delay={1.7} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} className="absolute top-[77%] -right-10 lg:-right-16" />
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
               <div className="space-y-6">
@@ -799,7 +815,14 @@ function DimensionComparisonPanel() {
                     whileInView={{ height: `${dim.score}%` }}
                     viewport={{ once: true, amount: 0.35 }}
                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  />
+                  >
+                    <span
+                      className="absolute inset-x-0 top-2 text-center text-[11px] tabular-nums font-bold text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
+                    >
+                      {dim.score}
+                    </span>
+                  </motion.div>
                 </div>
                 <div className="text-center">
                   <p className="text-[11px] uppercase tracking-[0.08em] font-bold" style={{ color: dim.domainColor }}>{dim.name}</p>
