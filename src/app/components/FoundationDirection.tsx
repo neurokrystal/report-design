@@ -29,22 +29,22 @@ const changeStates = [
 const traps = [
   {
     title: 'Pushing harder at Challenge',
-    text: 'Achievement can hide the absence of Safety by giving the system enough momentum to keep going without it.',
+    text: 'Achievement can hide the absence of Safety by giving the system enough momentum to keep going. The trap is that more pressure may make you look effective while making rest even harder to receive.',
     Icon: Compass,
   },
   {
     title: 'Performing wellness',
-    text: 'A practice only reaches Safety when it can be imperfect and still received without judgement.',
+    text: 'Wellness can become another performance when it has to be done correctly. A practice only reaches Safety when it can be imperfect, ordinary, and still received without judgement.',
     Icon: Sparkles,
   },
   {
     title: 'Being needed instead of held',
-    text: 'Connection grows when support can move toward you, not only through you.',
+    text: 'Connection can look strong when everyone leans on you. The trap is mistaking being useful for being held. Safety grows when support can move toward you, not only through you.',
     Icon: Sprout,
   },
   {
     title: 'Planning faster',
-    text: 'Your Future is strong, but direction is not the same thing as a foundation.',
+    text: 'Your Future is strong, but direction is not the same thing as a foundation. Planning can organise the next move while still avoiding the slower work of feeling steady where you are.',
     Icon: ArrowRight,
   },
 ];
@@ -136,15 +136,17 @@ function PathwayGraphic() {
     <div className="relative min-h-[380px] overflow-hidden rounded-[28px] bg-[#F6F3ED] p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_70%,rgba(66,166,142,0.18),transparent_40%),radial-gradient(circle_at_78%_28%,rgba(220,76,12,0.10),transparent_38%)]" />
       <svg viewBox="0 0 420 340" className="relative z-10 h-[330px] w-full" aria-hidden="true">
+        <text x="48" y="44" style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.12em', fill: SAFETY }}>BUILD THE BASE FIRST</text>
+        <text x="48" y="66" style={{ fontSize: 12, fill: '#6F6A64' }}>The path begins where the foundation is thinnest.</text>
         <motion.path
-          d="M54 244 C128 196 178 205 222 158 C266 111 315 91 366 72"
+          d="M54 254 C128 208 176 216 218 170 C264 120 314 98 366 84"
           fill="none"
           stroke="#DCD5CA"
           strokeWidth="20"
           strokeLinecap="round"
         />
         <motion.path
-          d="M54 244 C128 196 178 205 222 158 C266 111 315 91 366 72"
+          d="M54 254 C128 208 176 216 218 170 C264 120 314 98 366 84"
           fill="none"
           stroke={SAFETY}
           strokeWidth="20"
@@ -156,9 +158,9 @@ function PathwayGraphic() {
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
         />
-        <Node x={54} y={244} color={SAFETY} label="Safety" />
-        <Node x={222} y={158} color={PLAY} label="Play returns" />
-        <Node x={366} y={72} color={CHALLENGE} label="Challenge rests" />
+        <Node x={54} y={254} color={SAFETY} label="Build Safety" />
+        <Node x={218} y={170} color={PLAY} label="Play has room" />
+        <Node x={366} y={84} color={CHALLENGE} label="Challenge can rest" />
       </svg>
     </div>
   );

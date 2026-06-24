@@ -116,9 +116,9 @@ function JourneyMarker() {
 
 function IntegrationMarker() {
   return (
-    <section className="relative left-1/2 mt-28 w-[calc(100vw-13rem)] -translate-x-1/2 bg-[#F4F1EA] px-8 py-14 shadow-[0_26px_70px_-58px_rgba(26,22,20,0.45)]">
+    <section className="relative left-1/2 mt-28 w-[calc(100vw-13rem)] -translate-x-1/2 bg-[#1A1614] px-8 py-14 text-white shadow-[0_26px_70px_-52px_rgba(26,22,20,0.72)]">
       <div className="mx-auto max-w-5xl">
-        <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#DC4C0C]">Part 3 · Integration</p>
+        <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#FFBB30]">Part 3 · Integration</p>
         <div className="mt-4 grid gap-8 md:grid-cols-[0.92fr_1.08fr] md:items-end">
           <h2
             style={{
@@ -126,12 +126,11 @@ function IntegrationMarker() {
               fontSize: 'clamp(2rem, 3.4vw, 3rem)',
               lineHeight: 1,
               letterSpacing: '-0.04em',
-              color: '#15110F',
             }}
           >
             Now we bring the system back together.
           </h2>
-          <p className="text-[15px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+          <p className="text-[15px] leading-relaxed text-white/78" style={{ fontWeight: 300 }}>
             After the domain deep dive, the report returns to the whole architecture: how the foundations lean on each other, where the reading points, and what strengthening the base could change.
           </p>
         </div>
