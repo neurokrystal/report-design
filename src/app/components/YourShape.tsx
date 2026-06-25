@@ -1,74 +1,93 @@
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  Mountain, Layers, Sparkles, Activity, Compass, BatteryLow,
-  ArrowLeft, ArrowRight, Info,
-} from 'lucide-react';
+import { ArrowRight, Compass, Info, Route, Shield, Sparkles } from 'lucide-react';
+import { useState, type CSSProperties } from 'react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const NAV_ORANGE = '#FF5A1F';
+const CHALLENGE = '#DC4C0C';
+const PLAY = '#FFAB00';
+const SAFETY = '#42A68E';
 
-// Three solid domain sections — Challenge highlighted, Safety + Play neutral.
-const CH = '#E8551D';        // Challenge — highlighted
-const SAFETY_FILL = '#CBC5B9';
-const PLAY_FILL = '#B4AD9F';
+const observations = [
+  'Challenge forms the clear apex.',
+  'Play offers partial support, while Safety sits at the lowest point of the base.',
+  'Resources are concentrated rather than evenly distributed across the system.',
+];
 
-// Mirror helper — section 2 shows the symbol flipped (Safety left, Play right).
-const MX = (x: number) => 998 - x;
-
-// Tone palette for the info pieces.
-const TONE: Record<string, string> = {
-  neutral: '#8B8682',
-  good: '#2F8F79',
-  note: '#B26A1C',
-  cost: '#DC4C0C',
-};
-
-type Piece = { kicker: string; tone: keyof typeof TONE; body: string; Icon: typeof Mountain };
-
-// Six pieces of information across three steps — left/right, surface → deep.
-const beats: { left: Piece; right: Piece }[] = [
+const routeCards = [
   {
-    left:  { kicker: 'The Shape',        tone: 'neutral', Icon: Mountain, body: 'A Sharp Peak is created when one domain becomes visibly taller than the other two.' },
-    right: { kicker: 'The Architecture', tone: 'neutral', Icon: Layers,   body: 'In this profile, Challenge holds the apex while Safety and Play sit as a narrower base beneath it.' },
+    domain: 'Challenge',
+    href: '#challenge',
+    role: 'APEX',
+    headline: 'Start with what is working',
+    body: 'Explore the resource carrying the strongest direction, momentum and meaning in this profile.',
+    action: 'Explore Challenge',
+    color: CHALLENGE,
+    Icon: Sparkles,
   },
   {
-    left:  { kicker: "What's Working", tone: 'good', Icon: Sparkles, body: 'Your peak is a genuine resource — it generates the direction, momentum, and significance the other two domains cannot supply right now.' },
-    right: { kicker: 'Heavy Lifting',  tone: 'note', Icon: Activity, body: 'Challenge is doing structural work the other domains cannot currently carry. The gap between apex and base is wide enough to name.' },
+    domain: 'Safety',
+    href: '#safety',
+    role: 'LOWEST FOUNDATION',
+    headline: 'Start with what needs support',
+    body: 'Explore the foundation with the least available steadiness and the greatest potential to change the architecture.',
+    action: 'Explore Safety',
+    color: SAFETY,
+    Icon: Shield,
   },
   {
-    left:  { kicker: 'Where You Feel Yourself', tone: 'neutral', Icon: Compass,    body: 'You tend to feel most yourself at the apex. For now, that peak is where your sense of self lives.' },
-    right: { kicker: 'A Particular Fatigue',    tone: 'cost',    Icon: BatteryLow, body: 'From the outside this reads as high performance. From the inside it produces fatigue — from asking a single domain to finish work it was not designed to carry alone.' },
+    domain: 'Play',
+    href: '#play',
+    role: 'SUPPORTING FOUNDATION',
+    headline: 'Start with what could replenish',
+    body: 'Explore the partial resource that can broaden the base through aliveness, flexibility and restoration.',
+    action: 'Explore Play',
+    color: PLAY,
+    Icon: Compass,
   },
 ];
 
-function InfoPiece({ piece }: { piece: Piece }) {
-  const color = TONE[piece.tone];
-  const { Icon } = piece;
-  return (
-    <div className="md:px-2">
-      <div className="flex items-center gap-2 mb-3" style={{ color }}>
-        <Icon size={18} strokeWidth={2.25} />
-        <span className="text-[12px] font-bold tracking-[0.12em] uppercase">{piece.kicker}</span>
-      </div>
-      <p style={{ fontSize: '15.5px', color: '#1A1614', lineHeight: 1.7, fontWeight: 300 }}>
-        {piece.body}
-      </p>
-    </div>
-  );
-}
+const roleLabels = [
+  {
+    domain: 'Challenge',
+    role: 'APEX',
+    line: 'Your clearest available resource',
+    color: CHALLENGE,
+  },
+  {
+    domain: 'Play',
+    role: 'SUPPORTING FOUNDATION',
+    line: 'Some resource is available here',
+    color: PLAY,
+  },
+  {
+    domain: 'Safety',
+    role: 'LOWEST FOUNDATION',
+    line: 'The least supported part of the profile',
+    color: SAFETY,
+  },
+];
 
 export function YourShape() {
-  const [step, setStep] = useState(0);
   const [infoOpen, setInfoOpen] = useState(false);
 
   return (
-    <div className="space-y-12">
-      {/* Header */}
-      <div>
-        <p style={{ color: NAV_ORANGE, fontWeight: 800, letterSpacing: '0.16em', fontSize: '11px', marginBottom: '30px', textTransform: 'uppercase' }}>03 Overview</p>
+    <div className="space-y-10">
+      <header>
+        <p className="mb-[30px] text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: NAV_ORANGE }}>
+          03 Overview
+        </p>
         <div className="relative inline-flex items-center gap-3">
-          <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
+          <h1
+            className="mb-[30px]"
+            style={{
+              fontFamily: SERIF,
+              fontWeight: 600,
+              letterSpacing: '-0.03em',
+              fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)',
+              color: '#0F0F0F',
+            }}
+          >
             Your Shape
           </h1>
           <button
@@ -90,193 +109,224 @@ export function YourShape() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 0.98 }}
                 transition={{ duration: 0.18 }}
-                className="absolute left-full top-0 z-20 ml-4 w-[320px] rounded-[18px] border border-[#E5DED3] bg-white p-5 shadow-[0_22px_48px_-34px_rgba(26,22,20,0.45)]"
+                className="absolute left-full top-0 z-20 ml-4 w-[320px] rounded-[18px] border border-[#E5DED3] bg-white p-5 shadow-[0_22px_48px_-34px_rgba(26,22,20,0.45)] max-lg:left-0 max-lg:top-full max-lg:ml-0"
               >
                 <p className="text-sm leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
-                  Your shape shows how all three domains interact to produce the thoughts, feelings, behaviours, drives, and coping patterns you meet in everyday life. No domain works in isolation; the whole shape gives your profile its particular psychological flavour.
+                  Your shape shows how the three domains relate to one another. It is the relationship among them, not only each score on its own.
                 </p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-        <div style={{ width: '40px', height: '3px', backgroundColor: NAV_ORANGE, marginTop: '30px', marginBottom: '32px' }} />
-      </div>
+        <div className="mb-7 h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
+        <p className="max-w-2xl text-[17px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
+          The relationship among your three domains, not only each score on its own.
+        </p>
+      </header>
 
-      {/* Dual column — heading + description on the left, the shape on the right */}
-      <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-        {/* Left Column */}
+      <section className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="space-y-6">
-          <h2 style={{
-            fontFamily: SERIF,
-            fontSize: 'clamp(1.8rem, 3.2vw, 2.55rem)',
-            fontWeight: 600,
-            color: '#0F0F0F',
-            letterSpacing: '-0.035em',
-            lineHeight: 1.08,
-          }}>
+          <h2
+            style={{
+              fontFamily: SERIF,
+              fontSize: 'clamp(1.65rem, 2.65vw, 2.25rem)',
+              fontWeight: 600,
+              color: '#0F0F0F',
+              letterSpacing: '-0.035em',
+              lineHeight: 1.1,
+            }}
+          >
             Together, your domains form a Sharp Peak.
           </h2>
+          <p className="max-w-xl text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+            Challenge stands distinctly above Safety and Play, concentrating much of this profile's available resource at one point. The defining feature is the distance between the apex and the two foundations beneath it, not simply that Challenge is high.
+          </p>
           <div className="grid gap-3 pt-1">
-            {[
-              'Challenge sits at the top.',
-              'Safety and Play are running low beneath it.',
-              'The result is a powerful peak with a fragile base.',
-            ].map((point, index) => (
+            {observations.map((point, index) => (
               <motion.div
                 key={point}
-                className="flex items-center gap-3 rounded-[16px] bg-[#F7F4EE] px-4 py-3"
+                className="group flex items-start gap-3 rounded-[18px] bg-[#F7F4EE] px-4 py-3 transition-colors hover:bg-[#F0EBE1]"
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.35, delay: index * 0.08 }}
+                viewport={{ once: true, amount: 0.55 }}
+                transition={{ duration: 0.35, delay: index * 0.06 }}
               >
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: index === 0 ? CH : '#A8A095' }} />
-                <span className="text-[15.5px] leading-snug text-[#1A1614]" style={{ fontWeight: 350 }}>{point}</span>
+                <span
+                  className="mt-[0.45rem] h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: index === 0 ? CHALLENGE : index === 1 ? SAFETY : PLAY }}
+                />
+                <span className="text-[15px] leading-snug text-[#1A1614]" style={{ fontWeight: 350 }}>
+                  {point}
+                </span>
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Right Column: the Dimensional symbol as three solid sections */}
         <div className="flex justify-center lg:justify-end">
-          <svg viewBox="0 0 998 880" className="w-full max-w-[460px] h-auto overflow-visible">
-            <defs>
-              <radialGradient id="sharpPeakGlow" cx="50%" cy="25%" r="58%">
-                <stop offset="0%" stopColor="#E8551D" stopOpacity="0.36" />
-                <stop offset="48%" stopColor="#E8551D" stopOpacity="0.16" />
-                <stop offset="100%" stopColor="#E8551D" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            <motion.ellipse
-              cx="499"
-              cy="278"
-              rx="235"
-              ry="270"
-              fill="url(#sharpPeakGlow)"
-              animate={{ opacity: [0.74, 1, 0.74], scale: [0.985, 1.03, 0.985] }}
-              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ transformOrigin: '499px 278px' }}
-            />
-            <motion.path
-              d="M499 18 C496 160, 497 304, 499 518"
-              fill="none"
-              stroke="#E8551D"
-              strokeWidth="5"
-              strokeLinecap="round"
-              opacity="0.22"
-              animate={{ opacity: [0.18, 0.34, 0.18] }}
-              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <path d="M362 548 C418 506, 469 489, 499 489 C530 489, 582 506, 638 548" fill="none" stroke="#E8551D" strokeWidth="4" strokeLinecap="round" opacity="0.2" />
-            {/* ── The symbol (mirrored to match section 2) ── */}
-            <g transform="translate(998,0) scale(-1,1)">
-              {/* Play — neutral, one solid section */}
-              <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill={PLAY_FILL} />
-              <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill={PLAY_FILL} />
-              {/* Safety — neutral, one solid section */}
-              <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill={SAFETY_FILL} />
-              <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill={SAFETY_FILL} />
-              <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill={SAFETY_FILL} />
-              {/* Challenge — highlighted, one solid section */}
-              <motion.path
-                d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z"
-                fill={CH}
-                animate={{ opacity: [0.9, 1, 0.9] }}
-                transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <motion.path
-                d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z"
-                fill={CH}
-                animate={{ opacity: [0.9, 1, 0.9] }}
-                transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            </g>
-
-            {/* ── Labels only: the numbers were introduced in the domain section. ── */}
-            <text x={MX(500)} y="270" textAnchor="middle" dominantBaseline="middle" fill="#FFFFFF" fontSize="28" fontWeight="800" letterSpacing="3.2" opacity="0.96">CHALLENGE</text>
-            <text x={MX(500)} y="308" textAnchor="middle" dominantBaseline="middle" fill="#FFFFFF" fontSize="23" fontWeight="700" opacity="0.9">High</text>
-            <text x={MX(745)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="29" fontWeight="800" letterSpacing="3">SAFETY</text>
-            <text x={MX(745)} y="729" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="24" fontWeight="700" opacity="0.88">Very Low</text>
-            <text x={MX(253)} y="688" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="29" fontWeight="800" letterSpacing="3">PLAY</text>
-            <text x={MX(253)} y="729" textAnchor="middle" dominantBaseline="middle" fill="#4F5860" fontSize="24" fontWeight="700" opacity="0.88">Low</text>
-          </svg>
+          <ShapeGraphic />
         </div>
-      </div>
+      </section>
 
-      {/* Info box — left / right pieces, lighter & borderless */}
-      <div className="max-w-4xl bg-[#F4F1EA] rounded-2xl p-8 lg:p-10 mt-10 relative overflow-hidden">
-        <div className="relative min-h-[210px] md:min-h-[150px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 15 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -15 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0 z-10 grid md:grid-cols-2 gap-8 md:gap-12"
-            >
-              {/* Vertical divider */}
-              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-[#E2DBCC]" style={{ transform: 'translateX(-50%)' }} />
-              <InfoPiece piece={beats[step].left} />
-              <InfoPiece piece={beats[step].right} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Controls */}
-        <div className="mt-9 pt-2 flex items-center justify-center gap-7 relative z-10">
-          {/* Previous — ghost button */}
-          <button
-            onClick={() => setStep(s => Math.max(0, s - 1))}
-            disabled={step === 0}
-            className={`group flex items-center gap-2 rounded-[10px] border px-5 py-2.5 text-[12px] font-bold tracking-[0.1em] uppercase transition-all ${
-              step === 0
-                ? 'border-[#E4DFD5] text-[#C8C5BF] cursor-not-allowed'
-                : 'border-[#D4CEBF] text-[#1A1614] hover:border-[#E8551D] hover:text-[#E8551D]'
-            }`}
-          >
-            <ArrowLeft size={15} strokeWidth={2.5} />
-            Previous
-          </button>
-
-          {/* Connected dot track */}
-          <div className="relative flex items-center" aria-hidden="true">
-            <div className="absolute left-1 right-1 top-1/2 h-px -translate-y-1/2 bg-[#D4CEBF]" />
-            <div className="relative flex items-center gap-[18px]">
-              {beats.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setStep(i)}
-                  className="p-2 -m-2"
-                  aria-label={`Go to ${i + 1} of ${beats.length}`}
-                >
-                  <div
-                    className={`h-2.5 rounded-full transition-all duration-300 ${
-                      i === step
-                        ? 'w-6 bg-[#E8551D]'
-                        : 'w-2.5 bg-[#D4CEBF] hover:bg-[#B9B3A6]'
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
+      <section className="rounded-[32px] bg-[#F6F3ED] p-5 md:p-6" aria-label="Choose where to begin">
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Choose your entry point</p>
+            <p className="mt-1 max-w-xl text-[14px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
+              This section is intentionally non-linear. You can begin with the apex, the lowest foundation, or the place that feels most alive to investigate first.
+            </p>
           </div>
-
-          {/* Next — filled orange button */}
-          <button
-            onClick={() => setStep(s => Math.min(beats.length - 1, s + 1))}
-            disabled={step === beats.length - 1}
-            className={`flex items-center gap-2 rounded-[10px] px-5 py-2.5 text-[12px] font-bold tracking-[0.1em] uppercase text-white transition-all ${
-              step === beats.length - 1
-                ? 'bg-[#E8551D]/40 cursor-not-allowed'
-                : 'bg-[#E8551D] hover:bg-[#D14A16] shadow-sm hover:shadow'
-            }`}
-          >
-            Next
-            <ArrowRight size={15} strokeWidth={2.5} />
-          </button>
+          <div className="hidden h-px flex-1 bg-[#DFD6C9] md:block" />
         </div>
-      </div>
+        <div className="grid gap-4 md:grid-cols-3">
+        {routeCards.map((card, index) => {
+          const Icon = card.Icon;
+          return (
+            <motion.a
+              key={card.domain}
+              href={card.href}
+              className="group relative flex min-h-[225px] flex-col overflow-hidden rounded-[24px] border border-[#E8E1D6] bg-white p-5 shadow-[0_22px_58px_-52px_rgba(26,22,20,0.52)] transition-colors focus-visible:outline-none focus-visible:ring-2"
+              style={{ '--tw-ring-color': `${card.color}55` } as CSSProperties}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.42, delay: index * 0.06 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: card.color }} />
+              <div className="mb-6 flex items-center justify-between gap-4">
+                <div className="grid h-11 w-11 place-items-center rounded-full" style={{ backgroundColor: `${card.color}16`, color: card.color }}>
+                  <Icon size={19} strokeWidth={2.15} />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#8B8682]">{card.role}</span>
+              </div>
+              <p className="text-[13px] font-extrabold uppercase tracking-[0.16em]" style={{ color: card.color }}>
+                {card.domain}
+              </p>
+              <h3 className="mt-2 text-[20px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
+                {card.headline}
+              </h3>
+              <p className="mt-3 flex-1 text-[14px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
+                {card.body}
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.12em] transition-transform group-hover:translate-x-1" style={{ color: card.color }}>
+                {card.action}
+                <ArrowRight size={15} strokeWidth={2.35} />
+              </span>
+            </motion.a>
+          );
+        })}
+        </div>
+      </section>
+
+      <section className="rounded-[28px] bg-white p-7 shadow-[0_24px_70px_-62px_rgba(26,22,20,0.6)] ring-1 ring-[#E8E1D6] md:p-9">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Shape definition</p>
+            <p className="mt-3 text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
+              A Sharp Peak appears when one domain stands distinctly above the other two. It shows where the profile's resources are concentrated and which foundations sit comparatively lower.
+            </p>
+          </div>
+          <div className="rounded-[22px] bg-[#F7F4EE] p-5">
+            <div className="mb-3 flex items-center gap-2 text-[#DC4C0C]">
+              <Route size={18} strokeWidth={2.2} />
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]">Reading guidance</p>
+            </div>
+            <p className="text-[15px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
+              You do not have to read the domains in order. Begin with the apex, the lowest foundation or the resource that feels most relevant now. Once you have explored them individually, Section 7 will show how they operate together.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ShapeGraphic() {
+  return (
+    <div className="relative w-full max-w-[560px]">
+      <motion.div
+        className="absolute left-1/2 top-[4%] h-[48%] w-[62%] -translate-x-1/2 rounded-full blur-2xl"
+        style={{ background: 'radial-gradient(circle, rgba(220,76,12,0.32), rgba(220,76,12,0))' }}
+        animate={{ opacity: [0.6, 1, 0.6], scale: [0.97, 1.06, 0.97] }}
+        transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <div className="absolute inset-x-8 bottom-[18%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.12),transparent_68%)] blur-xl" />
+      <svg viewBox="0 0 720 620" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
+        <title id="shapeGraphicTitle">Sharp Peak structure</title>
+        <desc id="shapeGraphicDesc">Challenge forms the apex, with Play and Safety forming the lower foundations beneath it.</desc>
+        <defs>
+          <filter id="shapeDrop" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="22" stdDeviation="20" floodColor="#1A1614" floodOpacity="0.12" />
+          </filter>
+          <linearGradient id="challengeFill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#F15A1A" />
+            <stop offset="100%" stopColor="#C94A29" />
+          </linearGradient>
+          <linearGradient id="safetyFill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#5BC5AC" />
+            <stop offset="100%" stopColor="#2E9583" />
+          </linearGradient>
+          <linearGradient id="playFill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#FFC13B" />
+            <stop offset="100%" stopColor="#E79A00" />
+          </linearGradient>
+        </defs>
+
+        <motion.g filter="url(#shapeDrop)" initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.55 }}>
+          <motion.path
+            d="M360 24 L492 254 L360 254 L228 254 Z"
+            fill="url(#challengeFill)"
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.path
+            d="M360 24 L492 254 L360 254 Z"
+            fill="#FFFFFF"
+            opacity="0.08"
+            animate={{ opacity: [0.08, 0.17, 0.08] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <path d="M228 254 L360 254 L286 390 L112 390 Z" fill="url(#safetyFill)" />
+          <path d="M360 254 L492 254 L608 390 L434 390 Z" fill="url(#playFill)" />
+          <path d="M228 254 L360 254 L286 390 L112 390 Z" fill="#FFFFFF" opacity="0.09" />
+          <path d="M360 254 L492 254 L608 390 L434 390 Z" fill="#FFFFFF" opacity="0.07" />
+        </motion.g>
+
+        <g textAnchor="middle">
+          <text x="360" y="162" fill="#FFFFFF" fontSize="22" fontWeight="900" letterSpacing="3">CHALLENGE</text>
+          <text x="360" y="194" fill="#FFFFFF" fontSize="16" fontWeight="700">APEX</text>
+          <text x="360" y="222" fill="#FFFFFF" fontSize="13" opacity="0.88">Your clearest available resource</text>
+
+          <text x="224" y="318" fill="#FFFFFF" fontSize="17" fontWeight="900" letterSpacing="2.5">SAFETY</text>
+          <text x="224" y="346" fill="#FFFFFF" fontSize="12" fontWeight="800">LOWEST FOUNDATION</text>
+          <text x="224" y="366" fill="#FFFFFF" fontSize="10.5" opacity="0.88">
+            <tspan x="224" dy="0">The least supported part</tspan>
+            <tspan x="224" dy="13">of the profile</tspan>
+          </text>
+
+          <text x="486" y="318" fill="#FFFFFF" fontSize="17" fontWeight="900" letterSpacing="2.5">PLAY</text>
+          <text x="486" y="346" fill="#FFFFFF" fontSize="12" fontWeight="800">SUPPORTING FOUNDATION</text>
+          <text x="486" y="366" fill="#FFFFFF" fontSize="10.5" opacity="0.88">
+            <tspan x="486" dy="0">Some resource is available</tspan>
+            <tspan x="486" dy="13">here</tspan>
+          </text>
+        </g>
+
+        <g transform="translate(34 442)">
+          {roleLabels.map((label, index) => (
+            <g key={label.domain} transform={`translate(${index * 226} 0)`}>
+              <circle cx="14" cy="14" r="6" fill={label.color} />
+              <text x="30" y="14" dominantBaseline="middle" fill={label.color} fontSize="10" fontWeight="900" letterSpacing="1.2">
+                {label.role}
+              </text>
+              <text x="0" y="50" fill="#5F5952" fontSize="12">
+                {label.line}
+              </text>
+            </g>
+          ))}
+        </g>
+      </svg>
     </div>
   );
 }

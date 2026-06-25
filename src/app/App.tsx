@@ -18,7 +18,7 @@ export default function App() {
       <Sidebar activeSection={activeSection} onNavigate={setActiveSection} />
 
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-5xl mx-auto px-8 py-12">
+        <div className="max-w-5xl mx-auto px-4 py-10 md:px-8 md:py-12">
           <div id="orientation" className="scroll-mt-24">
             <Orientation />
           </div>
@@ -91,7 +91,7 @@ export default function App() {
 
 function JourneyMarker() {
   return (
-    <section className="relative left-1/2 mt-28 w-[calc(100vw-13rem)] -translate-x-1/2 bg-[#1A1614] px-8 py-14 text-white shadow-[0_26px_70px_-52px_rgba(26,22,20,0.72)]">
+    <section className="relative left-1/2 mt-28 w-screen -translate-x-1/2 bg-[#1A1614] px-4 py-14 text-white shadow-[0_26px_70px_-52px_rgba(26,22,20,0.72)] md:w-[calc(100vw-13rem)] md:px-8">
       <div className="mx-auto max-w-5xl">
         <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#FFBB30]">Part 2 · Domain deep dive</p>
         <div className="mt-4 grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-end">
@@ -116,7 +116,7 @@ function JourneyMarker() {
 
 function IntegrationMarker() {
   return (
-    <section className="relative left-1/2 mt-28 w-[calc(100vw-13rem)] -translate-x-1/2 bg-[#1A1614] px-8 py-14 text-white shadow-[0_26px_70px_-52px_rgba(26,22,20,0.72)]">
+    <section className="relative left-1/2 mt-28 w-screen -translate-x-1/2 bg-[#1A1614] px-4 py-14 text-white shadow-[0_26px_70px_-52px_rgba(26,22,20,0.72)] md:w-[calc(100vw-13rem)] md:px-8">
       <div className="mx-auto max-w-5xl">
         <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-[#FFBB30]">Part 3 · Integration</p>
         <div className="mt-4 grid gap-8 md:grid-cols-[0.92fr_1.08fr] md:items-end">

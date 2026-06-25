@@ -89,7 +89,7 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
   }, [activeSection]);
 
   return (
-    <aside className="w-52 bg-white border-r border-[#E5E3DD] flex flex-col h-screen sticky top-0">
+    <aside className="hidden w-52 bg-white border-r border-[#E5E3DD] flex-col h-screen sticky top-0 md:flex">
 
       {/* ── Branding ── */}
       <div className="py-7 px-5 flex flex-col items-center text-center flex-shrink-0">
