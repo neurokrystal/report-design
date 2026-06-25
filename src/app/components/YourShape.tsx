@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Compass, Info, Route, Shield, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Compass, Info, Shield, Sparkles, Zap } from 'lucide-react';
 import { useState, type CSSProperties } from 'react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
@@ -9,67 +9,75 @@ const PLAY = '#FFAB00';
 const SAFETY = '#42A68E';
 
 const observations = [
-  'Challenge forms the clear apex.',
-  'Play offers partial support, while Safety sits at the lowest point of the base.',
-  'Resources are concentrated rather than evenly distributed across the system.',
+  {
+    title: 'Challenge forms a clear apex',
+    body: 'The strongest resource rises visibly above the rest of the profile.',
+    color: CHALLENGE,
+    Icon: Zap,
+  },
+  {
+    title: 'Play offers partial support',
+    body: 'There is some flexibility and aliveness in the base, but it is not enough to hold the peak on its own.',
+    color: PLAY,
+    Icon: Compass,
+  },
+  {
+    title: 'Safety sits lower in the base',
+    body: 'The foundation that would make the system feel steadier is the least available part of this shape.',
+    color: SAFETY,
+    Icon: Shield,
+  },
 ];
 
-const routeCards = [
+const routeChips = [
   {
     domain: 'Challenge',
     href: '#challenge',
-    role: 'APEX',
-    headline: 'Start with what is working',
-    body: 'Explore the resource carrying the strongest direction, momentum and meaning in this profile.',
-    action: 'Explore Challenge',
+    label: 'Apex',
     color: CHALLENGE,
     Icon: Sparkles,
   },
   {
     domain: 'Safety',
     href: '#safety',
-    role: 'LOWEST FOUNDATION',
-    headline: 'Start with what needs support',
-    body: 'Explore the foundation with the least available steadiness and the greatest potential to change the architecture.',
-    action: 'Explore Safety',
+    label: 'Lowest foundation',
     color: SAFETY,
     Icon: Shield,
   },
   {
     domain: 'Play',
     href: '#play',
-    role: 'SUPPORTING FOUNDATION',
-    headline: 'Start with what could replenish',
-    body: 'Explore the partial resource that can broaden the base through aliveness, flexibility and restoration.',
-    action: 'Explore Play',
+    label: 'Partial support',
     color: PLAY,
     Icon: Compass,
   },
 ];
 
-const roleLabels = [
+const shapeSlides = [
   {
-    domain: 'Challenge',
-    role: 'APEX',
-    line: 'Your clearest available resource',
-    color: CHALLENGE,
+    eyebrow: 'Shape definition',
+    title: 'What a Sharp Peak is',
+    body: 'A Sharp Peak appears when one domain stands distinctly above the other two. It tells you where the profile is most resourced, and where the base is thinner.',
   },
   {
-    domain: 'Play',
-    role: 'SUPPORTING FOUNDATION',
-    line: 'Some resource is available here',
-    color: PLAY,
+    eyebrow: 'Why it matters',
+    title: 'The peak is real, but it is carrying weight',
+    body: 'Challenge is not a problem in itself. The important detail is that Safety and Play are not supporting it equally, so the system can look capable while quietly spending more than it restores.',
   },
   {
-    domain: 'Safety',
-    role: 'LOWEST FOUNDATION',
-    line: 'The least supported part of the profile',
-    color: SAFETY,
+    eyebrow: 'How to read from here',
+    title: 'You do not have to move through the deep dives in order',
+    body: 'You can begin with the apex, the lowest foundation, or the resource you are most curious about. Section 7 brings the parts back together once you have met them individually.',
   },
 ];
 
 export function YourShape() {
   const [infoOpen, setInfoOpen] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const slide = shapeSlides[activeSlide];
+  const goToSlide = (direction: 1 | -1) => {
+    setActiveSlide(current => (current + direction + shapeSlides.length) % shapeSlides.length);
+  };
 
   return (
     <div className="space-y-10">
@@ -119,9 +127,6 @@ export function YourShape() {
           </AnimatePresence>
         </div>
         <div className="mb-7 h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
-        <p className="max-w-2xl text-[17px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
-          The relationship among your three domains, not only each score on its own.
-        </p>
       </header>
 
       <section className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -138,28 +143,30 @@ export function YourShape() {
           >
             Together, your domains form a Sharp Peak.
           </h2>
-          <p className="max-w-xl text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-            Challenge stands distinctly above Safety and Play, concentrating much of this profile's available resource at one point. The defining feature is the distance between the apex and the two foundations beneath it, not simply that Challenge is high.
-          </p>
-          <div className="grid gap-3 pt-1">
-            {observations.map((point, index) => (
+          <div className="grid gap-3">
+            {observations.map((point, index) => {
+              const Icon = point.Icon;
+              return (
               <motion.div
-                key={point}
-                className="group flex items-start gap-3 rounded-[18px] bg-[#F7F4EE] px-4 py-3 transition-colors hover:bg-[#F0EBE1]"
+                key={point.title}
+                className="group flex items-start gap-4 rounded-[20px] bg-[#F7F4EE] px-4 py-4 transition-colors hover:bg-[#F0EBE1]"
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.55 }}
                 transition={{ duration: 0.35, delay: index * 0.06 }}
               >
-                <span
-                  className="mt-[0.45rem] h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: index === 0 ? CHALLENGE : index === 1 ? SAFETY : PLAY }}
-                />
-                <span className="text-[15px] leading-snug text-[#1A1614]" style={{ fontWeight: 350 }}>
-                  {point}
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full" style={{ backgroundColor: `${point.color}14`, color: point.color }}>
+                  <Icon size={17} strokeWidth={2.25} />
+                </span>
+                <span>
+                  <span className="block text-[15px] font-bold leading-snug text-[#1A1614]">{point.title}</span>
+                  <span className="mt-1 block text-[13px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
+                    {point.body}
+                  </span>
                 </span>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -168,73 +175,88 @@ export function YourShape() {
         </div>
       </section>
 
-      <section className="rounded-[32px] bg-[#F6F3ED] p-5 md:p-6" aria-label="Choose where to begin">
-        <div className="mb-5 flex items-center justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Choose your entry point</p>
-            <p className="mt-1 max-w-xl text-[14px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
-              This section is intentionally non-linear. You can begin with the apex, the lowest foundation, or the place that feels most alive to investigate first.
-            </p>
-          </div>
-          <div className="hidden h-px flex-1 bg-[#DFD6C9] md:block" />
+      <section className="rounded-[30px] bg-[#F6F3ED] p-5 md:p-6" aria-label="Shape reading options">
+        <div className="mb-5 max-w-2xl">
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Explore from any point</p>
+          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
+            The report has a sequence, but the deep dives can also be entered through the part of the shape you most want to understand first.
+          </p>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
-        {routeCards.map((card, index) => {
-          const Icon = card.Icon;
-          return (
-            <motion.a
-              key={card.domain}
-              href={card.href}
-              className="group relative flex min-h-[225px] flex-col overflow-hidden rounded-[24px] border border-[#E8E1D6] bg-white p-5 shadow-[0_22px_58px_-52px_rgba(26,22,20,0.52)] transition-colors focus-visible:outline-none focus-visible:ring-2"
-              style={{ '--tw-ring-color': `${card.color}55` } as CSSProperties}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.42, delay: index * 0.06 }}
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: card.color }} />
-              <div className="mb-6 flex items-center justify-between gap-4">
-                <div className="grid h-11 w-11 place-items-center rounded-full" style={{ backgroundColor: `${card.color}16`, color: card.color }}>
-                  <Icon size={19} strokeWidth={2.15} />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#8B8682]">{card.role}</span>
-              </div>
-              <p className="text-[13px] font-extrabold uppercase tracking-[0.16em]" style={{ color: card.color }}>
-                {card.domain}
-              </p>
-              <h3 className="mt-2 text-[20px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
-                {card.headline}
-              </h3>
-              <p className="mt-3 flex-1 text-[14px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
-                {card.body}
-              </p>
-              <span className="mt-5 inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.12em] transition-transform group-hover:translate-x-1" style={{ color: card.color }}>
-                {card.action}
-                <ArrowRight size={15} strokeWidth={2.35} />
-              </span>
-            </motion.a>
-          );
-        })}
+        <div className="flex flex-wrap gap-2">
+          {routeChips.map(chip => {
+            const Icon = chip.Icon;
+            return (
+              <a
+                key={chip.domain}
+                href={chip.href}
+                className="group inline-flex items-center gap-2 rounded-full border border-[#E2D9CC] bg-white px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2"
+                style={{ color: chip.color, '--tw-ring-color': `${chip.color}55` } as CSSProperties}
+              >
+                <Icon size={15} strokeWidth={2.3} />
+                <span>{chip.domain}</span>
+                <span className="hidden text-[#8B8682] sm:inline">{chip.label}</span>
+                <ArrowRight size={14} strokeWidth={2.4} className="transition-transform group-hover:translate-x-0.5" />
+              </a>
+            );
+          })}
         </div>
       </section>
 
-      <section className="rounded-[28px] bg-white p-7 shadow-[0_24px_70px_-62px_rgba(26,22,20,0.6)] ring-1 ring-[#E8E1D6] md:p-9">
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+      <section className="rounded-[30px] bg-white p-6 shadow-[0_24px_70px_-62px_rgba(26,22,20,0.6)] ring-1 ring-[#E8E1D6] md:p-8">
+        <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Shape definition</p>
-            <p className="mt-3 text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-              A Sharp Peak appears when one domain stands distinctly above the other two. It shows where the profile's resources are concentrated and which foundations sit comparatively lower.
-            </p>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSlide}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.22 }}
+              >
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: CHALLENGE }}>
+                  {slide.eyebrow}
+                </p>
+                <h3 className="mt-3 text-[26px] leading-tight text-[#15110F] md:text-[30px]" style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.035em' }}>
+                  {slide.title}
+                </h3>
+                <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
+                  {slide.body}
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </div>
-          <div className="rounded-[22px] bg-[#F7F4EE] p-5">
-            <div className="mb-3 flex items-center gap-2 text-[#DC4C0C]">
-              <Route size={18} strokeWidth={2.2} />
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]">Reading guidance</p>
+          <div className="flex items-center gap-3 md:justify-end">
+            <button
+              type="button"
+              onClick={() => goToSlide(-1)}
+              className="grid h-10 w-10 place-items-center rounded-full border border-[#E2D9CC] bg-[#F7F4EE] text-[#5F5952] transition-colors hover:bg-[#EEE6D8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+              aria-label="Previous shape note"
+            >
+              <ChevronLeft size={18} strokeWidth={2.35} />
+            </button>
+            <div className="flex items-center gap-2">
+              {shapeSlides.map((item, index) => (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  className="h-2.5 rounded-full transition-all"
+                  style={{
+                    width: activeSlide === index ? 26 : 10,
+                    backgroundColor: activeSlide === index ? CHALLENGE : '#D8D0C5',
+                  }}
+                  aria-label={`Show note ${index + 1}`}
+                />
+              ))}
             </div>
-            <p className="text-[15px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
-              You do not have to read the domains in order. Begin with the apex, the lowest foundation or the resource that feels most relevant now. Once you have explored them individually, Section 7 will show how they operate together.
-            </p>
+            <button
+              type="button"
+              onClick={() => goToSlide(1)}
+              className="grid h-10 w-10 place-items-center rounded-full border border-[#E2D9CC] bg-[#F7F4EE] text-[#5F5952] transition-colors hover:bg-[#EEE6D8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+              aria-label="Next shape note"
+            >
+              <ChevronRight size={18} strokeWidth={2.35} />
+            </button>
           </div>
         </div>
       </section>
@@ -244,87 +266,88 @@ export function YourShape() {
 
 function ShapeGraphic() {
   return (
-    <div className="relative w-full max-w-[560px]">
+    <div className="relative w-full max-w-[540px]">
       <motion.div
-        className="absolute left-1/2 top-[4%] h-[48%] w-[62%] -translate-x-1/2 rounded-full blur-2xl"
-        style={{ background: 'radial-gradient(circle, rgba(220,76,12,0.32), rgba(220,76,12,0))' }}
-        animate={{ opacity: [0.6, 1, 0.6], scale: [0.97, 1.06, 0.97] }}
-        transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute left-1/2 top-[1%] h-[54%] w-[72%] -translate-x-1/2 rounded-full blur-2xl"
+        style={{ background: 'radial-gradient(circle, rgba(220,76,12,0.34), rgba(220,76,12,0.08) 45%, rgba(220,76,12,0) 72%)' }}
+        animate={{ opacity: [0.72, 1, 0.72], scale: [0.98, 1.08, 0.98] }}
+        transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <div className="absolute inset-x-8 bottom-[18%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.12),transparent_68%)] blur-xl" />
-      <svg viewBox="0 0 720 620" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
+      <motion.div
+        className="absolute left-1/2 top-[8%] h-[48%] w-[48%] -translate-x-1/2 rounded-full border border-[#DC4C0C]/12"
+        animate={{ opacity: [0.4, 0.72, 0.4], scale: [0.94, 1.04, 0.94] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <div className="absolute inset-x-8 bottom-[20%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.14),transparent_68%)] blur-xl" />
+      <svg viewBox="0 0 720 560" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
         <title id="shapeGraphicTitle">Sharp Peak structure</title>
         <desc id="shapeGraphicDesc">Challenge forms the apex, with Play and Safety forming the lower foundations beneath it.</desc>
         <defs>
           <filter id="shapeDrop" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="22" stdDeviation="20" floodColor="#1A1614" floodOpacity="0.12" />
           </filter>
-          <linearGradient id="challengeFill" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id="challengeShapeFill" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#F15A1A" />
             <stop offset="100%" stopColor="#C94A29" />
           </linearGradient>
-          <linearGradient id="safetyFill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#5BC5AC" />
-            <stop offset="100%" stopColor="#2E9583" />
-          </linearGradient>
-          <linearGradient id="playFill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#FFC13B" />
-            <stop offset="100%" stopColor="#E79A00" />
+          <linearGradient id="mutedBaseFill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#BCC6CB" />
+            <stop offset="100%" stopColor="#919DA5" />
           </linearGradient>
         </defs>
 
         <motion.g filter="url(#shapeDrop)" initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.55 }}>
           <motion.path
-            d="M360 24 L492 254 L360 254 L228 254 Z"
-            fill="url(#challengeFill)"
-            animate={{ y: [0, -4, 0] }}
+            d="M108 358 L326 358 L254 494 L38 494 Z"
+            fill="url(#mutedBaseFill)"
+            opacity="0.78"
+            animate={{ y: [0, 4, 0], rotate: [-0.35, 0.25, -0.35] }}
+            style={{ transformOrigin: '190px 430px' }}
+            transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.path
+            d="M394 358 L612 358 L686 494 L470 494 Z"
+            fill="url(#mutedBaseFill)"
+            opacity="0.74"
+            animate={{ y: [2, -1, 2], rotate: [0.25, -0.2, 0.25] }}
+            style={{ transformOrigin: '540px 430px' }}
+            transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.path
+            d="M360 22 L510 322 L210 322 Z"
+            fill="url(#challengeShapeFill)"
+            animate={{ y: [0, -7, 0] }}
             transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.path
-            d="M360 24 L492 254 L360 254 Z"
+            d="M360 22 L510 322 L360 322 Z"
             fill="#FFFFFF"
             opacity="0.08"
-            animate={{ opacity: [0.08, 0.17, 0.08] }}
+            animate={{ opacity: [0.08, 0.16, 0.08] }}
             transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <path d="M228 254 L360 254 L286 390 L112 390 Z" fill="url(#safetyFill)" />
-          <path d="M360 254 L492 254 L608 390 L434 390 Z" fill="url(#playFill)" />
-          <path d="M228 254 L360 254 L286 390 L112 390 Z" fill="#FFFFFF" opacity="0.09" />
-          <path d="M360 254 L492 254 L608 390 L434 390 Z" fill="#FFFFFF" opacity="0.07" />
         </motion.g>
 
+        <motion.path
+          d="M170 530 C238 500 301 494 360 512 C419 494 482 500 550 530"
+          fill="none"
+          stroke="#1A1614"
+          strokeOpacity="0.18"
+          strokeWidth="3"
+          strokeDasharray="10 12"
+          animate={{ pathLength: [0.45, 1, 0.45], opacity: [0.22, 0.46, 0.22] }}
+          transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+
         <g textAnchor="middle">
-          <text x="360" y="162" fill="#FFFFFF" fontSize="22" fontWeight="900" letterSpacing="3">CHALLENGE</text>
-          <text x="360" y="194" fill="#FFFFFF" fontSize="16" fontWeight="700">APEX</text>
-          <text x="360" y="222" fill="#FFFFFF" fontSize="13" opacity="0.88">Your clearest available resource</text>
+          <text x="360" y="185" fill="#FFFFFF" fontSize="26" fontWeight="900" letterSpacing="3.2">CHALLENGE</text>
+          <text x="360" y="220" fill="#FFFFFF" fontSize="18" fontWeight="700">High</text>
 
-          <text x="224" y="318" fill="#FFFFFF" fontSize="17" fontWeight="900" letterSpacing="2.5">SAFETY</text>
-          <text x="224" y="346" fill="#FFFFFF" fontSize="12" fontWeight="800">LOWEST FOUNDATION</text>
-          <text x="224" y="366" fill="#FFFFFF" fontSize="10.5" opacity="0.88">
-            <tspan x="224" dy="0">The least supported part</tspan>
-            <tspan x="224" dy="13">of the profile</tspan>
-          </text>
+          <text x="184" y="428" fill="#F9F8F5" fontSize="22" fontWeight="900" letterSpacing="2.6">SAFETY</text>
+          <text x="184" y="458" fill="#F9F8F5" fontSize="15" fontWeight="800">Very Low</text>
 
-          <text x="486" y="318" fill="#FFFFFF" fontSize="17" fontWeight="900" letterSpacing="2.5">PLAY</text>
-          <text x="486" y="346" fill="#FFFFFF" fontSize="12" fontWeight="800">SUPPORTING FOUNDATION</text>
-          <text x="486" y="366" fill="#FFFFFF" fontSize="10.5" opacity="0.88">
-            <tspan x="486" dy="0">Some resource is available</tspan>
-            <tspan x="486" dy="13">here</tspan>
-          </text>
-        </g>
-
-        <g transform="translate(34 442)">
-          {roleLabels.map((label, index) => (
-            <g key={label.domain} transform={`translate(${index * 226} 0)`}>
-              <circle cx="14" cy="14" r="6" fill={label.color} />
-              <text x="30" y="14" dominantBaseline="middle" fill={label.color} fontSize="10" fontWeight="900" letterSpacing="1.2">
-                {label.role}
-              </text>
-              <text x="0" y="50" fill="#5F5952" fontSize="12">
-                {label.line}
-              </text>
-            </g>
-          ))}
+          <text x="536" y="428" fill="#F9F8F5" fontSize="22" fontWeight="900" letterSpacing="2.6">PLAY</text>
+          <text x="536" y="458" fill="#F9F8F5" fontSize="15" fontWeight="800">Low</text>
         </g>
       </svg>
     </div>
