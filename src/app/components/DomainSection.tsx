@@ -186,7 +186,7 @@ const domainContent = {
         score: 39,
         band: 'Low',
         lead: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.",
-        text: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.\n\nThis is not numbness. It is a body running a low-power mode it adopted to manage something. The disengagement is not a flaw in you. It is the result of asking your senses to do less so something else could carry more.",
+        text: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.\n\nThis is not numbness. It is a body running a low-power mode it adopted to manage something. The disengagement is not a flaw in you. It is the result of asking your senses to do less so something else could carry more.\n\nBecause Senses is the bodily doorway into Play, this narrowing changes more than pleasure. It affects how quickly ordinary life can reach you: food, sound, movement, touch, weather, colour, physical ease. Rebuilding here is often quiet at first. It starts with letting the body have small, believable moments of contact before asking it to feel fully alive.",
         working: "You still show up physically. You exercise, you eat well enough, you manage. The body is not neglected, it is simply on a shorter leash. Functionality is intact, and people around you would say you take reasonable care of yourself.",
         takeNote: "The richness has narrowed. Pleasure arrives as information rather than experience, and the body's invitation to feel has been turned down so low you may not notice it is missing until something briefly turns it back up.",
       },
@@ -195,7 +195,7 @@ const domainContent = {
         score: 43,
         band: 'Almost Balanced',
         lead: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.",
-        text: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.\n\nThis is a quieter dimension in your reading, neither the strongest nor the most depleted. The mental capacity is still there. It is the body's invitation to engage that has narrowed, and Perception, with less to receive from the senses, is generating less than it otherwise would.",
+        text: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.\n\nThis is a quieter dimension in your reading, neither the strongest nor the most depleted. The mental capacity is still there. It is the body's invitation to engage that has narrowed, and Perception, with less to receive from the senses, is generating less than it otherwise would.\n\nWhen Perception strengthens, the mind does not only think better. It wanders more fruitfully, notices alternate meanings, and lets surprise become useful again. For you, this dimension likely comes back through gentle experimentation rather than analysis alone: new inputs, new angles, and permission for an idea to be interesting before it is productive.",
         working: "You can still reframe, hold nuance, and shift perspective when the situation calls for it. Cognitive flexibility has not left. It is available when summoned, and your ability to hold complexity under pressure remains reliable.",
         takeNote: "The generative side of perception, the part that produces new angles unprompted, has quieted. You are interpreting the world more than playing with it, and the difference is felt in how few surprises your own thinking offers you lately.",
       },
@@ -214,7 +214,7 @@ const domainContent = {
       },
       excess: {
         label: "When it's excess",
-        text: "Struggle gets mistaken for meaning, busyness masquerades as growth, and you can chase goals you do not genuinely care about or find it hard to stop.",
+        text: "The strength stays healthiest when it remains chosen. At the far edge, Challenge can become so compelling that rest, receiving, and ordinary presence feel less convincing than the next meaningful push.",
       },
     },
     feltText: "Direction is one of the most settled things in your life. You know what you are doing, you know why you are doing it, and the connection between your effort and your meaning is strong. Pursuit feels good in your body. Forward motion regulates you in a way that few other things do. When you set a goal that matters, your system organises around it quickly, and that organisation is itself a source of relief.",
@@ -232,7 +232,7 @@ const domainContent = {
         score: 51,
         band: 'Almost Balanced',
         lead: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.",
-        text: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.\n\nThis is not a depleted dimension. It is a foundation that is functional and not yet finished. What is interesting in your reading is that your Future runs significantly higher than your Past, meaning you are oriented forward more strongly than you are anchored backward.",
+        text: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.\n\nThis is not a depleted dimension. It is a foundation that is functional and not yet finished. What is interesting in your reading is that your Future runs significantly higher than your Past, meaning you are oriented forward more strongly than you are anchored backward.\n\nPast becomes most useful when it is not only understood, but metabolised. The task here is less about revisiting everything and more about letting earlier versions of you become part of the current architecture, so forward motion has memory beneath it rather than only momentum ahead of it.",
         working: "You are not stuck in your history. The past does not paralyse you or define you against your will. You can narrate where you have been with clarity, and most of it has been digested enough to carry without distortion.",
         takeNote: "Integration is partial. Some chapters sit on the shelf described but not fully authored into your identity. The risk is not that the past controls you, but that the unfinished pieces quietly shape decisions you believe are only about the future.",
       },
@@ -241,7 +241,7 @@ const domainContent = {
         score: 82,
         band: 'High',
         lead: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.",
-        text: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.\n\nThis is also, read against your other scores, the most architecturally interesting part of your reading. Your Future dimension is doing significant work, pulling you forward into a life that has not yet arrived while your Safety foundations sit thin underneath. Strong forward orientation is a real resource here. It can also become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does.",
+        text: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.\n\nThis is also, read against your other scores, the most architecturally interesting part of your reading. Your Future dimension is doing significant work, pulling you forward into a life that has not yet arrived while your Safety foundations sit thin underneath. Strong forward orientation is a real resource here. It can also become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does.\n\nThe invitation is not to distrust your ambition. It is to let the future remain a direction rather than a refuge. When the ground beneath you becomes steadier, this same clarity can feel less like something that has to carry you and more like something you are free to choose.",
         working: "Direction is clear, genuinely chosen, and well-resourced. You are not wandering. Your forward motion is one of the most intact parts of your architecture and one of the places you can most reliably trust yourself.",
         takeNote: "Strong forward pull can become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does. When Future runs this far ahead of Safety, the question is whether the drive is building the life or outrunning the ground it stands on.",
         flagged: true,
@@ -710,6 +710,8 @@ function LevelContinuum({ domain, score, band, color, tint, levels }: {
   // Second card: low aspires toward Balanced; balanced and high get the distinct excess-edge caution.
   const secondCard = activeIndex === 0
     ? { label: 'Where you could be', title: 'Balanced', body: levels.balanced.text, Icon: Scale }
+    : domain === 'Challenge'
+      ? { label: 'How to keep it clean', title: 'Strength with enough ground', body: levels.excess.text, Icon: Gauge }
     : { label: 'Where to stay aware', title: 'The excess edge', body: levels.excess.text, Icon: Gauge };
   const cards = [
     { label: 'Where you are', title: band, body: whereYouAreBody, Icon: MapPin },
@@ -908,21 +910,24 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           className="relative overflow-hidden rounded-[28px] border p-7 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]"
           style={{
-            background: `linear-gradient(145deg, ${tint} 0%, #FFFFFF 82%)`,
+            background: `linear-gradient(145deg, ${tint} 0%, #FFFFFF 72%)`,
             borderColor: `${color}24`,
           }}
         >
-          <div className="mb-7 flex flex-col items-center text-center">
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-white shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]" style={{ color }}>
-              <Check size={19} strokeWidth={2.4} />
+          <span className="absolute left-0 top-0 h-1.5 w-full" style={{ backgroundColor: color }} />
+          <div className="mb-7 flex flex-col items-start">
+            <span className="grid h-[52px] w-[52px] place-items-center rounded-[18px] bg-white shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]" style={{ color }}>
+              <Check size={22} strokeWidth={2.35} />
             </span>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color: contrastText(color) }}>How you see yourself</p>
+            <p className="mt-5 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color: contrastText(color) }}>How you see yourself</p>
           </div>
-          <div className="grid gap-3">
-            {data.selfPoints.map((point) => (
-              <div key={point} className="flex items-center justify-center gap-3 rounded-full bg-white/70 px-5 py-3 shadow-[0_10px_24px_-22px_rgba(26,22,20,0.55)]">
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
-                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+          <div className="grid gap-4">
+            {data.selfPoints.map((point, index) => (
+              <div key={point} className="grid grid-cols-[34px_1fr] items-center gap-4">
+                <span className="grid h-8 w-8 place-items-center rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: color }}>
+                  {index + 1}
+                </span>
+                <span className="text-[22px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
               </div>
             ))}
           </div>
@@ -932,21 +937,24 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
           transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           className="relative overflow-hidden rounded-[28px] border p-7 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]"
           style={{
-            background: 'linear-gradient(145deg, #FFF4E7 0%, #FFFFFF 82%)',
+            background: 'linear-gradient(145deg, #FFF4E7 0%, #FFFFFF 72%)',
             borderColor: '#E7B97955',
           }}
         >
-          <div className="mb-7 flex flex-col items-center text-center">
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-white text-[#B66A22] shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]">
-              <Eye size={19} strokeWidth={2.2} />
+          <span className="absolute left-0 top-0 h-1.5 w-full bg-[#D88A35]" />
+          <div className="mb-7 flex flex-col items-start">
+            <span className="grid h-[52px] w-[52px] place-items-center rounded-[18px] bg-white text-[#B66A22] shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]">
+              <Eye size={22} strokeWidth={2.2} />
             </span>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.16em] font-bold text-[#9B5C1F]">How others see you</p>
+            <p className="mt-5 text-[10px] uppercase tracking-[0.16em] font-bold text-[#9B5C1F]">How others see you</p>
           </div>
-          <div className="grid gap-3">
-            {data.othersPoints.map((point) => (
-              <div key={point} className="flex items-center justify-center gap-3 rounded-full bg-white/70 px-5 py-3 shadow-[0_10px_24px_-22px_rgba(26,22,20,0.55)]">
-                <span className="h-2 w-2 rounded-full bg-[#D88A35]" />
-                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+          <div className="grid gap-4">
+            {data.othersPoints.map((point, index) => (
+              <div key={point} className="grid grid-cols-[34px_1fr] items-center gap-4">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-[#D88A35] text-[12px] font-bold text-white">
+                  {index + 1}
+                </span>
+                <span className="text-[22px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
               </div>
             ))}
           </div>
