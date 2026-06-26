@@ -126,16 +126,34 @@ function PartDivider({
   body: string;
   className?: string;
 }) {
-  const steps = ['Overview', 'Deep dive', 'Integration'];
+  const steps = [1, 2, 3];
   return (
     <section
-      className={`relative left-1/2 w-screen -translate-x-1/2 border-y border-[#E7E0D6] bg-[#F4F0E9] px-4 py-8 shadow-[0_22px_52px_-48px_rgba(26,22,20,0.42)] md:w-[calc(100vw-13rem)] md:px-8 ${className}`}
+      className={`relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#1A1614] px-4 py-12 text-white shadow-[0_28px_76px_-54px_rgba(26,22,20,0.78)] md:w-[calc(100vw-13rem)] md:px-8 ${className}`}
     >
-      <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-[0.72fr_1fr_auto] md:items-center">
+      <div
+        className="absolute inset-y-0 right-0 w-[42%] opacity-45"
+        style={{
+          background: 'linear-gradient(112deg, transparent 0%, rgba(255,187,48,0.10) 48%, rgba(220,76,12,0.13) 100%)',
+        }}
+      />
+      <div className="absolute right-[9%] top-1/2 hidden -translate-y-1/2 items-center gap-4 md:flex" aria-hidden="true">
+        {steps.map(item => (
+          <span
+            key={item}
+            className="block h-3 w-3 rotate-45"
+            style={{
+              backgroundColor: item === step ? '#FFBB30' : 'rgba(255,255,255,0.22)',
+              boxShadow: item === step ? '0 0 34px rgba(255,187,48,0.45)' : undefined,
+            }}
+          />
+        ))}
+      </div>
+      <div className="relative mx-auto grid max-w-5xl gap-7 md:grid-cols-[0.72fr_1fr] md:items-end">
         <div>
           <div className="mb-3 flex items-center gap-3">
-            <span className="h-px w-9 bg-[#DC4C0C]" />
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#9B3B14]">
+            <span className="h-px w-9 bg-[#FFBB30]" />
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#FFBB30]">
               {part} · {label}
             </p>
           </div>
@@ -145,33 +163,15 @@ function PartDivider({
               fontSize: 'clamp(1.75rem, 2.8vw, 2.55rem)',
               lineHeight: 1,
               letterSpacing: '-0.04em',
-              color: '#171411',
+              color: '#FFFFFF',
             }}
           >
             {title}
           </h2>
         </div>
-        <p className="max-w-xl text-[14px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
+        <p className="max-w-xl text-[15px] leading-relaxed text-white/72" style={{ fontWeight: 300 }}>
           {body}
         </p>
-        <div className="min-w-[190px] rounded-full border border-[#E1D9CD] bg-[#FDFCFA]/72 px-4 py-3">
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <span className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Report path</span>
-            <span className="text-[10px] font-bold tabular-nums text-[#9B3B14]">{step}/3</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5" aria-label={`${part} of 3`}>
-            {steps.map((name, index) => {
-              const active = index + 1 <= step;
-              return (
-                <span
-                  key={name}
-                  className="h-1.5 rounded-full"
-                  style={{ backgroundColor: active ? '#DC4C0C' : '#D8D0C5' }}
-                />
-              );
-            })}
-          </div>
-        </div>
       </div>
     </section>
   );

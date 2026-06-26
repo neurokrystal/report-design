@@ -905,11 +905,17 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
         ))}
       </div>
       <div
-        className="mx-auto max-w-4xl overflow-hidden rounded-[32px] p-6 text-white shadow-[0_28px_72px_-54px_rgba(26,22,20,0.72)] md:p-8"
+        className="relative mx-auto max-w-4xl overflow-hidden rounded-[34px] border border-white/70 p-6 shadow-[0_30px_78px_-58px_rgba(26,22,20,0.55)] md:p-8"
         style={{
-          background: `linear-gradient(135deg, #1A1614 0%, #211A16 48%, ${color} 160%)`,
+          background: `linear-gradient(135deg, ${tint} 0%, #FFF6EA 52%, #FDFCFA 100%)`,
         }}
       >
+        <div
+          className="absolute inset-0 opacity-80"
+          style={{
+            background: `radial-gradient(circle at 24% 18%, ${color}30, transparent 34%), radial-gradient(circle at 78% 24%, rgba(216,138,53,0.24), transparent 32%), radial-gradient(circle at 48% 110%, rgba(255,255,255,0.86), transparent 52%)`,
+          }}
+        />
         <div className="grid gap-8 md:grid-cols-[1fr_auto_1fr] md:gap-0">
           <ReflectionColumn
             title="How you see yourself"
@@ -917,7 +923,7 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
             color={color}
             Icon={Check}
           />
-          <div className="hidden w-px bg-white/14 md:block" />
+          <div className="relative hidden w-px bg-[#D8D0C5]/80 md:block" />
           <ReflectionColumn
             title="How others see you"
             points={data.othersPoints}
@@ -940,21 +946,19 @@ function ReflectionColumn({ title, points, color, Icon }: {
     <motion.div
       whileHover={{ y: -3 }}
       transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-      className="px-2 text-center md:px-8"
+      className="relative px-2 text-center md:px-8"
     >
-      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/10 ring-1 ring-white/18" style={{ color }}>
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/82 shadow-[0_16px_30px_-24px_rgba(26,22,20,0.48)] ring-1 ring-white" style={{ color }}>
         <Icon size={23} strokeWidth={2.25} />
       </div>
-      <p className="mt-5 text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color }}>
+      <p className="mt-5 text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color: contrastText(color) }}>
         {title}
       </p>
       <div className="mt-7 grid gap-3">
         {points.map(point => (
-          <div key={point} className="rounded-full bg-white/[0.075] px-5 py-3 ring-1 ring-white/10">
-            <span className="text-[24px] leading-tight text-white" style={{ fontFamily: SERIF }}>
-              {point}
-            </span>
-          </div>
+          <p key={point} className="text-[25px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>
+            {point}
+          </p>
         ))}
       </div>
     </motion.div>

@@ -7,21 +7,6 @@ const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, 
 const NAV_ORANGE = '#FF5A1F';
 const CHALLENGE = '#DC4C0C';
 
-const observations = [
-  {
-    body: 'Challenge sits at the top.',
-    color: CHALLENGE,
-  },
-  {
-    body: 'Safety and Play are running low beneath it.',
-    color: '#AAA399',
-  },
-  {
-    body: 'The result is a powerful peak with a fragile base.',
-    color: '#AAA399',
-  },
-];
-
 const shapeSlides = [
   {
     leftLabel: 'The shape',
@@ -109,42 +94,26 @@ export function YourShape() {
         <div className="mb-7 h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
       </header>
 
-      <section className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div className="space-y-6">
+      <section className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+        <div>
           <h2
             style={{
               fontFamily: SERIF,
-              fontSize: 'clamp(1.65rem, 2.65vw, 2.25rem)',
+              fontSize: 'clamp(1.85rem, 3vw, 2.7rem)',
               fontWeight: 600,
               color: '#0F0F0F',
               letterSpacing: '-0.035em',
-              lineHeight: 1.1,
+              lineHeight: 1.04,
             }}
           >
             Together, your domains form a Sharp Peak.
           </h2>
-          <div className="grid gap-3">
-            {observations.map((point, index) => {
-              return (
-              <motion.div
-                key={point.body}
-                className="group flex items-center gap-4 rounded-[18px] bg-[#F7F4EE] px-5 py-4 transition-colors hover:bg-[#F0EBE1]"
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.55 }}
-                transition={{ duration: 0.35, delay: index * 0.06 }}
-              >
-                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: point.color }} />
-                <span className="text-[18px] leading-snug text-[#1A1614]" style={{ fontWeight: 300 }}>
-                  {point.body}
-                </span>
-              </motion.div>
-              );
-            })}
-          </div>
+          <p className="mt-6 max-w-md text-[18px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+            Challenge rises as the apex of the profile, while Safety and Play form a quieter base beneath it.
+          </p>
         </div>
 
-        <div className="flex justify-center lg:justify-end">
+        <div className="flex justify-center lg:justify-center">
           <ShapeGraphic />
         </div>
       </section>
@@ -223,15 +192,17 @@ export function YourShape() {
 
 function ShapeGraphic() {
   return (
-    <div className="relative w-full max-w-[580px]">
+    <div className="relative w-full max-w-[700px]">
       <motion.div
-        className="absolute left-1/2 top-[6%] h-[42%] w-[52%] -translate-x-1/2 rounded-full blur-xl"
-        style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.22), rgba(242,85,26,0.08) 52%, rgba(242,85,26,0) 74%)' }}
-        animate={{ opacity: [0.58, 0.9, 0.58], scale: [0.96, 1.06, 0.96] }}
-        transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute left-1/2 top-[2%] h-[48%] w-[56%] -translate-x-1/2 rounded-full blur-2xl"
+        style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.24), rgba(242,85,26,0.08) 50%, rgba(242,85,26,0) 74%)' }}
+        initial={{ opacity: 0.15, scale: 0.94 }}
+        whileInView={{ opacity: 0.72, scale: 1 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 1.2, ease: 'easeOut' }}
       />
-      <div className="absolute inset-x-8 bottom-[10%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_68%)] blur-xl" />
-      <svg viewBox="0 0 560 500" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
+      <div className="absolute inset-x-8 bottom-[7%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.12),transparent_68%)] blur-xl" />
+      <svg viewBox="0 0 560 430" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
         <title id="shapeGraphicTitle">Sharp Peak structure</title>
         <desc id="shapeGraphicDesc">Challenge forms the apex, with Play and Safety forming the lower foundations beneath it.</desc>
         <defs>
@@ -241,7 +212,7 @@ function ShapeGraphic() {
         </defs>
 
         <motion.g
-          transform="translate(76 36) scale(1)"
+          transform="translate(28 -2) scale(1.24)"
           filter="url(#shapeDrop)"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -250,24 +221,18 @@ function ShapeGraphic() {
         >
           <path d={DOMAIN_HEX_OUTLINES.Safety} fill="#C9C1B5" opacity="0.92" />
           <path d={DOMAIN_HEX_OUTLINES.Play} fill="#BDB5A9" opacity="0.95" />
+          <path d={DOMAIN_HEX_OUTLINES.Safety} stroke="#FDFCFA" strokeOpacity="0.34" strokeWidth="1.4" fill="none" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} stroke="#FDFCFA" strokeOpacity="0.34" strokeWidth="1.4" fill="none" />
           <motion.path
             d={DOMAIN_HEX_OUTLINES.Challenge}
             fill="#F2551A"
-            animate={{ y: [0, -4, 0], filter: ['brightness(1)', 'brightness(1.07)', 'brightness(1)'] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+            initial={{ y: 10, filter: 'brightness(1)' }}
+            whileInView={{ y: 0, filter: 'brightness(1.04)' }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 0.95, ease: 'easeOut', delay: 0.12 }}
           />
+          <path d={DOMAIN_HEX_OUTLINES.Challenge} stroke="#FFFFFF" strokeOpacity="0.28" strokeWidth="1.6" fill="none" />
         </motion.g>
-
-        <g textAnchor="middle">
-          <text x="280" y="158" fill="#FFFFFF" fontSize="18" fontWeight="900" letterSpacing="2.2">CHALLENGE</text>
-          <text x="280" y="183" fill="#FFFFFF" fontSize="15" fontWeight="800">High</text>
-
-          <text x="168" y="296" fill="#56606A" fontSize="17" fontWeight="900" letterSpacing="2">SAFETY</text>
-          <text x="168" y="321" fill="#56606A" fontSize="14" fontWeight="800">Very Low</text>
-
-          <text x="392" y="296" fill="#56606A" fontSize="17" fontWeight="900" letterSpacing="2">PLAY</text>
-          <text x="392" y="321" fill="#56606A" fontSize="14" fontWeight="800">Low</text>
-        </g>
       </svg>
     </div>
   );
