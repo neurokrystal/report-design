@@ -902,38 +902,55 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
           <p key={i} className="text-[16.5px] leading-[1.85] text-[#1A1614]" style={{ fontWeight: 300, fontFamily: SERIF }}>{p}</p>
         ))}
       </div>
-      <div className="mx-auto max-w-3xl rounded-[26px] bg-white p-8 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.4)]">
-        <div className="grid gap-0 md:grid-cols-[1fr_auto_1fr]">
-          <div className="flex flex-col items-center text-center">
-            <span className="grid h-11 w-11 place-items-center rounded-full text-[#2F9A86]" style={{ backgroundColor: tint }}>
-              <Check size={18} strokeWidth={2.4} />
+      <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
+        <motion.div
+          whileHover={{ y: -4, scale: 1.01 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className="relative overflow-hidden rounded-[28px] border p-7 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]"
+          style={{
+            background: `linear-gradient(145deg, ${tint} 0%, #FFFFFF 82%)`,
+            borderColor: `${color}24`,
+          }}
+        >
+          <div className="mb-7 flex flex-col items-center text-center">
+            <span className="grid h-12 w-12 place-items-center rounded-full bg-white shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]" style={{ color }}>
+              <Check size={19} strokeWidth={2.4} />
             </span>
-            <p className="mt-3 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color: contrastText(color) }}>How you see yourself</p>
-            <div className="mt-6 grid gap-3 text-left mx-auto">
-              {data.selfPoints.map((point) => (
-                <div key={point} className="flex items-center gap-3 justify-center">
-                  <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
-                </div>
-              ))}
-            </div>
+            <p className="mt-4 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color: contrastText(color) }}>How you see yourself</p>
           </div>
-          <div className="hidden md:flex items-stretch justify-center px-6">
-            <div className="w-px bg-[#E5E3DD]" />
+          <div className="grid gap-3">
+            {data.selfPoints.map((point) => (
+              <div key={point} className="flex items-center justify-center gap-3 rounded-full bg-white/70 px-5 py-3 shadow-[0_10px_24px_-22px_rgba(26,22,20,0.55)]">
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+              </div>
+            ))}
           </div>
-          <div className="flex flex-col items-center text-center mt-8 md:mt-0">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-[#F5F3EF] text-[#8B8682]">
-              <Eye size={18} strokeWidth={2.2} />
+        </motion.div>
+        <motion.div
+          whileHover={{ y: -4, scale: 1.01 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className="relative overflow-hidden rounded-[28px] border p-7 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]"
+          style={{
+            background: 'linear-gradient(145deg, #FFF4E7 0%, #FFFFFF 82%)',
+            borderColor: '#E7B97955',
+          }}
+        >
+          <div className="mb-7 flex flex-col items-center text-center">
+            <span className="grid h-12 w-12 place-items-center rounded-full bg-white text-[#B66A22] shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]">
+              <Eye size={19} strokeWidth={2.2} />
             </span>
-            <p className="mt-3 text-[10px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">How others see you</p>
-            <div className="mt-6 grid gap-3 text-left mx-auto">
-              {data.othersPoints.map((point) => (
-                <div key={point} className="flex items-center gap-3 justify-center">
-                  <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
-                </div>
-              ))}
-            </div>
+            <p className="mt-4 text-[10px] uppercase tracking-[0.16em] font-bold text-[#9B5C1F]">How others see you</p>
           </div>
-        </div>
+          <div className="grid gap-3">
+            {data.othersPoints.map((point) => (
+              <div key={point} className="flex items-center justify-center gap-3 rounded-full bg-white/70 px-5 py-3 shadow-[0_10px_24px_-22px_rgba(26,22,20,0.55)]">
+                <span className="h-2 w-2 rounded-full bg-[#D88A35]" />
+                <span className="text-[21px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </motion.div>
   );
