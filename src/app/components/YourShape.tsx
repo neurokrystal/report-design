@@ -17,7 +17,7 @@ const observations = [
     color: '#AAA399',
   },
   {
-    body: 'The result is a powerful peak with a thinner base.',
+    body: 'The result is a powerful peak with a fragile base.',
     color: '#AAA399',
   },
 ];
@@ -223,7 +223,7 @@ export function YourShape() {
 
 function ShapeGraphic() {
   return (
-    <div className="relative w-full max-w-[540px]">
+    <div className="relative w-full max-w-[580px]">
       <motion.div
         className="absolute left-1/2 top-[6%] h-[42%] w-[52%] -translate-x-1/2 rounded-full blur-xl"
         style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.22), rgba(242,85,26,0.08) 52%, rgba(242,85,26,0) 74%)' }}
