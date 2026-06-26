@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flag, ArrowLeft, ArrowRight, Sparkles, Sprout, X } from 'lucide-react';
+import { Flag, ArrowLeft, ArrowRight, Sparkles, Sprout, X, Layers3 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { getScoreFillPath, DOMAIN_HEX_OUTLINES, DOMAIN_SPOKE_LINES, DOMAIN_SPOKE_TRANSFORM, DOMAIN_VERTEX_DOTS } from '../data/symbolFillPaths';
 
 import lowFuture from "../../imports/10__Low_Future.svg";
 import lowOthers from "../../imports/10__Low_Others.svg";
@@ -249,10 +250,7 @@ export function YourDomains() {
                     <DomainMarker label="Safety" color={DS} active={(activeDomain || selectedDomain) === 'Safety'} delay={0.85} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} className="absolute top-[72%] -left-14" />
                     <DomainMarker label="Play" color={DP} active={(activeDomain || selectedDomain) === 'Play'} delay={1.7} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} className="absolute top-[72%] -right-14" />
                   </div>
-                  <div className="absolute left-1/2 top-[300px] lg:top-[318px] z-20 w-[300px] -translate-x-1/2">
-                    <SelectedDimensionChips domain={selectedDomain} />
-                  </div>
-                  <div className="absolute left-1/2 top-[356px] lg:top-[370px] z-30 w-[300px] -translate-x-1/2">
+                  <div className="absolute left-1/2 top-[316px] lg:top-[340px] z-30 w-[312px] -translate-x-1/2">
                     <AnimatePresence mode="wait">
                       {selectedDomain ? (
                         <DomainDescriptionPopover
@@ -448,16 +446,25 @@ function DomainSymbol({
           ? 'rotateX(18deg) translateY(-10px) scale(1.07)'
           : 'rotateX(0deg) rotateY(0deg) scale(1)';
 
+  const scores: Record<'Safety' | 'Play' | 'Challenge', number> = {
+    Safety: 27,
+    Play: 41,
+    Challenge: 78,
+  };
+
+  const colors: Record<'Safety' | 'Play' | 'Challenge', string> = {
+    Safety: DS,
+    Play: DP,
+    Challenge: DC,
+  };
+
   const groupStyle = (domain: 'Safety' | 'Play' | 'Challenge') => {
     const active = visualDomain === domain;
 
     return {
-      transformBox: 'fill-box' as const,
-      transformOrigin: 'center',
-      transition: 'filter 650ms ease, opacity 650ms ease, transform 650ms cubic-bezier(0.22, 1, 0.36, 1)',
-      transform: active ? 'translateZ(28px) scale(1.025)' : 'translateZ(0) scale(1)',
-      filter: active ? 'brightness(1.08) saturate(1.12) drop-shadow(0 12px 10px rgba(26,22,20,0.14))' : undefined,
-      opacity: visualDomain && !active ? 0.72 : 1,
+      transition: 'filter 650ms ease, opacity 650ms ease',
+      filter: active ? 'brightness(1.08) saturate(1.12) drop-shadow(0 10px 10px rgba(26,22,20,0.13))' : undefined,
+      opacity: visualDomain && !active ? 0.56 : 1,
       cursor: 'pointer',
       outline: 'none',
     };
@@ -466,7 +473,7 @@ function DomainSymbol({
   return (
     <div style={{ perspective: '900px' }}>
       <svg
-        viewBox="0 0 998 862"
+        viewBox="0 0 409 338"
         className="w-full drop-shadow-2xl overflow-visible"
         aria-label="Dimensional Symbol"
         role="img"
@@ -477,82 +484,43 @@ function DomainSymbol({
           filter: visualDomain ? 'drop-shadow(0 26px 28px rgba(26,22,20,0.16))' : undefined,
         }}
       >
-        <g transform="translate(998,0) scale(-1,1)">
-        <g
-          style={groupStyle('Safety')}
-          onMouseEnter={() => onActivate('Safety')}
-          onMouseLeave={onClear}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => onSelect('Safety')}
-          aria-label="Highlight Safety section"
-        >
-          <path d="M597.693 863.691H998L549.849 605.382L500.539 690.557L401.847 520.078L397.232 517.419L597.693 863.691Z" fill="#42A68E" />
-          <path d="M600.768 517.419L549.849 605.382L998 863.691L797.848 517.419H600.768Z" fill="#52C3A8" />
-          <path d="M401.847 520.078L400.307 517.419H397.232L401.847 520.078Z" fill="#52C3A8" />
-        </g>
-        <g
-          style={groupStyle('Challenge')}
-          onMouseEnter={() => onActivate('Challenge')}
-          onMouseLeave={onClear}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => onSelect('Challenge')}
-          aria-label="Highlight Challenge section"
-        >
-          <path d="M500.533 -2L300.381 344.272L400.61 517.41L400.616 517.419H500.533L500.539 -2H500.533Z" fill="#F7601D" />
-          <path d="M500.533 517.419H600.756L700.994 344.272L500.533 -2V517.419Z" fill="#DC4C0C" />
-        </g>
-        <g
-          style={groupStyle('Play')}
-          onMouseEnter={() => onActivate('Play')}
-          onMouseLeave={onClear}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => onSelect('Play')}
-          aria-label="Highlight Play section"
-        >
-          <path d="M500.539 690.557L450.496 604.111L0 864H400.307L600.768 517.419L500.539 690.557Z" fill="#FFBB30" />
-          <path d="M200.155 517.419L0 864L450.496 604.111L400.307 517.419H200.155Z" fill="#FFAB00" />
-        </g>
+        <g>
+          {(['Safety', 'Play', 'Challenge'] as const).map(domain => {
+            const fillPath = getScoreFillPath(domain, scores[domain]);
+            return (
+              <g
+                key={domain}
+                style={groupStyle(domain)}
+                onMouseEnter={() => onActivate(domain)}
+                onMouseLeave={onClear}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => onSelect(domain)}
+                aria-label={`Highlight ${domain} section`}
+              >
+                <path d={DOMAIN_HEX_OUTLINES[domain]} fill={`${colors[domain]}12`} stroke={`${colors[domain]}42`} strokeWidth="1.1" />
+                {fillPath && (
+                  <motion.path
+                    d={fillPath}
+                    fill={colors[domain]}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: visualDomain && visualDomain !== domain ? 0.5 : 0.92 }}
+                    transition={{ duration: 0.35 }}
+                  />
+                )}
+                <path d={DOMAIN_HEX_OUTLINES[domain]} fill="transparent" />
+              </g>
+            );
+          })}
+          {DOMAIN_SPOKE_LINES.map((line, index) => (
+            <line key={index} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#D3CEC5" strokeWidth="1" pointerEvents="none" />
+          ))}
+          <line y1="-0.4" x2="167" y2="-0.4" transform={DOMAIN_SPOKE_TRANSFORM} stroke="#D3CEC5" strokeWidth="1" pointerEvents="none" />
+          {DOMAIN_VERTEX_DOTS.map((dot, index) => (
+            <circle key={index} cx={dot.cx} cy={dot.cy} r="3" fill="#C8C1B7" pointerEvents="none" />
+          ))}
         </g>
       </svg>
     </div>
-  );
-}
-
-function SelectedDimensionChips({ domain }: { domain: string | null }) {
-  const entry = domainData.find(item => item.key === domain);
-  if (!entry) return <div className="h-10" />;
-
-  const dimensionOrder: Record<string, string[]> = {
-    Safety: ['Self', 'Others'],
-    Play: ['Senses', 'Perception'],
-    Challenge: ['Past', 'Future'],
-  };
-  const dimensions = dimensionOrder[entry.key]
-    .map(name => entry.dimensions.find(dim => dim.name === name))
-    .filter(Boolean) as DimEntry[];
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={entry.key}
-        initial={{ opacity: 0, y: 8, filter: 'blur(4px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        exit={{ opacity: 0, y: -8, filter: 'blur(4px)' }}
-        transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-        className="grid grid-cols-2 gap-2"
-      >
-        {dimensions.map(dim => (
-          <div
-            key={dim.name}
-            className="rounded-[14px] border bg-white/88 px-3 py-2 text-center shadow-[0_14px_30px_-26px_rgba(26,22,20,0.42)] backdrop-blur-sm"
-            style={{ borderColor: `${entry.color}30` }}
-          >
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.13em]" style={{ color: entry.color }}>{dim.name}</p>
-            <p className="mt-0.5 text-[11px] text-[#7A746D]">{dim.band}</p>
-          </div>
-        ))}
-      </motion.div>
-    </AnimatePresence>
   );
 }
 
@@ -596,6 +564,22 @@ function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; 
         </button>
       </div>
       <p className="text-sm leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>{copy[entry.key]}</p>
+      <div className="mt-5 rounded-[16px] bg-[#F7F4EE] p-4">
+        <div className="mb-3 flex items-center gap-2">
+          <span className="grid h-8 w-8 place-items-center rounded-full bg-white" style={{ color: entry.color }}>
+            <Layers3 size={15} strokeWidth={2.2} />
+          </span>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Dimensions inside this domain</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {entry.dimensions.map(dim => (
+            <div key={dim.name} className="rounded-[12px] border border-white bg-white/70 px-3 py-2">
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.13em]" style={{ color: entry.color }}>{dim.name}</p>
+              <p className="mt-1 text-[12px] text-[#5F5952]">{dim.band}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </motion.div>
   );
 }

@@ -20,11 +20,11 @@ export default function App() {
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto px-4 py-10 md:px-8 md:py-12">
           <PartDivider
+            step={1}
             part="Part 1"
             label="Overview"
-            title="First, the whole profile."
-            body="This opening part orients you to the foundations, shows the domain results, and names the shape those results create together."
-            tone="light"
+            title="Overview"
+            body="Foundations, domains, dimensions, and shape."
           />
 
           <div id="orientation" className="scroll-mt-24">
@@ -40,11 +40,11 @@ export default function App() {
           </div>
 
           <PartDivider
+            step={2}
             part="Part 2"
             label="Domain deep dive"
-            title="Now we go inside the foundations."
-            body="You have seen the domains, dimensions, and overall shape. The next part reads each domain as a lived system: what your level means, where alignment is flagged, and how the dimensions underneath are carrying the profile."
-            tone="dark"
+            title="Domain deep dive"
+            body="Safety, Play, and Challenge read as lived systems."
             className="mt-28"
           />
 
@@ -82,11 +82,11 @@ export default function App() {
           </div>
 
           <PartDivider
+            step={3}
             part="Part 3"
             label="Integration"
-            title="Now we bring the system back together."
-            body="After the domain deep dive, the report returns to the whole architecture: how the foundations lean on each other, where the reading points, and what strengthening the base could change."
-            tone="dark"
+            title="Integration"
+            body="The foundations return to one architecture."
             className="mt-28"
           />
 
@@ -112,56 +112,65 @@ export default function App() {
 }
 
 function PartDivider({
+  step,
   part,
   label,
   title,
   body,
-  tone,
   className = '',
 }: {
+  step: 1 | 2 | 3;
   part: string;
   label: string;
   title: string;
   body: string;
-  tone: 'light' | 'dark';
   className?: string;
 }) {
-  const isDark = tone === 'dark';
+  const steps = ['Overview', 'Deep dive', 'Integration'];
   return (
     <section
-      className={`relative left-1/2 w-screen -translate-x-1/2 px-4 py-12 shadow-[0_26px_70px_-52px_rgba(26,22,20,0.62)] md:w-[calc(100vw-13rem)] md:px-8 ${className}`}
-      style={{
-        backgroundColor: isDark ? '#1A1614' : '#F3EFE7',
-        color: isDark ? '#FFFFFF' : '#1A1614',
-      }}
+      className={`relative left-1/2 w-screen -translate-x-1/2 border-y border-[#E7E0D6] bg-[#F4F0E9] px-4 py-8 shadow-[0_22px_52px_-48px_rgba(26,22,20,0.42)] md:w-[calc(100vw-13rem)] md:px-8 ${className}`}
     >
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-7 flex items-center gap-3">
-          <span className="h-px w-10" style={{ backgroundColor: isDark ? '#FFBB30' : '#DC4C0C' }} />
-          <p
-            className="text-[11px] uppercase tracking-[0.2em] font-bold"
-            style={{ color: isDark ? '#FFBB30' : '#9B3B14' }}
-          >
-            {part} · {label}
-          </p>
-        </div>
-        <div className="mt-4 grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-end">
+      <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-[0.72fr_1fr_auto] md:items-center">
+        <div>
+          <div className="mb-3 flex items-center gap-3">
+            <span className="h-px w-9 bg-[#DC4C0C]" />
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#9B3B14]">
+              {part} · {label}
+            </p>
+          </div>
           <h2
             style={{
               fontFamily: '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif',
-              fontSize: 'clamp(2rem, 3.4vw, 3rem)',
+              fontSize: 'clamp(1.75rem, 2.8vw, 2.55rem)',
               lineHeight: 1,
               letterSpacing: '-0.04em',
+              color: '#171411',
             }}
           >
             {title}
           </h2>
-          <p
-            className="text-[15px] leading-relaxed"
-            style={{ fontWeight: 300, color: isDark ? 'rgba(255,255,255,0.78)' : '#5F5952' }}
-          >
-            {body}
-          </p>
+        </div>
+        <p className="max-w-xl text-[14px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
+          {body}
+        </p>
+        <div className="min-w-[190px] rounded-full border border-[#E1D9CD] bg-[#FDFCFA]/72 px-4 py-3">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <span className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Report path</span>
+            <span className="text-[10px] font-bold tabular-nums text-[#9B3B14]">{step}/3</span>
+          </div>
+          <div className="grid grid-cols-3 gap-1.5" aria-label={`${part} of 3`}>
+            {steps.map((name, index) => {
+              const active = index + 1 <= step;
+              return (
+                <span
+                  key={name}
+                  className="h-1.5 rounded-full"
+                  style={{ backgroundColor: active ? '#DC4C0C' : '#D8D0C5' }}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

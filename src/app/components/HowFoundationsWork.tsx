@@ -106,10 +106,7 @@ export function HowFoundationsWork() {
         >
           How Your Foundations Work Together
         </h1>
-        <div className="mb-4 h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
-        <p className="max-w-2xl text-lg leading-relaxed text-[#6F6A64]" style={{ fontWeight: 300 }}>
-          The synthesis: what your three domains create when they operate as one system.
-        </p>
+        <div className="h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
       </header>
 
       <section className="relative overflow-hidden rounded-[34px] border border-[#E8E1D6] bg-[#F7F4EE] shadow-[0_28px_80px_-64px_rgba(26,22,20,0.62)]">

@@ -186,7 +186,7 @@ const domainContent = {
         score: 39,
         band: 'Low',
         lead: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.",
-        text: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.\n\nThis is not numbness. It is a body running a low-power mode it adopted to manage something. The disengagement is not a flaw in you. It is the result of asking your senses to do less so something else could carry more.\n\nBecause Senses is the bodily doorway into Play, this narrowing changes more than pleasure. It affects how quickly ordinary life can reach you: food, sound, movement, touch, weather, colour, physical ease. Rebuilding here is often quiet at first. It starts with letting the body have small, believable moments of contact before asking it to feel fully alive.",
+        text: "Your body is somewhere just outside the room. You inhabit it functionally, you move through your day, you eat, you sleep, but the small portals through which Play normally enters have narrowed. Warmth, taste, texture, breath, the weight of someone you love resting on you, these arrive as data more than as experience. You can register that something is pleasant without being filled by it.\n\nThis is not numbness. It is a body running a low-power mode it adopted to manage something. The disengagement is not a flaw in you. It is the result of asking your senses to do less so something else could carry more.\n\nBecause Senses is the bodily doorway into Play, this narrowing changes more than pleasure. It affects how quickly ordinary life can reach you: food, sound, movement, touch, weather, colour, physical ease. Rebuilding here is often quiet at first. It starts with letting the body have small, believable moments of contact before asking it to feel fully alive.\n\nThe practical clue is whether pleasure changes state in you. A pleasant meal, song, shower, walk, or touch may be present, but it may not alter your pace, breath, or mood very much. This dimension strengthens when the body is allowed to register enjoyment long enough for it to become nourishment rather than information.",
         working: "You still show up physically. You exercise, you eat well enough, you manage. The body is not neglected, it is simply on a shorter leash. Functionality is intact, and people around you would say you take reasonable care of yourself.",
         takeNote: "The richness has narrowed. Pleasure arrives as information rather than experience, and the body's invitation to feel has been turned down so low you may not notice it is missing until something briefly turns it back up.",
       },
@@ -195,7 +195,7 @@ const domainContent = {
         score: 43,
         band: 'Almost Balanced',
         lead: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.",
-        text: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.\n\nThis is a quieter dimension in your reading, neither the strongest nor the most depleted. The mental capacity is still there. It is the body's invitation to engage that has narrowed, and Perception, with less to receive from the senses, is generating less than it otherwise would.\n\nWhen Perception strengthens, the mind does not only think better. It wanders more fruitfully, notices alternate meanings, and lets surprise become useful again. For you, this dimension likely comes back through gentle experimentation rather than analysis alone: new inputs, new angles, and permission for an idea to be interesting before it is productive.",
+        text: "Your mental flexibility is present, but operating with less curiosity than is natural to you. You can hold complexity, you can shift perspective when asked, and you are not rigid in your thinking, but you are not currently generating new angles either. Interpretation has become more dutiful than playful. Your inner perceptual world is in maintenance mode.\n\nThis is a quieter dimension in your reading, neither the strongest nor the most depleted. The mental capacity is still there. It is the body's invitation to engage that has narrowed, and Perception, with less to receive from the senses, is generating less than it otherwise would.\n\nWhen Perception strengthens, the mind does not only think better. It wanders more fruitfully, notices alternate meanings, and lets surprise become useful again. For you, this dimension likely comes back through gentle experimentation rather than analysis alone: new inputs, new angles, and permission for an idea to be interesting before it is productive.\n\nThe important distinction is between flexibility on demand and curiosity at rest. You can still shift when a situation requires it. What is quieter is the unforced movement of attention: the little sideways thought, the fresh interpretation, the sense that reality has more texture than the first explanation offered.",
         working: "You can still reframe, hold nuance, and shift perspective when the situation calls for it. Cognitive flexibility has not left. It is available when summoned, and your ability to hold complexity under pressure remains reliable.",
         takeNote: "The generative side of perception, the part that produces new angles unprompted, has quieted. You are interpreting the world more than playing with it, and the difference is felt in how few surprises your own thinking offers you lately.",
       },
@@ -232,7 +232,7 @@ const domainContent = {
         score: 51,
         band: 'Almost Balanced',
         lead: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.",
-        text: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.\n\nThis is not a depleted dimension. It is a foundation that is functional and not yet finished. What is interesting in your reading is that your Future runs significantly higher than your Past, meaning you are oriented forward more strongly than you are anchored backward.\n\nPast becomes most useful when it is not only understood, but metabolised. The task here is less about revisiting everything and more about letting earlier versions of you become part of the current architecture, so forward motion has memory beneath it rather than only momentum ahead of it.",
+        text: "Your history is mostly integrated. You have a working relationship with where you have been, and you are not haunted by your story, but there are still some chapters that have not fully been authored. You can describe what happened, yet a few pieces of it remain on the shelf rather than woven into your identity.\n\nThis is not a depleted dimension. It is a foundation that is functional and not yet finished. What is interesting in your reading is that your Future runs significantly higher than your Past, meaning you are oriented forward more strongly than you are anchored backward.\n\nPast becomes most useful when it is not only understood, but metabolised. The task here is less about revisiting everything and more about letting earlier versions of you become part of the current architecture, so forward motion has memory beneath it rather than only momentum ahead of it.\n\nThis matters because a strong future can sometimes make the past look less relevant than it is. You may not feel defined by old experiences, which is a genuine strength. The remaining work is subtler: noticing where unfinished chapters still set the emotional weather, shape what feels possible, or make certain forms of support harder to receive.",
         working: "You are not stuck in your history. The past does not paralyse you or define you against your will. You can narrate where you have been with clarity, and most of it has been digested enough to carry without distortion.",
         takeNote: "Integration is partial. Some chapters sit on the shelf described but not fully authored into your identity. The risk is not that the past controls you, but that the unfinished pieces quietly shape decisions you believe are only about the future.",
       },
@@ -241,7 +241,7 @@ const domainContent = {
         score: 82,
         band: 'High',
         lead: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.",
-        text: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.\n\nThis is also, read against your other scores, the most architecturally interesting part of your reading. Your Future dimension is doing significant work, pulling you forward into a life that has not yet arrived while your Safety foundations sit thin underneath. Strong forward orientation is a real resource here. It can also become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does.\n\nThe invitation is not to distrust your ambition. It is to let the future remain a direction rather than a refuge. When the ground beneath you becomes steadier, this same clarity can feel less like something that has to carry you and more like something you are free to choose.",
+        text: "You are oriented forward with real clarity. Your sense of direction is one of the most resourced parts of your entire architecture. You know where you are going, you have planned the next few steps, and the future you are working toward is one you actually want. Choosing what to pursue is not where your energy gets stuck.\n\nThis is also, read against your other scores, the most architecturally interesting part of your reading. Your Future dimension is doing significant work, pulling you forward into a life that has not yet arrived while your Safety foundations sit thin underneath. Strong forward orientation is a real resource here. It can also become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does.\n\nThe invitation is not to distrust your ambition. It is to let the future remain a direction rather than a refuge. When the ground beneath you becomes steadier, this same clarity can feel less like something that has to carry you and more like something you are free to choose.\n\nFuture is therefore both gift and signal. It shows where your system has access to momentum, vision, and agency. It also shows where the rest of the profile may be borrowing regulation from what comes next. The more Safety can develop underneath, the more this forward pull can become spacious rather than load-bearing.",
         working: "Direction is clear, genuinely chosen, and well-resourced. You are not wandering. Your forward motion is one of the most intact parts of your architecture and one of the places you can most reliably trust yourself.",
         takeNote: "Strong forward pull can become its own form of compensation, a place to live mentally that asks less of the foundations than the present moment does. When Future runs this far ahead of Safety, the question is whether the drive is building the life or outrunning the ground it stands on.",
         flagged: true,
@@ -904,61 +904,58 @@ function SafetyLevelReflection({ domain, color, tint }: { domain: 'Safety' | 'Pl
           <p key={i} className="text-[16.5px] leading-[1.85] text-[#1A1614]" style={{ fontWeight: 300, fontFamily: SERIF }}>{p}</p>
         ))}
       </div>
-      <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
-        <motion.div
-          whileHover={{ y: -4, scale: 1.01 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="relative overflow-hidden rounded-[28px] border p-7 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]"
-          style={{
-            background: `linear-gradient(145deg, ${tint} 0%, #FFFFFF 72%)`,
-            borderColor: `${color}24`,
-          }}
-        >
-          <span className="absolute left-0 top-0 h-1.5 w-full" style={{ backgroundColor: color }} />
-          <div className="mb-7 flex flex-col items-start">
-            <span className="grid h-[52px] w-[52px] place-items-center rounded-[18px] bg-white shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]" style={{ color }}>
-              <Check size={22} strokeWidth={2.35} />
+      <div
+        className="mx-auto max-w-4xl overflow-hidden rounded-[32px] p-6 text-white shadow-[0_28px_72px_-54px_rgba(26,22,20,0.72)] md:p-8"
+        style={{
+          background: `linear-gradient(135deg, #1A1614 0%, #211A16 48%, ${color} 160%)`,
+        }}
+      >
+        <div className="grid gap-8 md:grid-cols-[1fr_auto_1fr] md:gap-0">
+          <ReflectionColumn
+            title="How you see yourself"
+            points={data.selfPoints}
+            color={color}
+            Icon={Check}
+          />
+          <div className="hidden w-px bg-white/14 md:block" />
+          <ReflectionColumn
+            title="How others see you"
+            points={data.othersPoints}
+            color="#D88A35"
+            Icon={Eye}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function ReflectionColumn({ title, points, color, Icon }: {
+  title: string;
+  points: string[];
+  color: string;
+  Icon: typeof Check;
+}) {
+  return (
+    <motion.div
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+      className="px-2 text-center md:px-8"
+    >
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white/10 ring-1 ring-white/18" style={{ color }}>
+        <Icon size={23} strokeWidth={2.25} />
+      </div>
+      <p className="mt-5 text-[10px] font-extrabold uppercase tracking-[0.18em]" style={{ color }}>
+        {title}
+      </p>
+      <div className="mt-7 grid gap-3">
+        {points.map(point => (
+          <div key={point} className="rounded-full bg-white/[0.075] px-5 py-3 ring-1 ring-white/10">
+            <span className="text-[24px] leading-tight text-white" style={{ fontFamily: SERIF }}>
+              {point}
             </span>
-            <p className="mt-5 text-[10px] uppercase tracking-[0.16em] font-bold" style={{ color: contrastText(color) }}>How you see yourself</p>
           </div>
-          <div className="grid gap-4">
-            {data.selfPoints.map((point, index) => (
-              <div key={point} className="grid grid-cols-[34px_1fr] items-center gap-4">
-                <span className="grid h-8 w-8 place-items-center rounded-full text-[12px] font-bold text-white" style={{ backgroundColor: color }}>
-                  {index + 1}
-                </span>
-                <span className="text-[22px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-        <motion.div
-          whileHover={{ y: -4, scale: 1.01 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="relative overflow-hidden rounded-[28px] border p-7 shadow-[0_18px_46px_-40px_rgba(26,22,20,0.45)]"
-          style={{
-            background: 'linear-gradient(145deg, #FFF4E7 0%, #FFFFFF 72%)',
-            borderColor: '#E7B97955',
-          }}
-        >
-          <span className="absolute left-0 top-0 h-1.5 w-full bg-[#D88A35]" />
-          <div className="mb-7 flex flex-col items-start">
-            <span className="grid h-[52px] w-[52px] place-items-center rounded-[18px] bg-white text-[#B66A22] shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]">
-              <Eye size={22} strokeWidth={2.2} />
-            </span>
-            <p className="mt-5 text-[10px] uppercase tracking-[0.16em] font-bold text-[#9B5C1F]">How others see you</p>
-          </div>
-          <div className="grid gap-4">
-            {data.othersPoints.map((point, index) => (
-              <div key={point} className="grid grid-cols-[34px_1fr] items-center gap-4">
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-[#D88A35] text-[12px] font-bold text-white">
-                  {index + 1}
-                </span>
-                <span className="text-[22px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{point}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        ))}
       </div>
     </motion.div>
   );

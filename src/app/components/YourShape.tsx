@@ -1,81 +1,51 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, ChevronLeft, ChevronRight, Compass, Info, Shield, Sparkles, Zap } from 'lucide-react';
-import { useState, type CSSProperties } from 'react';
-import { getScoreFillPath, DOMAIN_HEX_OUTLINES, DOMAIN_SPOKE_LINES, DOMAIN_SPOKE_TRANSFORM, DOMAIN_VERTEX_DOTS } from '../data/symbolFillPaths';
+import { ArrowLeft, ArrowRight, Compass, Info, Layers3, Shield, Triangle, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { DOMAIN_HEX_OUTLINES } from '../data/symbolFillPaths';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const NAV_ORANGE = '#FF5A1F';
 const CHALLENGE = '#DC4C0C';
-const PLAY = '#FFAB00';
-const SAFETY = '#42A68E';
 
 const observations = [
   {
-    title: 'Challenge forms a clear apex',
-    body: 'The strongest resource rises visibly above the rest of the profile.',
+    body: 'Challenge sits at the top.',
     color: CHALLENGE,
-    Icon: Zap,
   },
   {
-    title: 'Play offers partial support',
-    body: 'There is some flexibility and aliveness in the base, but it is not enough to hold the peak on its own.',
-    color: PLAY,
-    Icon: Compass,
+    body: 'Safety and Play are running low beneath it.',
+    color: '#AAA399',
   },
   {
-    title: 'Safety sits lower in the base',
-    body: 'The foundation that would make the system feel steadier is the least available part of this shape.',
-    color: SAFETY,
-    Icon: Shield,
-  },
-];
-
-const routeChips = [
-  {
-    domain: 'Challenge',
-    href: '#challenge',
-    label: 'Apex',
-    color: CHALLENGE,
-    Icon: Sparkles,
-  },
-  {
-    domain: 'Safety',
-    href: '#safety',
-    label: 'Lowest foundation',
-    color: SAFETY,
-    Icon: Shield,
-  },
-  {
-    domain: 'Play',
-    href: '#play',
-    label: 'Partial support',
-    color: PLAY,
-    Icon: Compass,
+    body: 'The result is a powerful peak with a thinner base.',
+    color: '#AAA399',
   },
 ];
 
 const shapeSlides = [
   {
-    eyebrow: 'Shape definition',
-    title: 'What a Sharp Peak is',
-    body: 'A Sharp Peak appears when one domain stands distinctly above the other two. It tells you where the profile is most resourced, and where the base is thinner.',
-    tidbit: 'The important signal is the distance between the apex and the base.',
-    Icon: Zap,
+    leftLabel: 'The shape',
+    leftBody: 'A Sharp Peak is created when one domain becomes visibly taller than the other two.',
+    rightLabel: 'The architecture',
+    rightBody: 'In this profile, Challenge holds the apex while Safety and Play sit as a narrower base beneath it.',
+    LeftIcon: Triangle,
+    RightIcon: Layers3,
   },
   {
-    eyebrow: 'Why it matters',
-    title: 'The peak is real, but it is carrying weight',
-    body: 'Challenge is not a problem in itself. The important detail is that Safety and Play are not supporting it equally, so the system can look capable while quietly spending more than it restores.',
-    tidbit: 'The strength is genuine. The question is whether it has enough ground beneath it.',
-    Icon: Shield,
+    leftLabel: 'The resource',
+    leftBody: 'The apex is not a flaw. Challenge is a real strength here: clear, active, and personally meaningful.',
+    rightLabel: 'The load',
+    rightBody: 'Because the base is thinner, Challenge may be holding more of the system than it was designed to hold alone.',
+    LeftIcon: Zap,
+    RightIcon: Shield,
   },
   {
-    eyebrow: 'How to read from here',
-    title: 'Enter through the part that is most alive',
-    body: 'You can begin with the apex, the lowest foundation, or the resource you are most curious about. The integration section brings the parts back together once you have met them individually.',
-    tidbit: 'Choose a doorway, then return to the whole shape.',
-    Icon: Compass,
-    routes: true,
+    leftLabel: 'The direction',
+    leftBody: 'The work is not to make Challenge smaller. It is to give the base enough support that the peak can remain strong without doing everything.',
+    rightLabel: 'The reading',
+    rightBody: 'The next sections show what each foundation is carrying, then bring the whole profile back together.',
+    LeftIcon: Compass,
+    RightIcon: ArrowRight,
   },
 ];
 
@@ -83,7 +53,8 @@ export function YourShape() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const slide = shapeSlides[activeSlide];
-  const SlideIcon = slide.Icon;
+  const LeftIcon = slide.LeftIcon;
+  const RightIcon = slide.RightIcon;
   const goToSlide = (direction: 1 | -1) => {
     setActiveSlide(current => (current + direction + shapeSlides.length) % shapeSlides.length);
   };
@@ -154,24 +125,18 @@ export function YourShape() {
           </h2>
           <div className="grid gap-3">
             {observations.map((point, index) => {
-              const Icon = point.Icon;
               return (
               <motion.div
-                key={point.title}
-                className="group flex items-start gap-4 rounded-[20px] bg-[#F7F4EE] px-4 py-4 transition-colors hover:bg-[#F0EBE1]"
+                key={point.body}
+                className="group flex items-center gap-4 rounded-[18px] bg-[#F7F4EE] px-5 py-4 transition-colors hover:bg-[#F0EBE1]"
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.55 }}
                 transition={{ duration: 0.35, delay: index * 0.06 }}
               >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full" style={{ backgroundColor: `${point.color}14`, color: point.color }}>
-                  <Icon size={17} strokeWidth={2.25} />
-                </span>
-                <span>
-                  <span className="block text-[15px] font-bold leading-snug text-[#1A1614]">{point.title}</span>
-                  <span className="mt-1 block text-[13px] leading-relaxed text-[#5F5952]" style={{ fontWeight: 300 }}>
-                    {point.body}
-                  </span>
+                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: point.color }} />
+                <span className="text-[18px] leading-snug text-[#1A1614]" style={{ fontWeight: 300 }}>
+                  {point.body}
                 </span>
               </motion.div>
               );
@@ -184,103 +149,72 @@ export function YourShape() {
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-[30px] bg-[#1A1614] p-5 text-white shadow-[0_28px_80px_-62px_rgba(26,22,20,0.76)] md:p-7">
-        <div className="grid gap-5 lg:grid-cols-[1fr_280px] lg:items-stretch">
-          <div>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSlide}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.22 }}
-                className="min-h-[235px] rounded-[22px] bg-white/[0.055] p-6 ring-1 ring-white/10 md:p-7"
-              >
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: CHALLENGE }}>
-                  {slide.eyebrow}
+      <section className="overflow-hidden rounded-[30px] bg-[#F4F0E9] p-6 shadow-[0_24px_70px_-58px_rgba(26,22,20,0.42)] ring-1 ring-[#E6DED2] md:p-8">
+        <div className="min-h-[275px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSlide}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.22 }}
+              className="grid gap-8 md:grid-cols-2"
+            >
+              <div className="md:border-r md:border-[#DED6CB] md:pr-10">
+                <div className="mb-5 flex items-center gap-3">
+                  <LeftIcon size={22} strokeWidth={1.9} className="text-[#969087]" />
+                  <p className="text-[12px] font-extrabold uppercase tracking-[0.18em] text-[#8B8682]">{slide.leftLabel}</p>
+                </div>
+                <p className="text-[22px] leading-[1.55] text-[#1A1614]" style={{ fontWeight: 300 }}>
+                  {slide.leftBody}
                 </p>
-                <h3 className="mt-3 text-[26px] leading-tight text-white md:text-[31px]" style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.035em' }}>
-                  {slide.title}
-                </h3>
-                <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-white/76" style={{ fontWeight: 300 }}>
-                  {slide.body}
-                </p>
-                {slide.routes && (
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    {routeChips.map(chip => {
-                      const Icon = chip.Icon;
-                      return (
-                        <a
-                          key={chip.domain}
-                          href={chip.href}
-                          className="group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.12em] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2"
-                          style={{ color: chip.color, '--tw-ring-color': `${chip.color}55` } as CSSProperties}
-                        >
-                          <Icon size={14} strokeWidth={2.3} />
-                          <span>{chip.domain}</span>
-                          <ArrowRight size={13} strokeWidth={2.4} className="transition-transform group-hover:translate-x-0.5" />
-                        </a>
-                      );
-                    })}
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          <div className="flex flex-col justify-between gap-5 rounded-[22px] bg-[#F7F4EE] p-5 text-[#1A1614]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${activeSlide}-tidbit`}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.22 }}
-              >
-                <span className="grid h-12 w-12 place-items-center rounded-full bg-white text-[#DC4C0C] shadow-[0_14px_28px_-24px_rgba(26,22,20,0.55)]">
-                  <SlideIcon size={19} strokeWidth={2.2} />
-                </span>
-                <p className="mt-5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Reading note</p>
-                <p className="mt-3 text-[20px] leading-snug" style={{ fontFamily: SERIF }}>
-                  {slide.tidbit}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-            <div>
-              <div className="mb-4 flex items-center gap-2">
-                {shapeSlides.map((item, index) => (
-                  <button
-                    key={item.title}
-                    type="button"
-                    onClick={() => setActiveSlide(index)}
-                    className="h-2.5 rounded-full transition-all"
-                    style={{
-                      width: activeSlide === index ? 28 : 10,
-                      backgroundColor: activeSlide === index ? CHALLENGE : '#D8D0C5',
-                    }}
-                    aria-label={`Show note ${index + 1}`}
-                  />
-                ))}
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => goToSlide(-1)}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-[#E2D9CC] bg-white text-[#5F5952] transition-colors hover:bg-[#EEE6D8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
-                  aria-label="Previous shape note"
-                >
-                  <ChevronLeft size={18} strokeWidth={2.35} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => goToSlide(1)}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-[#E2D9CC] bg-white text-[#5F5952] transition-colors hover:bg-[#EEE6D8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
-                  aria-label="Next shape note"
-                >
-                  <ChevronRight size={18} strokeWidth={2.35} />
-                </button>
+              <div className="md:pl-2">
+                <div className="mb-5 flex items-center gap-3">
+                  <RightIcon size={22} strokeWidth={1.9} className="text-[#969087]" />
+                  <p className="text-[12px] font-extrabold uppercase tracking-[0.18em] text-[#8B8682]">{slide.rightLabel}</p>
+                </div>
+                <p className="text-[22px] leading-[1.55] text-[#1A1614]" style={{ fontWeight: 300 }}>
+                  {slide.rightBody}
+                </p>
               </div>
-            </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
+          <button
+            type="button"
+            onClick={() => goToSlide(-1)}
+            className="inline-flex h-12 min-w-[150px] items-center justify-center gap-2 rounded-[12px] border border-[#DED6CB] bg-[#FDFCFA]/55 px-5 text-[12px] font-extrabold uppercase tracking-[0.14em] text-[#9A948D] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+            aria-label="Previous shape note"
+          >
+            <ArrowLeft size={16} strokeWidth={2.35} />
+            Previous
+          </button>
+          <div className="flex items-center gap-2">
+            {shapeSlides.map((item, index) => (
+              <button
+                key={item.leftLabel}
+                type="button"
+                onClick={() => setActiveSlide(index)}
+                className="h-3 rounded-full transition-all"
+                style={{
+                  width: activeSlide === index ? 28 : 12,
+                  backgroundColor: activeSlide === index ? CHALLENGE : '#D1C8BC',
+                }}
+                aria-label={`Show note ${index + 1}`}
+              />
+            ))}
           </div>
+          <button
+            type="button"
+            onClick={() => goToSlide(1)}
+            className="inline-flex h-12 min-w-[150px] items-center justify-center gap-2 rounded-[12px] bg-[#F2551A] px-5 text-[12px] font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_14px_28px_-20px_rgba(220,76,12,0.72)] transition-colors hover:bg-[#DC4C0C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+            aria-label="Next shape note"
+          >
+            Next
+            <ArrowRight size={16} strokeWidth={2.35} />
+          </button>
         </div>
       </section>
     </div>
@@ -288,12 +222,14 @@ export function YourShape() {
 }
 
 function ShapeGraphic() {
-  const challengePath = getScoreFillPath('Challenge', 78);
-  const safetyPath = getScoreFillPath('Safety', 27);
-  const playPath = getScoreFillPath('Play', 41);
-
   return (
     <div className="relative w-full max-w-[540px]">
+      <motion.div
+        className="absolute left-1/2 top-[6%] h-[42%] w-[52%] -translate-x-1/2 rounded-full blur-xl"
+        style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.22), rgba(242,85,26,0.08) 52%, rgba(242,85,26,0) 74%)' }}
+        animate={{ opacity: [0.58, 0.9, 0.58], scale: [0.96, 1.06, 0.96] }}
+        transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+      />
       <div className="absolute inset-x-8 bottom-[10%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_68%)] blur-xl" />
       <svg viewBox="0 0 560 500" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
         <title id="shapeGraphicTitle">Sharp Peak structure</title>
@@ -312,47 +248,25 @@ function ShapeGraphic() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.55 }}
         >
-          {safetyPath && <path d={safetyPath} fill="#42A68E" opacity="0.48" />}
-          {playPath && <path d={playPath} fill="#FFBB30" opacity="0.56" />}
-          {challengePath && (
-            <motion.path
-              d={challengePath}
-              fill="#DC4C0C"
-              animate={{ y: [0, -5, 0], filter: ['brightness(1)', 'brightness(1.12)', 'brightness(1)'] }}
-              transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          )}
-          {Object.values(DOMAIN_HEX_OUTLINES).map((d, i) => (
-            <path key={i} d={d} stroke="#BFB8AD" strokeWidth="1.2" fill="none" />
-          ))}
-          {DOMAIN_SPOKE_LINES.map((line, i) => (
-            <line key={`s${i}`} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke="#BFB8AD" strokeWidth="1.2" />
-          ))}
-          <line y1="-0.4" x2="167" y2="-0.4" transform={DOMAIN_SPOKE_TRANSFORM} stroke="#BFB8AD" strokeWidth="1.2" />
-          {DOMAIN_VERTEX_DOTS.map((dot, index) => (
-            <circle key={index} cx={dot.cx} cy={dot.cy} r={index === 0 ? 5 : 3.5} fill={index === 0 ? '#DC4C0C' : '#BFB8AD'} />
-          ))}
-          <motion.circle
-            cx="204.5"
-            cy="29.5"
-            r="24"
-            fill="none"
-            stroke="#DC4C0C"
-            strokeWidth="2"
-            animate={{ opacity: [0.25, 0.65, 0.25], r: [18, 28, 18] }}
-            transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="#C9C1B5" opacity="0.92" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="#BDB5A9" opacity="0.95" />
+          <motion.path
+            d={DOMAIN_HEX_OUTLINES.Challenge}
+            fill="#F2551A"
+            animate={{ y: [0, -4, 0], filter: ['brightness(1)', 'brightness(1.07)', 'brightness(1)'] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
           />
         </motion.g>
 
         <g textAnchor="middle">
-          <text x="280" y="34" fill="#DC4C0C" fontSize="14" fontWeight="900" letterSpacing="2.4">CHALLENGE APEX</text>
-          <text x="280" y="54" fill="#8B4330" fontSize="13" fontWeight="700">High</text>
+          <text x="280" y="158" fill="#FFFFFF" fontSize="18" fontWeight="900" letterSpacing="2.2">CHALLENGE</text>
+          <text x="280" y="183" fill="#FFFFFF" fontSize="15" fontWeight="800">High</text>
 
-          <text x="116" y="420" fill="#0F6E56" fontSize="13" fontWeight="900" letterSpacing="2">SAFETY</text>
-          <text x="116" y="439" fill="#6F6A64" fontSize="12" fontWeight="700">Very Low</text>
+          <text x="168" y="296" fill="#56606A" fontSize="17" fontWeight="900" letterSpacing="2">SAFETY</text>
+          <text x="168" y="321" fill="#56606A" fontSize="14" fontWeight="800">Very Low</text>
 
-          <text x="444" y="420" fill="#9A6D00" fontSize="13" fontWeight="900" letterSpacing="2">PLAY</text>
-          <text x="444" y="439" fill="#6F6A64" fontSize="12" fontWeight="700">Low</text>
+          <text x="392" y="296" fill="#56606A" fontSize="17" fontWeight="900" letterSpacing="2">PLAY</text>
+          <text x="392" y="321" fill="#56606A" fontSize="14" fontWeight="800">Low</text>
         </g>
       </svg>
     </div>
