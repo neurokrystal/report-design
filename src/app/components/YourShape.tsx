@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Compass, DoorOpen, Eye, Flame, Info, Shield, Sparkles, Sun, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, DoorOpen, Eye, Flame, Info, Shield, Sparkles, Sun, Zap } from 'lucide-react';
 import { useState } from 'react';
-import { getScoreFillPath } from '../data/symbolFillPaths';
+import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const NAV_ORANGE = '#FF5A1F';
@@ -11,77 +11,74 @@ const PLAY = '#FFAB00';
 const INK = '#15110F';
 
 const shapePoints = [
-  'One domain rises well above the rest of the profile.',
-  'Challenge is the apex here: active, directional, and highly available.',
-  'Safety and Play form the lower base, so the profile reads as strong but uneven.',
+  {
+    title: 'The visible apex',
+    body: 'One domain rises well above the rest of the profile.',
+    color: CHALLENGE,
+  },
+  {
+    title: 'The strongest current',
+    body: 'Challenge is active, directional, and highly available.',
+    color: CHALLENGE,
+  },
+  {
+    title: 'The quieter base',
+    body: 'Safety and Play sit lower, so the profile reads as strong but uneven.',
+    color: '#9C948B',
+  },
 ];
 
-const journeySlides = [
+const slides = [
   {
-    kicker: 'Recognition',
     title: 'How this shape moves',
-    Icon: Sparkles,
     color: CHALLENGE,
-    body:
-      'A Sharp Peak moves through the world by rising toward what matters. The person often recognises themselves in momentum, direction, development, responsibility, and the feeling of being pulled forward by something meaningful.',
-    callout: 'The peak is not the problem. It is the most available part of the system.',
-    signals: ['Forward motion feels clarifying', 'Purpose arrives faster than rest', 'The strongest part becomes the first place they go'],
   },
   {
-    kicker: 'Revelation',
     title: "What's hard to see from inside it",
-    Icon: Eye,
     color: '#7A3D9A',
-    body:
-      "From the inside, this can feel like strength, ambition, or simply being the person who keeps going. What is harder to see is that the peak may be creating coherence for the whole profile before the base has fully caught up.",
-    callout: 'The sharpness is the clue: one part is carrying more visibility than the others.',
-    signals: ['Capability may hide the thinner base', 'Progress can feel easier than settling', 'The person may underestimate how much they are holding'],
   },
   {
-    kicker: 'Doorways',
     title: 'Where the deep dive opens',
-    Icon: DoorOpen,
     color: PLAY,
-    body:
-      'The next part of the report lets you enter the three foundations separately. Each doorway shows a different reason this shape exists, and each one answers a different kind of curiosity.',
-    callout: 'Choose the door that feels most alive first. The report will still hold the whole architecture.',
-    doorways: [
-      {
-        domain: 'Safety',
-        promise: 'Find where steadiness is available, and where it has to be earned.',
-        hook: 'For the part of you that wants to know why ease does not always land.',
-        color: SAFETY,
-        Icon: Shield,
-        target: 'safety',
-      },
-      {
-        domain: 'Play',
-        promise: 'Find what restores aliveness, pleasure, and flexibility.',
-        hook: 'For the part of you that wants life to feel less functional and more alive.',
-        color: PLAY,
-        Icon: Sun,
-        target: 'play',
-      },
-      {
-        domain: 'Challenge',
-        promise: 'Find the engine behind your drive and direction.',
-        hook: 'For the part of you that wants to understand the power of the peak.',
-        color: CHALLENGE,
-        Icon: Flame,
-        target: 'challenge',
-      },
-    ],
+  },
+];
+
+const doorways = [
+  {
+    domain: 'Safety',
+    promise: 'Find where steadiness is available, and where it has to be earned.',
+    hook: 'For the part of you that wants to know why ease does not always land.',
+    color: SAFETY,
+    Icon: Shield,
+    target: 'safety',
+  },
+  {
+    domain: 'Play',
+    promise: 'Find what restores aliveness, pleasure, and flexibility.',
+    hook: 'For the part of you that wants life to feel less functional and more alive.',
+    color: PLAY,
+    Icon: Sun,
+    target: 'play',
+  },
+  {
+    domain: 'Challenge',
+    promise: 'Find the engine behind your drive and direction.',
+    hook: 'For the part of you that wants to understand the power of the peak.',
+    color: CHALLENGE,
+    Icon: Flame,
+    target: 'challenge',
   },
 ];
 
 export function YourShape() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
-  const slide = journeySlides[activeSlide];
-  const SlideIcon = slide.Icon;
+  const slide = slides[activeSlide];
+  const isFirst = activeSlide === 0;
+  const isLast = activeSlide === slides.length - 1;
 
   const goToSlide = (direction: 1 | -1) => {
-    setActiveSlide(current => (current + direction + journeySlides.length) % journeySlides.length);
+    setActiveSlide(current => Math.max(0, Math.min(slides.length - 1, current + direction)));
   };
 
   return (
@@ -141,20 +138,17 @@ export function YourShape() {
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: CHALLENGE }}>
-            Shape type
-          </p>
           <h2
             style={{
               fontFamily: SERIF,
-              fontSize: 'clamp(2rem, 3.7vw, 3.45rem)',
+              fontSize: 'clamp(1.95rem, 3.5vw, 3.25rem)',
               fontWeight: 600,
               color: INK,
               letterSpacing: '-0.045em',
-              lineHeight: 0.98,
+              lineHeight: 1,
             }}
           >
-            Sharp Peak
+            Together, your domains form a Sharp Peak.
           </h2>
           <p className="mt-5 max-w-md text-[18px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
             Your profile has one clear apex. Challenge rises above the other two domains, making the whole shape feel driven, purposeful, and visibly uneven.
@@ -162,17 +156,25 @@ export function YourShape() {
           <div className="mt-7 grid gap-3">
             {shapePoints.map((point, index) => (
               <motion.div
-                key={point}
-                className="flex gap-4 border-l border-[#E2D9CE] pl-4"
+                key={point.title}
+                className="relative overflow-hidden rounded-[20px] border border-[#E7DED3] bg-[#F8F4EE] p-4 shadow-[0_18px_44px_-40px_rgba(26,22,20,0.48)]"
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.35, delay: index * 0.06 }}
               >
-                <span className="mt-2 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: index === 0 ? CHALLENGE : '#B8B0A5' }} />
-                <p className="text-[16px] leading-relaxed text-[#26211D]" style={{ fontWeight: 300 }}>
-                  {point}
-                </p>
+                <div className="absolute inset-y-0 left-0 w-1.5" style={{ backgroundColor: point.color }} />
+                <div className="flex gap-4 pl-1">
+                  <span className="mt-1 h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: point.color }} />
+                  <div>
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: point.color }}>
+                      {point.title}
+                    </p>
+                    <p className="mt-2 text-[15.5px] leading-relaxed text-[#26211D]" style={{ fontWeight: 300 }}>
+                      {point.body}
+                    </p>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -183,216 +185,269 @@ export function YourShape() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden rounded-[34px] border border-[#E8E1D6] bg-[#F7F2EA] shadow-[0_30px_90px_-70px_rgba(26,22,20,0.7)]">
+      <section className="relative overflow-hidden rounded-[34px] border border-[#E8E1D6] bg-[#F7F2EA] p-6 shadow-[0_30px_90px_-70px_rgba(26,22,20,0.7)] md:p-9">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#F2551A]/45 to-transparent" />
-        <div className="grid gap-0 lg:grid-cols-[230px_1fr]">
-          <aside className="border-b border-[#E1D8CB] bg-[#F0E9DD]/70 p-5 lg:border-b-0 lg:border-r">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#948A7D]">Shape journey</p>
-            <div className="mt-7 grid gap-3">
-              {journeySlides.map((item, index) => {
-                const StepIcon = item.Icon;
-                const active = index === activeSlide;
-                return (
-                  <button
-                    key={item.title}
-                    type="button"
-                    onClick={() => setActiveSlide(index)}
-                    className="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-[18px] px-3 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
-                    style={{ backgroundColor: active ? '#FDFCFA' : 'transparent' }}
-                    aria-current={active}
-                  >
-                    <span
-                      className="grid h-10 w-10 place-items-center rounded-full transition-transform group-hover:scale-105"
-                      style={{
-                        color: active ? item.color : '#9C948B',
-                        backgroundColor: active ? `${item.color}16` : '#E6DED2',
-                      }}
-                    >
-                      <StepIcon size={18} strokeWidth={2.1} />
-                    </span>
-                    <span>
-                      <span className="block text-[10px] font-extrabold uppercase tracking-[0.16em]" style={{ color: active ? item.color : '#A09A93' }}>
-                        {String(index + 1).padStart(2, '0')} {item.kicker}
-                      </span>
-                      <span className="mt-1 block text-[14px] leading-tight text-[#201B17]">{item.title}</span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </aside>
+        <div
+          className="pointer-events-none absolute inset-0 opacity-80"
+          style={{
+            background: `linear-gradient(135deg, ${slide.color}10 0%, rgba(255,255,255,0) 45%), radial-gradient(circle at 88% 18%, ${slide.color}14, transparent 32%)`,
+          }}
+        />
 
-          <div className="relative min-h-[480px] p-6 md:p-9">
-            <div
-              className="pointer-events-none absolute inset-0 opacity-80"
-              style={{
-                background: `linear-gradient(135deg, ${slide.color}12 0%, rgba(255,255,255,0) 46%), radial-gradient(circle at 86% 18%, ${slide.color}18, transparent 34%)`,
-              }}
-            />
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={slide.title}
-                className="relative"
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-5">
-                  <div>
-                    <div className="mb-4 flex items-center gap-3">
-                      <span className="grid h-12 w-12 place-items-center rounded-full bg-white shadow-[0_18px_40px_-32px_rgba(26,22,20,0.6)]" style={{ color: slide.color }}>
-                        <SlideIcon size={21} strokeWidth={2.1} />
-                      </span>
-                      <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: slide.color }}>
-                        {slide.kicker}
-                      </p>
-                    </div>
-                    <h3
-                      style={{
-                        fontFamily: SERIF,
-                        fontSize: 'clamp(2rem, 3.6vw, 3.4rem)',
-                        lineHeight: 1,
-                        letterSpacing: '-0.045em',
-                        color: INK,
-                      }}
-                    >
-                      {slide.title}
-                    </h3>
-                  </div>
-                  <div className="hidden items-center gap-2 md:flex" aria-hidden="true">
-                    {journeySlides.map((item, index) => (
-                      <span
-                        key={item.title}
-                        className="h-2.5 rounded-full transition-all"
-                        style={{
-                          width: index === activeSlide ? 34 : 10,
-                          backgroundColor: index === activeSlide ? item.color : '#D6CCC0',
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSlide}
+            className="relative min-h-[455px]"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {activeSlide === 0 && <MovementSlide />}
+            {activeSlide === 1 && <RevelationSlide />}
+            {activeSlide === 2 && <DoorwaySlide />}
+          </motion.div>
+        </AnimatePresence>
 
-                {'doorways' in slide ? <DoorwaySlide doorways={slide.doorways} /> : <ReadingSlide slide={slide} />}
-
-                <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-                  <button
-                    type="button"
-                    onClick={() => goToSlide(-1)}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#DED6CB] bg-[#FDFCFA]/70 px-5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#8E867C] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
-                    aria-label="Previous shape journey step"
-                  >
-                    <ArrowLeft size={15} strokeWidth={2.35} />
-                    Previous
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => goToSlide(1)}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#F2551A] px-6 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_16px_34px_-24px_rgba(220,76,12,0.8)] transition-colors hover:bg-[#DC4C0C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
-                    aria-label="Next shape journey step"
-                  >
-                    Next
-                    <ArrowRight size={15} strokeWidth={2.35} />
-                  </button>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+        <div className="relative mt-8 flex items-center justify-center gap-5">
+          <button
+            type="button"
+            onClick={() => goToSlide(-1)}
+            disabled={isFirst}
+            className="grid h-11 w-11 place-items-center rounded-full border border-[#DED6CB] bg-[#FDFCFA]/72 text-[#867E74] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+            aria-label="Previous shape reading"
+          >
+            <ArrowLeft size={17} strokeWidth={2.35} />
+          </button>
+          <div className="flex items-center gap-2" aria-label="Shape reading progress">
+            {slides.map((item, index) => (
+              <button
+                key={item.title}
+                type="button"
+                onClick={() => setActiveSlide(index)}
+                className="h-2.5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+                style={{
+                  width: activeSlide === index ? 36 : 10,
+                  backgroundColor: activeSlide === index ? item.color : '#D2C8BB',
+                }}
+                aria-label={`Show ${item.title}`}
+                aria-current={activeSlide === index}
+              />
+            ))}
           </div>
+          <button
+            type="button"
+            onClick={() => goToSlide(1)}
+            disabled={isLast}
+            className="grid h-11 w-11 place-items-center rounded-full bg-[#F2551A] text-white shadow-[0_16px_34px_-24px_rgba(220,76,12,0.8)] transition-colors hover:bg-[#DC4C0C] disabled:cursor-default disabled:bg-[#D9D0C4] disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+            aria-label="Next shape reading"
+          >
+            <ArrowRight size={17} strokeWidth={2.35} />
+          </button>
         </div>
       </section>
     </div>
   );
 }
 
-function ReadingSlide({ slide }: { slide: (typeof journeySlides)[0] }) {
+function MovementSlide() {
   return (
-    <div className="mt-8 grid gap-8 lg:grid-cols-[0.68fr_0.32fr] lg:items-start">
+    <div className="grid gap-8 lg:grid-cols-[0.56fr_0.44fr] lg:items-center">
       <div>
-        <p className="max-w-2xl text-[21px] leading-[1.72] text-[#1F1A16]" style={{ fontFamily: SERIF }}>
-          {slide.body}
+        <h3
+          style={{
+            fontFamily: SERIF,
+            fontSize: 'clamp(2rem, 3.7vw, 3.45rem)',
+            lineHeight: 1,
+            letterSpacing: '-0.045em',
+            color: INK,
+          }}
+        >
+          How this shape moves
+        </h3>
+        <p className="mt-7 max-w-2xl text-[21px] leading-[1.72] text-[#1F1A16]" style={{ fontFamily: SERIF }}>
+          A Sharp Peak moves through the world by rising toward what matters. The person often recognises themselves in momentum, direction, development, responsibility, and the feeling of being pulled forward by something meaningful.
         </p>
-        <div className="mt-8 flex gap-4 border-l pl-5" style={{ borderColor: `${slide.color}55` }}>
-          <Zap className="mt-1 shrink-0" size={21} strokeWidth={2.1} style={{ color: slide.color }} />
-          <p className="max-w-xl text-[18px] leading-relaxed text-[#2A241F]" style={{ fontWeight: 300 }}>
-            {slide.callout}
+        <div className="mt-8 flex gap-4 border-l border-[#F2551A]/45 pl-5">
+          <Zap className="mt-1 shrink-0 text-[#F2551A]" size={21} strokeWidth={2.1} />
+          <p className="max-w-xl text-[17px] leading-relaxed text-[#342D27]" style={{ fontWeight: 300 }}>
+            The peak is not the problem. It is the most available part of the system, so movement often becomes the first way the whole profile finds coherence.
           </p>
         </div>
       </div>
+      <MovementGraphic />
+    </div>
+  );
+}
 
-      <div className="grid gap-3">
-        {slide.signals?.map((signal, index) => (
-          <motion.div
-            key={signal}
-            className="rounded-[22px] bg-white/72 px-5 py-4 shadow-[0_18px_46px_-42px_rgba(26,22,20,0.6)] ring-1 ring-[#E5DDD2]"
-            initial={{ opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.32, delay: index * 0.07 }}
-          >
-            <span className="text-[11px] font-black" style={{ color: slide.color }}>{String(index + 1).padStart(2, '0')}</span>
-            <p className="mt-2 text-[15px] leading-relaxed text-[#3F3933]" style={{ fontWeight: 300 }}>{signal}</p>
-          </motion.div>
+function MovementGraphic() {
+  return (
+    <div className="relative min-h-[330px] overflow-hidden rounded-[30px] border border-[#E8DED2] bg-[#FDFCFA]/72 p-6 shadow-[0_24px_60px_-54px_rgba(26,22,20,0.58)]">
+      <svg viewBox="0 0 320 300" className="h-full min-h-[278px] w-full overflow-visible" aria-hidden="true">
+        <defs>
+          <linearGradient id="movementLine" x1="80" x2="238" y1="238" y2="44" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#D6CEC2" />
+            <stop offset="1" stopColor="#F2551A" />
+          </linearGradient>
+        </defs>
+        <path d="M74 238 C122 214 158 169 174 126 C187 90 206 61 238 44" fill="none" stroke="url(#movementLine)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M134 242 C160 214 184 205 228 206" fill="none" stroke="#FFAB00" strokeOpacity="0.42" strokeWidth="2" strokeLinecap="round" />
+        <path d="M86 242 C111 220 132 213 162 215" fill="none" stroke="#42A68E" strokeOpacity="0.42" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="74" cy="238" r="7" fill="#42A68E" opacity="0.78" />
+        <circle cx="228" cy="206" r="7" fill="#FFAB00" opacity="0.78" />
+        <circle cx="238" cy="44" r="10" fill="#F2551A" />
+        <motion.circle
+          r="5.5"
+          fill="#F2551A"
+          animate={{ cx: [74, 132, 174, 238], cy: [238, 194, 126, 44], opacity: [0.35, 0.7, 1, 0.45] }}
+          transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <text x="238" y="26" textAnchor="middle" fill="#DC4C0C" fontSize="12" fontWeight="800">apex</text>
+      </svg>
+      <div className="absolute bottom-6 left-6 right-6 grid grid-cols-3 gap-3">
+        {['base', 'motion', 'meaning'].map((label, index) => (
+          <span key={label} className="rounded-full bg-white/72 px-3 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8C837A] ring-1 ring-[#E8DED2]">
+            {label}
+          </span>
         ))}
       </div>
     </div>
   );
 }
 
-function DoorwaySlide({ doorways }: { doorways: NonNullable<(typeof journeySlides)[2]['doorways']> }) {
+function RevelationSlide() {
+  return (
+    <div className="grid gap-8 lg:grid-cols-[0.55fr_0.45fr] lg:items-center">
+      <div>
+        <h3
+          style={{
+            fontFamily: SERIF,
+            fontSize: 'clamp(2rem, 3.7vw, 3.45rem)',
+            lineHeight: 1,
+            letterSpacing: '-0.045em',
+            color: INK,
+          }}
+        >
+          What's hard to see from inside it
+        </h3>
+        <p className="mt-7 max-w-2xl text-[21px] leading-[1.72] text-[#1F1A16]" style={{ fontFamily: SERIF }}>
+          From the inside, this can feel like strength, ambition, or simply being the person who keeps going. What is harder to see is that the peak may be creating coherence for the whole profile before the base has fully caught up.
+        </p>
+        <div className="mt-8 flex gap-4 border-l border-[#7A3D9A]/35 pl-5">
+          <Eye className="mt-1 shrink-0 text-[#7A3D9A]" size={21} strokeWidth={2.1} />
+          <p className="max-w-xl text-[17px] leading-relaxed text-[#342D27]" style={{ fontWeight: 300 }}>
+            The sharpness is the clue: one part is carrying more visibility than the others.
+          </p>
+        </div>
+      </div>
+      <RevelationGraphic />
+    </div>
+  );
+}
+
+function RevelationGraphic() {
+  return (
+    <div className="relative min-h-[330px] overflow-hidden rounded-[30px] border border-[#E8DED2] bg-[#FDFCFA]/72 p-6 shadow-[0_24px_60px_-54px_rgba(26,22,20,0.58)]">
+      <svg viewBox="0 0 409 356" className="relative z-10 h-full min-h-[278px] w-full overflow-visible" aria-labelledby="revelationTitle" role="img">
+        <title id="revelationTitle">Sharp Peak outline with inner signal</title>
+        <g transform="translate(0 8)">
+          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="none" stroke="#DC4C0C" strokeOpacity="0.58" strokeWidth="2" />
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#42A68E" strokeOpacity="0.36" strokeWidth="2" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="none" stroke="#FFAB00" strokeOpacity="0.36" strokeWidth="2" />
+          <motion.circle
+            cx="204.5"
+            cy="206"
+            r="18"
+            fill="#7A3D9A"
+            opacity="0.16"
+            animate={{ r: [14, 28, 14], opacity: [0.18, 0.05, 0.18] }}
+            transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.circle
+            cx="204.5"
+            cy="206"
+            r="6"
+            fill="#7A3D9A"
+            animate={{ opacity: [0.55, 1, 0.55] }}
+            transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <path d="M204.5 206 C204.5 178 204.5 154 204.5 128" fill="none" stroke="#7A3D9A" strokeOpacity="0.22" strokeWidth="2" strokeLinecap="round" />
+        </g>
+      </svg>
+      <div className="absolute bottom-6 left-6 right-6 rounded-[20px] bg-white/72 p-4 ring-1 ring-[#E8DED2]">
+        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#7A3D9A]">inside signal</p>
+        <p className="mt-2 text-[14px] leading-relaxed text-[#514940]" style={{ fontWeight: 300 }}>
+          The profile may feel coherent from the inside because the peak is doing so much organising work.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function DoorwaySlide() {
   const openDoor = (target: string) => {
     document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
-    <div className="mt-7">
-      <div className="grid gap-6 xl:grid-cols-[0.62fr_0.38fr] xl:items-start">
-        <p className="max-w-2xl text-[20px] leading-[1.65] text-[#1F1A16]" style={{ fontFamily: SERIF }}>
-          Each doorway answers a different kind of curiosity inside the same shape. The deep dive is not more scoring; it is where the shape starts to explain itself.
-        </p>
-        <div className="flex gap-4 border-l border-[#FFAB00]/45 pl-5">
-          <Compass className="mt-1 shrink-0 text-[#B47700]" size={21} strokeWidth={2.1} />
-          <p className="text-[15px] leading-relaxed text-[#4A4139]" style={{ fontWeight: 300 }}>
-            The doors are not a fixed order. Start with the one that feels most alive, then return for the rest of the architecture.
+    <div>
+      <div className="grid gap-8 xl:grid-cols-[0.35fr_0.65fr] xl:items-center">
+        <div>
+          <div className="relative mx-auto grid h-32 w-32 place-items-center rounded-full bg-[#FFF4DB] text-[#B47700] shadow-[0_22px_54px_-42px_rgba(180,119,0,0.55)] ring-1 ring-[#F2D58E]">
+            <motion.div
+              className="absolute inset-5 rounded-full border border-[#FFAB00]/35"
+              animate={{ scale: [0.95, 1.08, 0.95], opacity: [0.35, 0.8, 0.35] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <DoorOpen size={48} strokeWidth={1.65} />
+          </div>
+          <h3
+            className="mt-7 text-center xl:text-left"
+            style={{
+              fontFamily: SERIF,
+              fontSize: 'clamp(2rem, 3.6vw, 3.25rem)',
+              lineHeight: 1,
+              letterSpacing: '-0.045em',
+              color: INK,
+            }}
+          >
+            Where the deep dive opens
+          </h3>
+          <p className="mt-5 text-center text-[17px] leading-relaxed text-[#4A4139] xl:text-left" style={{ fontWeight: 300 }}>
+            Each doorway answers a different kind of curiosity inside the same shape. Start with the one that feels most alive.
           </p>
         </div>
-      </div>
 
-      <div className="relative mt-7">
-        <div className="absolute left-8 right-8 top-8 hidden h-px bg-gradient-to-r from-[#42A68E]/45 via-[#FFAB00]/50 to-[#DC4C0C]/42 md:block" />
-        <div className="grid gap-4 md:grid-cols-3 md:items-stretch">
-        {doorways.map((door, index) => {
-          const DoorIcon = door.Icon;
-          const offsets = ['md:mt-0', 'md:mt-6', 'md:mt-2'];
-          return (
-            <motion.button
-              key={door.domain}
-              type="button"
-              onClick={() => openDoor(door.target)}
-              className={`group relative overflow-hidden rounded-[24px] border border-[#E6DED3] bg-white/84 p-5 text-left shadow-[0_20px_58px_-50px_rgba(26,22,20,0.65)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25 ${offsets[index]}`}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.38, delay: index * 0.08 }}
-            >
-              <div
-                className="absolute inset-x-0 top-0 h-1.5"
-                style={{ backgroundColor: door.color }}
-              />
-              <div className="mb-5 flex items-center justify-between gap-4">
-                <span className="grid h-11 w-11 place-items-center rounded-full" style={{ color: door.color, backgroundColor: `${door.color}16` }}>
-                  <DoorIcon size={21} strokeWidth={2.1} />
+        <div className="grid gap-3">
+          {doorways.map((door, index) => {
+            const DoorIcon = door.Icon;
+            return (
+              <motion.button
+                key={door.domain}
+                type="button"
+                onClick={() => openDoor(door.target)}
+                className="group relative grid gap-4 overflow-hidden rounded-[24px] border border-[#E6DED3] bg-white/84 p-5 text-left shadow-[0_20px_58px_-50px_rgba(26,22,20,0.65)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25 md:grid-cols-[auto_1fr_auto] md:items-center"
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.38, delay: index * 0.08 }}
+              >
+                <div className="absolute inset-y-0 left-0 w-1.5" style={{ backgroundColor: door.color }} />
+                <span className="grid h-12 w-12 place-items-center rounded-full" style={{ color: door.color, backgroundColor: `${door.color}16` }}>
+                  <DoorIcon size={22} strokeWidth={2.1} />
                 </span>
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.17em]" style={{ color: door.color }}>{door.domain}</p>
+                  <p className="mt-2 text-[15px] leading-relaxed text-[#17120F]" style={{ fontWeight: 300 }}>
+                    {door.promise}
+                  </p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#6B635A]" style={{ fontWeight: 300 }}>
+                    {door.hook}
+                  </p>
+                </div>
                 <ArrowRight className="opacity-45 transition-transform group-hover:translate-x-1 group-hover:opacity-80" size={18} strokeWidth={2.2} style={{ color: door.color }} />
-              </div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.17em]" style={{ color: door.color }}>{door.domain}</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-[#17120F]" style={{ fontWeight: 300 }}>
-                {door.promise}
-              </p>
-              <p className="mt-4 border-t border-[#E6DED3] pt-4 text-[13px] leading-relaxed text-[#6B635A]" style={{ fontWeight: 300 }}>
-                {door.hook}
-              </p>
-            </motion.button>
-          );
-        })}
+              </motion.button>
+            );
+          })}
         </div>
       </div>
     </div>
