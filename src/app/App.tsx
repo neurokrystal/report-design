@@ -21,10 +21,8 @@ export default function App() {
         <div className="max-w-5xl mx-auto px-4 py-10 md:px-8 md:py-12">
           <PartDivider
             step={1}
-            part="Part 1"
-            label="Overview"
             title="Overview"
-            body="Foundations, domains, dimensions, and shape."
+            body="This opening view gives the reader the whole pattern first, so the detail that follows has a shape to attach to."
           />
 
           <div id="orientation" className="scroll-mt-24">
@@ -41,10 +39,8 @@ export default function App() {
 
           <PartDivider
             step={2}
-            part="Part 2"
-            label="Domain deep dive"
             title="Domain deep dive"
-            body="Safety, Play, and Challenge read as lived systems."
+            body="The three foundations become personal here: what steadies you, what restores you, and what drives you."
             className="mt-28"
           />
 
@@ -83,10 +79,8 @@ export default function App() {
 
           <PartDivider
             step={3}
-            part="Part 3"
-            label="Integration"
             title="Integration"
-            body="The foundations return to one architecture."
+            body="After the parts are visible, this section puts them back into one system and turns the reading toward direction."
             className="mt-28"
           />
 
@@ -113,15 +107,11 @@ export default function App() {
 
 function PartDivider({
   step,
-  part,
-  label,
   title,
   body,
   className = '',
 }: {
   step: 1 | 2 | 3;
-  part: string;
-  label: string;
   title: string;
   body: string;
   className?: string;
@@ -137,25 +127,26 @@ function PartDivider({
           background: 'linear-gradient(112deg, transparent 0%, rgba(255,187,48,0.10) 48%, rgba(220,76,12,0.13) 100%)',
         }}
       />
-      <div className="absolute right-[9%] top-1/2 hidden -translate-y-1/2 items-center gap-4 md:flex" aria-hidden="true">
-        {steps.map(item => (
-          <span
-            key={item}
-            className="block h-3 w-3 rotate-45"
-            style={{
-              backgroundColor: item === step ? '#FFBB30' : 'rgba(255,255,255,0.22)',
-              boxShadow: item === step ? '0 0 34px rgba(255,187,48,0.45)' : undefined,
-            }}
-          />
-        ))}
-      </div>
-      <div className="relative mx-auto grid max-w-5xl gap-7 md:grid-cols-[0.72fr_1fr] md:items-end">
+      <div className="relative mx-auto grid max-w-5xl gap-7 md:grid-cols-[0.66fr_1fr] md:items-end">
         <div>
-          <div className="mb-3 flex items-center gap-3">
+          <div className="mb-4 flex items-center gap-4">
             <span className="h-px w-9 bg-[#FFBB30]" />
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#FFBB30]">
-              {part} · {label}
-            </p>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#FFBB30]">Part {step}</p>
+            <div className="flex items-center gap-3" aria-label={`Part ${step} of 3`}>
+              {steps.map(item => {
+                const completed = item <= step;
+                return (
+                  <span
+                    key={item}
+                    className="block h-2.5 w-2.5 rotate-45"
+                    style={{
+                      backgroundColor: completed ? '#FFBB30' : 'rgba(255,255,255,0.22)',
+                      boxShadow: completed && item === step ? '0 0 30px rgba(255,187,48,0.45)' : undefined,
+                    }}
+                  />
+                );
+              })}
+            </div>
           </div>
           <h2
             style={{

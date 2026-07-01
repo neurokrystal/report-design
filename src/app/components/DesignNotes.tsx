@@ -32,6 +32,34 @@ const SHAPES = [
 
 const LEVELS = ['Very low', 'Low', 'Almost balanced', 'Balanced', 'Excess'];
 
+const SHAPE_EXPERIMENTS = [
+  {
+    name: 'Sharp peak radial',
+    note: 'A central field with one tall spike. Useful when the shape needs to feel immediate and kinetic.',
+    variant: 'sharp',
+  },
+  {
+    name: 'Dual engine',
+    note: 'Two strong arcs operate together while the third remains visibly under-built.',
+    variant: 'dual',
+  },
+  {
+    name: 'Steps',
+    note: 'A stepped skyline shows adaptation and movement from one foundation to the next.',
+    variant: 'steps',
+  },
+  {
+    name: 'Balanced high / mid',
+    note: 'An even ring can show balance without making all balanced profiles feel identical.',
+    variant: 'balance',
+  },
+  {
+    name: 'Depleted',
+    note: 'A low but alive centre avoids making the reader feel like the profile is empty.',
+    variant: 'depleted',
+  },
+];
+
 export function DesignNotes() {
   return (
     <section className="space-y-10">
@@ -58,6 +86,37 @@ export function DesignNotes() {
             <p className="mt-3 text-sm leading-relaxed text-[#5C574F]" style={{ fontWeight: 300 }}>{shape.body}</p>
           </motion.article>
         ))}
+      </div>
+
+      <div className="overflow-hidden rounded-[32px] bg-[#1E222E] p-6 text-white shadow-[0_32px_90px_-70px_rgba(26,22,20,0.85)] md:p-8">
+        <div className="grid gap-5 md:grid-cols-[0.42fr_0.58fr] md:items-end">
+          <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#48E3D5]">Shape visual experiments</p>
+            <h2 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', lineHeight: 1.02 }}>
+              Alternate graphic language for the shape family.
+            </h2>
+          </div>
+          <p className="max-w-xl text-[15px] leading-relaxed text-white/68" style={{ fontWeight: 300 }}>
+            These are exploratory directions for testing whether a radial, spiked, or skyline system communicates the ten shape types more clearly than the current domain-symbol view.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          {SHAPE_EXPERIMENTS.map((item, index) => (
+            <motion.article
+              key={item.name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.42, delay: index * 0.04 }}
+              className="rounded-[24px] border border-white/10 bg-white/[0.055] p-4"
+            >
+              <ShapeExperiment variant={item.variant} />
+              <h3 className="mt-4 text-[18px] leading-tight text-white" style={{ fontFamily: SERIF }}>{item.name}</h3>
+              <p className="mt-3 text-[13px] leading-relaxed text-white/60" style={{ fontWeight: 300 }}>{item.note}</p>
+            </motion.article>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-8 rounded-[28px] bg-[#F8F6F1] p-7 md:grid-cols-[0.9fr_1.1fr]">
@@ -93,6 +152,72 @@ export function DesignNotes() {
         </div>
       </div>
     </section>
+  );
+}
+
+function ShapeExperiment({ variant }: { variant: string }) {
+  return (
+    <svg viewBox="0 0 180 140" className="h-28 w-full overflow-visible" aria-hidden="true">
+      <defs>
+        <filter id={`noteGlow-${variant}`} x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="3.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      {variant === 'sharp' && (
+        <g transform="translate(90 72)">
+          <circle r="34" fill="none" stroke="#3F4656" strokeWidth="8" />
+          <path d="M0 -54 L10 -12 L0 -2 L-10 -12 Z" fill="#48E3D5" filter={`url(#noteGlow-${variant})`} />
+          <path d="M-28 28 L-12 8 L0 2 L-10 34 Z" fill="#E3485D" />
+          <path d="M28 28 L12 8 L0 2 L10 34 Z" fill="#6B7182" />
+        </g>
+      )}
+      {variant === 'dual' && (
+        <g transform="translate(90 72)" fill="none" strokeLinecap="round">
+          <path d="M-42 16 A46 46 0 0 1 -9 -43" stroke="#48E3D5" strokeWidth="12" />
+          <path d="M42 16 A46 46 0 0 0 9 -43" stroke="#E3485D" strokeWidth="12" />
+          <path d="M-18 40 A34 34 0 0 0 18 40" stroke="#6B7182" strokeWidth="8" />
+        </g>
+      )}
+      {variant === 'steps' && (
+        <g transform="translate(28 24)">
+          {[24, 43, 63, 86].map((height, index) => (
+            <rect key={height} x={index * 32} y={92 - height} width="10" height={height} rx="5" fill={index === 3 ? '#48E3D5' : index === 2 ? '#E3485D' : '#6B7182'} />
+          ))}
+          <path d="M0 90 C38 76 65 78 118 35" fill="none" stroke="#48E3D5" strokeOpacity="0.55" strokeWidth="2" />
+        </g>
+      )}
+      {variant === 'balance' && (
+        <g transform="translate(90 72)" fill="none" strokeWidth="10">
+          <circle r="42" stroke="#3F4656" />
+          <path d="M0 -42 A42 42 0 0 1 36 21" stroke="#48E3D5" />
+          <path d="M36 21 A42 42 0 0 1 -36 21" stroke="#E3485D" />
+          <path d="M-36 21 A42 42 0 0 1 0 -42" stroke="#6B7182" />
+        </g>
+      )}
+      {variant === 'depleted' && (
+        <g transform="translate(90 76)">
+          <circle r="18" fill="#48E3D5" opacity="0.18" />
+          <circle r="6" fill="#48E3D5" />
+          {[0, 45, 90, 135, 180, 225, 270, 315].map(angle => (
+            <line
+              key={angle}
+              x1={Math.cos((angle * Math.PI) / 180) * 25}
+              y1={Math.sin((angle * Math.PI) / 180) * 25}
+              x2={Math.cos((angle * Math.PI) / 180) * 42}
+              y2={Math.sin((angle * Math.PI) / 180) * 42}
+              stroke={angle % 90 === 0 ? '#48E3D5' : '#6B7182'}
+              strokeWidth="3"
+              strokeLinecap="round"
+              opacity="0.8"
+            />
+          ))}
+        </g>
+      )}
+    </svg>
   );
 }
 

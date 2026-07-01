@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, DoorOpen, Eye, Flame, Info, Shield, Sparkles, Sun, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, DoorOpen, Eye, Flame, Info, Shield, Sun, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
@@ -19,12 +19,12 @@ const shapePoints = [
   {
     title: 'The strongest current',
     body: 'Challenge is active, directional, and highly available.',
-    color: CHALLENGE,
+    color: '#B83F14',
   },
   {
     title: 'The quieter base',
     body: 'Safety and Play sit lower, so the profile reads as strong but uneven.',
-    color: '#9C948B',
+    color: SAFETY,
   },
 ];
 
@@ -38,32 +38,32 @@ const slides = [
     color: '#7A3D9A',
   },
   {
-    title: 'Where the deep dive opens',
-    color: PLAY,
+    title: 'Choose a domain to open',
+    color: CHALLENGE,
   },
 ];
 
 const doorways = [
   {
     domain: 'Safety',
-    promise: 'Find where steadiness is available, and where it has to be earned.',
-    hook: 'For the part of you that wants to know why ease does not always land.',
+    promise: 'See where steadiness is available, and where it has to be earned.',
+    hook: 'Open this if you want to understand your relationship with calm, trust, and ease.',
     color: SAFETY,
     Icon: Shield,
     target: 'safety',
   },
   {
     domain: 'Play',
-    promise: 'Find what restores aliveness, pleasure, and flexibility.',
-    hook: 'For the part of you that wants life to feel less functional and more alive.',
+    promise: 'See what restores aliveness, pleasure, and flexibility.',
+    hook: 'Open this if you want to understand where lightness and enjoyment are still available.',
     color: PLAY,
     Icon: Sun,
     target: 'play',
   },
   {
     domain: 'Challenge',
-    promise: 'Find the engine behind your drive and direction.',
-    hook: 'For the part of you that wants to understand the power of the peak.',
+    promise: 'See the engine behind your drive and direction.',
+    hook: 'Open this if you want to understand the strongest part of the whole profile.',
     color: CHALLENGE,
     Icon: Flame,
     target: 'challenge',
@@ -228,7 +228,7 @@ export function YourShape() {
                 className="h-2.5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
                 style={{
                   width: activeSlide === index ? 36 : 10,
-                  backgroundColor: activeSlide === index ? item.color : '#D2C8BB',
+                  backgroundColor: activeSlide === index ? NAV_ORANGE : '#D2C8BB',
                 }}
                 aria-label={`Show ${item.title}`}
                 aria-current={activeSlide === index}
@@ -290,11 +290,12 @@ function MovementGraphic() {
             <stop offset="1" stopColor="#F2551A" />
           </linearGradient>
         </defs>
+        <path d="M74 238 C122 214 158 169 174 126 C187 90 206 61 238 44" fill="none" stroke="#E7DED3" strokeWidth="16" strokeLinecap="round" />
         <path d="M74 238 C122 214 158 169 174 126 C187 90 206 61 238 44" fill="none" stroke="url(#movementLine)" strokeWidth="3" strokeLinecap="round" />
-        <path d="M134 242 C160 214 184 205 228 206" fill="none" stroke="#FFAB00" strokeOpacity="0.42" strokeWidth="2" strokeLinecap="round" />
-        <path d="M86 242 C111 220 132 213 162 215" fill="none" stroke="#42A68E" strokeOpacity="0.42" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="74" cy="238" r="7" fill="#42A68E" opacity="0.78" />
-        <circle cx="228" cy="206" r="7" fill="#FFAB00" opacity="0.78" />
+        {[92, 128, 164, 198].map((x, index) => (
+          <line key={x} x1={x} y1={245 - index * 38} x2={x} y2={258 - index * 38} stroke="#BFB5A8" strokeWidth="2" strokeLinecap="round" />
+        ))}
+        <circle cx="74" cy="238" r="7" fill="#B8B0A5" opacity="0.78" />
         <circle cx="238" cy="44" r="10" fill="#F2551A" />
         <motion.circle
           r="5.5"
@@ -305,7 +306,7 @@ function MovementGraphic() {
         <text x="238" y="26" textAnchor="middle" fill="#DC4C0C" fontSize="12" fontWeight="800">apex</text>
       </svg>
       <div className="absolute bottom-6 left-6 right-6 grid grid-cols-3 gap-3">
-        {['base', 'motion', 'meaning'].map((label, index) => (
+        {['start', 'rising', 'apex'].map(label => (
           <span key={label} className="rounded-full bg-white/72 px-3 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8C837A] ring-1 ring-[#E8DED2]">
             {label}
           </span>
@@ -347,39 +348,120 @@ function RevelationSlide() {
 
 function RevelationGraphic() {
   return (
-    <div className="relative min-h-[330px] overflow-hidden rounded-[30px] border border-[#E8DED2] bg-[#FDFCFA]/72 p-6 shadow-[0_24px_60px_-54px_rgba(26,22,20,0.58)]">
-      <svg viewBox="0 0 409 356" className="relative z-10 h-full min-h-[278px] w-full overflow-visible" aria-labelledby="revelationTitle" role="img">
-        <title id="revelationTitle">Sharp Peak outline with inner signal</title>
+    <div className="relative min-h-[350px] overflow-hidden rounded-[30px] border border-[#372337] bg-[#17121A] p-5 shadow-[0_24px_70px_-45px_rgba(26,18,28,0.82)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(122,61,154,0.28),transparent_35%),radial-gradient(circle_at_50%_14%,rgba(242,85,26,0.18),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0))]" />
+      <div className="absolute inset-x-8 top-8 h-px bg-gradient-to-r from-transparent via-white/18 to-transparent" />
+      <svg viewBox="0 0 409 356" className="relative z-10 h-full min-h-[300px] w-full overflow-visible" aria-labelledby="revelationTitle revelationDesc" role="img">
+        <title id="revelationTitle">Hidden organising force inside a Sharp Peak</title>
+        <desc id="revelationDesc">The visible apex is bright above a hidden centre that sends organising currents through the whole shape.</desc>
+        <defs>
+          <linearGradient id="hiddenCurrent" x1="204" x2="204" y1="265" y2="70" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#7A3D9A" stopOpacity="0.2" />
+            <stop offset="0.52" stopColor="#7A3D9A" stopOpacity="0.56" />
+            <stop offset="1" stopColor="#F2551A" stopOpacity="0.78" />
+          </linearGradient>
+          <filter id="insideGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
         <g transform="translate(0 8)">
-          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="none" stroke="#DC4C0C" strokeOpacity="0.58" strokeWidth="2" />
-          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#42A68E" strokeOpacity="0.36" strokeWidth="2" />
-          <path d={DOMAIN_HEX_OUTLINES.Play} fill="none" stroke="#FFAB00" strokeOpacity="0.36" strokeWidth="2" />
+          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="#F2551A" opacity="0.11" />
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="#42A68E" opacity="0.055" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="#FFAB00" opacity="0.055" />
+          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="none" stroke="#FF6A2D" strokeOpacity="0.92" strokeWidth="2.4" filter="url(#insideGlow)" />
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#42E0C5" strokeOpacity="0.32" strokeWidth="2" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="none" stroke="#FFC45A" strokeOpacity="0.32" strokeWidth="2" />
+
+          <motion.path
+            d="M83 282 C121 234 168 226 204.5 206 C241 226 288 234 326 282"
+            fill="none"
+            stroke="#C989E2"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeOpacity="0.25"
+            strokeDasharray="10 13"
+            animate={{ strokeDashoffset: [0, -46] }}
+            transition={{ duration: 5.6, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.path
+            d="M122 276 C152 228 183 224 204.5 206 C226 224 257 228 287 276"
+            fill="none"
+            stroke="#C989E2"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeOpacity="0.42"
+            strokeDasharray="8 12"
+            animate={{ strokeDashoffset: [0, -40] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.path
+            d="M204.5 255 C204.5 216 204.5 170 204.5 101"
+            fill="none"
+            stroke="url(#hiddenCurrent)"
+            strokeWidth="5"
+            strokeLinecap="round"
+            strokeDasharray="20 18"
+            animate={{ strokeDashoffset: [38, 0] }}
+            transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+
           <motion.circle
             cx="204.5"
             cy="206"
-            r="18"
-            fill="#7A3D9A"
-            opacity="0.16"
-            animate={{ r: [14, 28, 14], opacity: [0.18, 0.05, 0.18] }}
-            transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+            r="42"
+            fill="none"
+            stroke="#C989E2"
+            strokeOpacity="0.2"
+            strokeWidth="1.6"
+            animate={{ r: [32, 48, 32], opacity: [0.72, 0.24, 0.72] }}
+            transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.circle
             cx="204.5"
             cy="206"
-            r="6"
-            fill="#7A3D9A"
-            animate={{ opacity: [0.55, 1, 0.55] }}
-            transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+            r="17"
+            fill="#C989E2"
+            opacity="0.24"
+            animate={{ scale: [0.9, 1.18, 0.9] }}
+            transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <path d="M204.5 206 C204.5 178 204.5 154 204.5 128" fill="none" stroke="#7A3D9A" strokeOpacity="0.22" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="204.5" cy="206" r="6.5" fill="#E6B4FF" />
+
+          <motion.circle
+            cx="204.5"
+            cy="206"
+            r="4.5"
+            fill="#F2551A"
+            animate={{ cy: [206, 170, 124, 101], opacity: [0, 0.65, 1, 0] }}
+            transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.circle
+            cx="204.5"
+            cy="206"
+            r="3.5"
+            fill="#E6B4FF"
+            animate={{ cx: [204.5, 158, 122], cy: [206, 230, 276], opacity: [0, 0.7, 0] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+          />
+          <motion.circle
+            cx="204.5"
+            cy="206"
+            r="3.5"
+            fill="#E6B4FF"
+            animate={{ cx: [204.5, 251, 287], cy: [206, 230, 276], opacity: [0, 0.7, 0] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 0.65 }}
+          />
+
+          <g textAnchor="middle">
+            <text x="204.5" y="64" fill="#FF7542" fontSize="11" fontWeight="900" letterSpacing="1.6">VISIBLE PEAK</text>
+            <text x="204.5" y="304" fill="#E6B4FF" fontSize="11" fontWeight="900" letterSpacing="1.6">HIDDEN ORGANISING WORK</text>
+          </g>
         </g>
       </svg>
-      <div className="absolute bottom-6 left-6 right-6 rounded-[20px] bg-white/72 p-4 ring-1 ring-[#E8DED2]">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#7A3D9A]">inside signal</p>
-        <p className="mt-2 text-[14px] leading-relaxed text-[#514940]" style={{ fontWeight: 300 }}>
-          The profile may feel coherent from the inside because the peak is doing so much organising work.
-        </p>
-      </div>
     </div>
   );
 }
@@ -390,65 +472,76 @@ function DoorwaySlide() {
   };
 
   return (
-    <div>
-      <div className="grid gap-8 xl:grid-cols-[0.35fr_0.65fr] xl:items-center">
-        <div>
-          <div className="relative mx-auto grid h-32 w-32 place-items-center rounded-full bg-[#FFF4DB] text-[#B47700] shadow-[0_22px_54px_-42px_rgba(180,119,0,0.55)] ring-1 ring-[#F2D58E]">
-            <motion.div
-              className="absolute inset-5 rounded-full border border-[#FFAB00]/35"
-              animate={{ scale: [0.95, 1.08, 0.95], opacity: [0.35, 0.8, 0.35] }}
-              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <DoorOpen size={48} strokeWidth={1.65} />
-          </div>
-          <h3
-            className="mt-7 text-center xl:text-left"
-            style={{
-              fontFamily: SERIF,
-              fontSize: 'clamp(2rem, 3.6vw, 3.25rem)',
-              lineHeight: 1,
-              letterSpacing: '-0.045em',
-              color: INK,
-            }}
-          >
-            Where the deep dive opens
-          </h3>
-          <p className="mt-5 text-center text-[17px] leading-relaxed text-[#4A4139] xl:text-left" style={{ fontWeight: 300 }}>
-            Each doorway answers a different kind of curiosity inside the same shape. Start with the one that feels most alive.
-          </p>
+    <div className="space-y-8">
+      <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-t-full rounded-b-[18px] bg-[#211A17] text-white shadow-[0_20px_48px_-34px_rgba(26,22,20,0.72)]">
+          <DoorOpen size={30} strokeWidth={1.7} />
         </div>
+        <h3
+          style={{
+            fontFamily: SERIF,
+            fontSize: 'clamp(2rem, 3.6vw, 3.25rem)',
+            lineHeight: 1,
+            letterSpacing: '-0.045em',
+            color: INK,
+          }}
+        >
+          Where do you want to go first?
+        </h3>
+        <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-[#4A4139]" style={{ fontWeight: 300 }}>
+          Choose the domain you want to read first. Each door answers a different question about this Sharp Peak.
+        </p>
+      </div>
 
-        <div className="grid gap-3">
-          {doorways.map((door, index) => {
-            const DoorIcon = door.Icon;
-            return (
-              <motion.button
-                key={door.domain}
-                type="button"
-                onClick={() => openDoor(door.target)}
-                className="group relative grid gap-4 overflow-hidden rounded-[24px] border border-[#E6DED3] bg-white/84 p-5 text-left shadow-[0_20px_58px_-50px_rgba(26,22,20,0.65)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25 md:grid-cols-[auto_1fr_auto] md:items-center"
-                initial={{ opacity: 0, x: 16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.38, delay: index * 0.08 }}
-              >
-                <div className="absolute inset-y-0 left-0 w-1.5" style={{ backgroundColor: door.color }} />
-                <span className="grid h-12 w-12 place-items-center rounded-full" style={{ color: door.color, backgroundColor: `${door.color}16` }}>
-                  <DoorIcon size={22} strokeWidth={2.1} />
-                </span>
-                <div>
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.17em]" style={{ color: door.color }}>{door.domain}</p>
-                  <p className="mt-2 text-[15px] leading-relaxed text-[#17120F]" style={{ fontWeight: 300 }}>
+      <div className="grid gap-4 md:grid-cols-3">
+        {doorways.map((door, index) => {
+          const DoorIcon = door.Icon;
+          return (
+            <motion.button
+              key={door.domain}
+              type="button"
+              onClick={() => openDoor(door.target)}
+              className="group relative min-h-[315px] overflow-hidden rounded-[28px] border border-[#E6DED3] bg-[#FFFCF7] p-5 text-left shadow-[0_24px_68px_-58px_rgba(26,22,20,0.68)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.42, delay: index * 0.08 }}
+            >
+              <div
+                className="absolute inset-x-5 top-5 h-[140px] rounded-t-[90px] rounded-b-[22px] border transition-transform duration-500 group-hover:-translate-y-1"
+                style={{
+                  borderColor: `${door.color}45`,
+                  background: `linear-gradient(180deg, ${door.color}24, ${door.color}0 68%), radial-gradient(circle at 50% 30%, ${door.color}26, transparent 60%)`,
+                }}
+              />
+              <motion.div
+                className="absolute left-1/2 top-10 h-20 w-20 -translate-x-1/2 rounded-full blur-2xl"
+                style={{ backgroundColor: door.color }}
+                animate={{ opacity: [0.16, 0.38, 0.16], scale: [0.92, 1.08, 0.92] }}
+                transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: index * 0.35 }}
+              />
+              <div className="relative flex h-full flex-col">
+                <div className="mx-auto mt-4 grid h-14 w-14 place-items-center rounded-full bg-white/82 shadow-[0_16px_36px_-28px_rgba(26,22,20,0.72)]" style={{ color: door.color }}>
+                  <DoorIcon size={24} strokeWidth={2.1} />
+                </div>
+                <div className="mt-24">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.17em]" style={{ color: door.color }}>
+                    Open {door.domain}
+                  </p>
+                  <p className="mt-3 text-[17px] leading-snug text-[#17120F]" style={{ fontFamily: SERIF }}>
                     {door.promise}
                   </p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-[#6B635A]" style={{ fontWeight: 300 }}>
+                  <p className="mt-3 text-[13px] leading-relaxed text-[#6B635A]" style={{ fontWeight: 300 }}>
                     {door.hook}
                   </p>
                 </div>
-                <ArrowRight className="opacity-45 transition-transform group-hover:translate-x-1 group-hover:opacity-80" size={18} strokeWidth={2.2} style={{ color: door.color }} />
-              </motion.button>
-            );
-          })}
-        </div>
+                <div className="mt-auto flex items-center justify-between pt-5">
+                  <span className="h-px flex-1" style={{ backgroundColor: `${door.color}42` }} />
+                  <ArrowRight className="ml-3 opacity-55 transition-transform group-hover:translate-x-1 group-hover:opacity-90" size={18} strokeWidth={2.2} style={{ color: door.color }} />
+                </div>
+              </div>
+            </motion.button>
+          );
+        })}
       </div>
     </div>
   );
@@ -464,10 +557,15 @@ function ShapeGraphic() {
   return (
     <div className="relative w-full max-w-[650px]">
       <motion.div
-        className="absolute left-1/2 top-[8%] h-[42%] w-[50%] -translate-x-1/2 rounded-full blur-2xl"
-        style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.32), rgba(242,85,26,0.1) 54%, rgba(242,85,26,0) 72%)' }}
-        animate={{ opacity: [0.45, 0.82, 0.45], scale: [0.96, 1.04, 0.96] }}
-        transition={{ duration: 6.4, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute left-1/2 top-[4%] h-[50%] w-[58%] -translate-x-1/2 rounded-full blur-2xl"
+        style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.42), rgba(242,85,26,0.18) 46%, rgba(255,171,0,0.08) 62%, rgba(242,85,26,0) 76%)' }}
+        animate={{ opacity: [0.62, 0.98, 0.62], scale: [0.94, 1.08, 0.94] }}
+        transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute left-1/2 top-[15%] h-[28%] w-[34%] -translate-x-1/2 rounded-full border border-[#F2551A]/25"
+        animate={{ opacity: [0.2, 0.72, 0.2], scale: [0.86, 1.12, 0.86] }}
+        transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
       />
       <div className="absolute inset-x-14 bottom-[5%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.12),transparent_70%)] blur-xl" />
       <svg viewBox="0 0 409 356" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
