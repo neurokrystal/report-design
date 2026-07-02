@@ -22,7 +22,7 @@ export default function App() {
           <PartDivider
             step={1}
             title="Overview"
-            body="Start here to see the whole architecture before any one score asks for attention. This is the map that makes the rest of the report legible."
+            body="Before any one score asks for attention, this opening part lets the whole pattern come into view. It gives the reader a map for the rest of the report, so the details that follow have emotional and structural context."
           />
 
           <div id="orientation" className="mt-16 scroll-mt-24">
@@ -40,7 +40,7 @@ export default function App() {
           <PartDivider
             step={2}
             title="Domain deep dive"
-            body="Now the map becomes personal. Each foundation opens into the specific places your system steadies, restores, and drives itself."
+            body="The second part moves from the whole pattern into the three foundations themselves. Safety, Play, and Challenge open one by one, showing where steadiness, aliveness, and direction are actually available."
             className="mt-28"
           />
 
@@ -80,7 +80,7 @@ export default function App() {
           <PartDivider
             step={3}
             title="Integration"
-            body="The final part recomposes the reading into one operating pattern, so insight can become direction rather than information."
+            body="The final part gathers the reading back into one living system. After the foundations are visible, this is where the profile becomes direction, timing, and a more usable sense of what comes next."
             className="mt-28"
           />
 
@@ -117,77 +117,175 @@ function PartDivider({
   className?: string;
 }) {
   const steps = [
-    { number: 1, label: 'Orient' },
-    { number: 2, label: 'Deepen' },
-    { number: 3, label: 'Integrate' },
+    {
+      number: 1,
+      label: 'The Map',
+      line: 'See the full profile',
+      symbol: 'map',
+      heading: 'The Map',
+      invitation: 'Begin by seeing the whole architecture.',
+    },
+    {
+      number: 2,
+      label: 'The Deep Dive',
+      line: 'Enter the domains',
+      symbol: 'deep',
+      heading: 'The Deep Dive',
+      invitation: 'Move into Safety, Play, and Challenge.',
+    },
+    {
+      number: 3,
+      label: 'The Integration',
+      line: 'Bring the system together',
+      symbol: 'integration',
+      heading: 'The Integration',
+      invitation: 'Turn the reading into direction.',
+    },
   ] as const;
+  const activeStage = steps[step - 1];
+
   return (
     <section
-      className={`relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#191410] px-4 py-12 text-white shadow-[0_28px_76px_-54px_rgba(26,22,20,0.78)] md:w-[calc(100vw-13rem)] md:px-8 ${className}`}
+      aria-label={`${title}: part ${step} of 3`}
+      className={`relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#17120F] px-4 py-16 text-white shadow-[0_32px_92px_-58px_rgba(26,22,20,0.86)] md:w-[calc(100vw-13rem)] md:px-8 md:py-20 lg:py-24 ${className}`}
     >
       <div
-        className="absolute inset-0 opacity-80"
+        className="absolute inset-0 opacity-95"
         style={{
-          background: 'radial-gradient(circle at 16% 28%, rgba(255,187,48,0.13), transparent 24%), radial-gradient(circle at 84% 58%, rgba(220,76,12,0.16), transparent 34%), linear-gradient(112deg, #191410 0%, #221B15 100%)',
+          background: 'radial-gradient(circle at 18% 28%, rgba(255,187,48,0.18), transparent 24%), radial-gradient(circle at 82% 24%, rgba(242,85,26,0.14), transparent 32%), radial-gradient(circle at 70% 78%, rgba(66,166,142,0.08), transparent 28%), linear-gradient(112deg, #17120F 0%, #241A14 54%, #191410 100%)',
         }}
       />
-      <div className="absolute inset-y-0 left-1/2 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-      <div className="absolute -right-16 top-1/2 h-52 w-52 -translate-y-1/2 rotate-45 border border-white/[0.06]" />
-      <div className="relative mx-auto grid max-w-5xl gap-8 md:grid-cols-[0.58fr_1fr] md:items-center">
-        <div className="space-y-5">
-          <div className="flex items-center gap-4">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#FFBB30]">Report journey</p>
-            <div className="h-px flex-1 bg-white/12" />
-          </div>
+      <div className="absolute inset-y-0 left-[58%] hidden w-px bg-gradient-to-b from-transparent via-white/10 to-transparent md:block" />
+      <div className="absolute -right-24 top-1/2 h-80 w-80 -translate-y-1/2 rotate-45 border border-white/[0.055]" />
+      <div className="absolute -left-24 bottom-[-45%] h-72 w-72 rounded-full border border-[#FFBB30]/[0.055]" />
 
-          <div className="grid max-w-sm grid-cols-3 gap-3" aria-label={`Report journey stage ${step} of 3`}>
-            {steps.map(item => {
-              const completed = item.number <= step;
-              const active = item.number === step;
-              return (
-                <div key={item.number} className="flex items-center gap-2">
-                  <span
-                    className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/12 bg-white/[0.035]"
-                    style={{
-                      boxShadow: active ? '0 0 34px rgba(255,187,48,0.28)' : undefined,
-                    }}
-                  >
-                    <span
-                      className="block h-2.5 w-2.5 rotate-45"
-                      style={{
-                        backgroundColor: completed ? '#FFBB30' : 'rgba(255,255,255,0.2)',
-                      }}
-                    />
-                  </span>
-                  <span
-                    className="text-[9px] font-extrabold uppercase tracking-[0.14em]"
-                    style={{ color: completed ? 'rgba(255,255,255,0.86)' : 'rgba(255,255,255,0.34)' }}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-              );
-            })}
+      <div className="relative mx-auto grid max-w-6xl gap-12 md:grid-cols-[0.86fr_1.14fr] md:items-center">
+        <div>
+          <div className="mb-7 flex items-center gap-4">
+            <span className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#FFBB30]">Part {step} of 3</span>
+            <span className="h-px w-16 bg-[#FFBB30]/55" />
+            <span className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-white/48">Report journey</span>
           </div>
-
           <h2
             style={{
               fontFamily: '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif',
-              fontSize: 'clamp(1.75rem, 2.8vw, 2.55rem)',
-              lineHeight: 1,
+              fontSize: 'clamp(3rem, 6.4vw, 5.7rem)',
+              lineHeight: 0.92,
               letterSpacing: '-0.04em',
               color: '#FFFFFF',
             }}
           >
-            {title}
+            {activeStage.heading}
           </h2>
-        </div>
-        <div className="relative max-w-2xl md:pl-4">
-          <p className="text-[15px] leading-relaxed text-white/74" style={{ fontWeight: 300 }}>
+          <p className="mt-6 max-w-lg text-[20px] leading-snug text-white/88" style={{ fontWeight: 300 }}>
+            {activeStage.invitation}
+          </p>
+          <p className="mt-7 max-w-2xl border-l border-[#FFBB30]/45 pl-5 text-[16px] leading-relaxed text-white/70" style={{ fontWeight: 300 }}>
             {body}
           </p>
         </div>
+
+        <div className="relative min-h-[290px]">
+          <div className="absolute inset-0 rounded-[42px] border border-white/[0.055] bg-white/[0.025]" />
+          <div className="absolute inset-0 rounded-[42px] bg-[radial-gradient(circle_at_44%_42%,rgba(255,187,48,0.10),transparent_33%),radial-gradient(circle_at_70%_58%,rgba(242,85,26,0.10),transparent_34%)]" />
+          <div className="absolute left-[13%] right-[13%] top-[46%] h-px bg-gradient-to-r from-[#FFBB30]/10 via-[#FFBB30]/44 to-white/10" />
+          <div className="relative grid min-h-[290px] grid-cols-1 gap-5 px-5 py-8 sm:grid-cols-3 sm:items-center md:px-7">
+            {steps.map((item, index) => {
+              const completed = item.number <= step;
+              const active = item.number === step;
+              return (
+                <div
+                  key={item.number}
+                  className={`relative flex min-h-[210px] flex-col items-center justify-center text-center ${index === 1 ? 'sm:-translate-y-6' : index === 2 ? 'sm:translate-y-5' : 'sm:translate-y-3'}`}
+                >
+                  <JourneyStageSymbol symbol={item.symbol} completed={completed} active={active} />
+                  <p
+                    className="mt-5 text-[11px] font-extrabold uppercase tracking-[0.18em]"
+                    style={{ color: completed ? '#FFBB30' : 'rgba(255,255,255,0.38)' }}
+                  >
+                    {item.label}
+                  </p>
+                  <p className="mt-2 max-w-[10rem] text-[13px] leading-snug text-white/58" style={{ fontWeight: 300 }}>
+                    {item.line}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
+  );
+}
+
+function JourneyStageSymbol({
+  symbol,
+  completed,
+  active,
+}: {
+  symbol: 'map' | 'deep' | 'integration';
+  completed: boolean;
+  active: boolean;
+}) {
+  const color = completed ? '#FFBB30' : 'rgba(255,255,255,0.28)';
+  const glow = active ? '0 0 52px rgba(255,187,48,0.28), 0 0 92px rgba(242,85,26,0.16)' : undefined;
+  const opacity = completed ? 1 : 0.58;
+
+  return (
+    <div
+      className="relative grid h-28 w-28 place-items-center rounded-full border border-white/10 bg-white/[0.035]"
+      style={{ boxShadow: glow }}
+      aria-hidden="true"
+    >
+      <div
+        className="absolute inset-3 rounded-full"
+        style={{
+          background: active
+            ? 'radial-gradient(circle, rgba(255,187,48,0.18), rgba(242,85,26,0.08) 48%, transparent 72%)'
+            : 'radial-gradient(circle, rgba(255,255,255,0.06), transparent 68%)',
+        }}
+      />
+
+      {symbol === 'map' && (
+        <div className="relative h-16 w-16" style={{ opacity }}>
+          <span className="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rotate-45 border" style={{ borderColor: color }} />
+          <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ backgroundColor: color }} />
+          <span className="absolute left-1/2 top-[8px] h-4 w-px -translate-x-1/2" style={{ backgroundColor: color }} />
+          <span className="absolute bottom-[8px] left-1/2 h-4 w-px -translate-x-1/2" style={{ backgroundColor: color }} />
+          <span className="absolute left-[8px] top-1/2 h-px w-4 -translate-y-1/2" style={{ backgroundColor: color }} />
+          <span className="absolute right-[8px] top-1/2 h-px w-4 -translate-y-1/2" style={{ backgroundColor: color }} />
+        </div>
+      )}
+
+      {symbol === 'deep' && (
+        <div className="relative flex h-16 w-16 items-end justify-center gap-2" style={{ opacity }}>
+          {[46, 58, 38].map((height, index) => (
+            <span
+              key={height}
+              className="block w-3 rounded-t-full border"
+              style={{
+                height,
+                borderColor: color,
+                background: completed ? `linear-gradient(180deg, ${color}44, transparent 78%)` : 'transparent',
+                transform: index === 1 ? 'translateY(-5px)' : undefined,
+              }}
+            />
+          ))}
+          <span className="absolute bottom-0 left-1/2 h-px w-14 -translate-x-1/2" style={{ backgroundColor: color }} />
+        </div>
+      )}
+
+      {symbol === 'integration' && (
+        <div className="relative h-16 w-16" style={{ opacity }}>
+          <span className="absolute left-1/2 top-[5px] h-8 w-px -translate-x-1/2 rotate-0 origin-bottom" style={{ backgroundColor: color }} />
+          <span className="absolute left-[15px] top-[33px] h-8 w-px -rotate-[58deg] origin-top" style={{ backgroundColor: color }} />
+          <span className="absolute right-[15px] top-[33px] h-8 w-px rotate-[58deg] origin-top" style={{ backgroundColor: color }} />
+          <span className="absolute left-1/2 top-[2px] h-4 w-4 -translate-x-1/2 rotate-45 border" style={{ borderColor: color, backgroundColor: completed ? `${color}22` : 'transparent' }} />
+          <span className="absolute bottom-[6px] left-[6px] h-4 w-4 rotate-45 border" style={{ borderColor: color, backgroundColor: completed ? `${color}18` : 'transparent' }} />
+          <span className="absolute bottom-[6px] right-[6px] h-4 w-4 rotate-45 border" style={{ borderColor: color, backgroundColor: completed ? `${color}18` : 'transparent' }} />
+          <span className="absolute left-1/2 top-[30px] h-5 w-5 -translate-x-1/2 rotate-45 border" style={{ borderColor: color, backgroundColor: completed ? `${color}24` : 'transparent' }} />
+        </div>
+      )}
+    </div>
   );
 }
