@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const SAFETY = '#42A68E';
@@ -75,6 +76,13 @@ const BLIND_SPOT_OPTIONS = [
     variant: 'counterweight',
   },
 ];
+
+const SECTION_THREE_GRAPHIC_STATES = [
+  { name: 'Your shape', state: 'shape' },
+  { name: 'How you move', state: 'move' },
+  { name: 'Your blind spot', state: 'blind' },
+  { name: 'Pathways', state: 'paths' },
+] as const;
 
 const RADAR_PROTOTYPES = [
   {
@@ -212,13 +220,43 @@ export function DesignNotes() {
       <div className="overflow-hidden rounded-[34px] border border-[#E6DED2] bg-[#FFFCF7] p-7 shadow-[0_34px_95px_-78px_rgba(26,22,20,0.58)] md:p-9">
         <div className="grid gap-6 md:grid-cols-[0.38fr_0.62fr] md:items-end">
           <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#DC4C0C]">Section 3 archive</p>
+            <h2 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.85rem, 3.2vw, 2.7rem)', lineHeight: 1.02, color: '#15110F' }}>
+              The previous block-state graphics.
+            </h2>
+          </div>
+          <p className="max-w-2xl text-[15.5px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+            These preserve the graphic language that was previously inside Section 3, so the block-based direction remains available for comparison while the live section uses radar.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          {SECTION_THREE_GRAPHIC_STATES.map((item, index) => (
+            <motion.article
+              key={item.name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.22 }}
+              transition={{ duration: 0.45, delay: index * 0.05 }}
+              className="rounded-[30px] border border-[#E5D8C8] bg-white/78 p-5"
+            >
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8278]">{item.name}</p>
+              <LegacySectionThreeGraphic state={item.state} />
+            </motion.article>
+          ))}
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-[34px] border border-[#E6DED2] bg-[#FFFCF7] p-7 shadow-[0_34px_95px_-78px_rgba(26,22,20,0.58)] md:p-9">
+        <div className="grid gap-6 md:grid-cols-[0.38fr_0.62fr] md:items-end">
+          <div>
             <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#DC4C0C]">Radar shape prototype</p>
             <h2 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.85rem, 3.2vw, 2.7rem)', lineHeight: 1.02, color: '#15110F' }}>
               Testing one grammar across quiet and dramatic shapes.
             </h2>
           </div>
           <p className="max-w-2xl text-[15.5px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
-            This sandbox keeps Section 3 unchanged. It tests whether a three-axis radar can make the quiet, even, stepped, dual, and sharply imbalanced profiles feel distinct while staying connected to the existing block symbol.
+            This sandbox keeps the wider radar family visible while Section 3 uses the Sharp Peak version. It tests whether a three-axis radar can make the quiet, even, stepped, dual, and sharply imbalanced profiles feel distinct.
           </p>
         </div>
 
@@ -232,7 +270,7 @@ export function DesignNotes() {
               transition={{ duration: 0.45, delay: index * 0.05 }}
               className="grid gap-6 rounded-[30px] border border-[#E5D8C8] bg-white/78 p-5 md:grid-cols-[0.42fr_0.58fr] md:p-6"
             >
-              <div className="flex flex-col justify-between">
+              <div className="flex flex-col justify-center">
                 <div>
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8278]">{profile.label}</p>
                   <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.8rem, 3vw, 2.45rem)', lineHeight: 1, color: '#15110F' }}>
@@ -244,10 +282,6 @@ export function DesignNotes() {
                   <p className="mt-5 border-l border-[#E2D7CA] pl-4 text-[13.5px] leading-relaxed text-[#6A6259]" style={{ fontWeight: 300 }}>
                     {profile.note}
                   </p>
-                </div>
-                <div className="mt-6 max-w-[260px] rounded-[22px] bg-[#F8F3EB] p-4">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#8B8278]">Block echo</p>
-                  <ShapeMini values={[profile.scores.Safety, profile.scores.Play, profile.scores.Challenge]} />
                 </div>
               </div>
               <RadarShape scores={profile.scores} />
@@ -297,6 +331,192 @@ type RadarScores = {
   Challenge: number;
   Play: number;
 };
+
+type SectionThreeArchiveState = (typeof SECTION_THREE_GRAPHIC_STATES)[number]['state'];
+
+function LegacySectionThreeGraphic({ state }: { state: SectionThreeArchiveState }) {
+  if (state === 'paths') {
+    return <LegacyPathwaysGraphic />;
+  }
+
+  const fills = {
+    Safety: getScoreFillPath('Safety', 27),
+    Play: getScoreFillPath('Play', 41),
+    Challenge: getScoreFillPath('Challenge', 78),
+  };
+  const isMove = state === 'move';
+  const isBlind = state === 'blind';
+  const safetyOpacity = state === 'shape' ? 0.88 : isBlind ? 0.32 : 0.24;
+  const playOpacity = state === 'shape' ? 0.84 : isBlind ? 0.32 : 0.24;
+  const challengeOpacity = isMove ? 0.58 : 1;
+
+  return (
+    <div className="relative mt-5 overflow-hidden rounded-[24px] bg-[#F8F3EB] p-4">
+      <svg viewBox="0 0 409 356" className="h-[280px] w-full overflow-visible" aria-hidden="true">
+        <defs>
+          <filter id={`legacyShapeDrop-${state}`} x="-20%" y="-20%" width="140%" height="150%">
+            <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.13" />
+          </filter>
+          <radialGradient id={`legacyPeakAura-${state}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0" stopColor="#F2551A" stopOpacity="0.34" />
+            <stop offset="0.45" stopColor="#FFBB30" stopOpacity="0.15" />
+            <stop offset="1" stopColor="#F2551A" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id={`legacyBlindShadow-${state}`} x1="190" x2="352" y1="186" y2="317" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#1A1614" stopOpacity="0.18" />
+            <stop offset="0.58" stopColor="#1A1614" stopOpacity="0.08" />
+            <stop offset="1" stopColor="#1A1614" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+
+        {state === 'shape' && (
+          <g>
+            <motion.circle
+              cx="204.5"
+              cy="60"
+              r="78"
+              fill={`url(#legacyPeakAura-${state})`}
+              animate={{ r: [34, 74, 34], opacity: [0.85, 0.16, 0.85] }}
+              transition={{ duration: 5.1, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.circle
+              cx="204.5"
+              cy="60"
+              r="58"
+              fill="none"
+              stroke="#F2551A"
+              strokeWidth="1.4"
+              strokeOpacity="0.34"
+              animate={{ r: [22, 52, 22], opacity: [0.5, 0.09, 0.5] }}
+              transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </g>
+        )}
+
+        {isMove && (
+          <g>
+            <circle cx="204.5" cy="198" r="23" fill="#FFF8F0" stroke="#E8D9CC" strokeWidth="1.3" />
+            <path d="M204.5 198 C186 216 157 239 112 272" fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.52" />
+            <path d="M204.5 198 C225 218 256 240 304 272" fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.52" />
+            <path d="M204.5 198 C204 157 204 112 204.5 60" fill="none" stroke="#FFF6E8" strokeWidth="7.8" strokeLinecap="round" strokeOpacity="0.8" />
+            <path d="M204.5 198 C204 157 204 112 204.5 60" fill="none" stroke="#F2551A" strokeWidth="3.8" strokeLinecap="round" strokeOpacity="0.92" />
+          </g>
+        )}
+
+        {isBlind && (
+          <g>
+            <motion.path
+              d="M174 199 C232 244 290 282 358 313 L318 327 C263 294 216 258 185 221 Z"
+              fill={`url(#legacyBlindShadow-${state})`}
+              animate={{ opacity: [0.62, 0.95, 0.62], x: [0, 6, 0] }}
+              transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <ellipse cx="207" cy="290" rx="82" ry="17" fill="#1A1614" opacity="0.05" />
+          </g>
+        )}
+
+        <g filter={`url(#legacyShapeDrop-${state})`}>
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#D8D0C5" strokeWidth="1.15" opacity={state === 'shape' || isBlind ? 0 : 0.16} />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="none" stroke="#D8D0C5" strokeWidth="1.15" opacity={state === 'shape' || isBlind ? 0 : 0.16} />
+          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="none" stroke="#D8D0C5" strokeWidth="1.15" opacity={state === 'shape' || isBlind ? 0 : 0.16} />
+          {fills.Safety && <path d={fills.Safety} fill={SAFETY} opacity={safetyOpacity} transform={isMove ? 'translate(-12 8)' : undefined} />}
+          {fills.Play && <path d={fills.Play} fill={PLAY} opacity={playOpacity} transform={isMove ? 'translate(12 8)' : undefined} />}
+          {fills.Challenge && <path d={fills.Challenge} fill="#F2551A" opacity={challengeOpacity} transform={isMove ? 'translate(0 -8)' : undefined} />}
+        </g>
+
+        {isMove && (
+          <g>
+            <circle cx="204.5" cy="198" r="8.2" fill="#FFF8F0" stroke="#E5DACE" strokeWidth="1.2" />
+            <motion.circle
+              r="6"
+              fill="#FFF8F0"
+              stroke="#F2551A"
+              strokeWidth="2.4"
+              animate={{
+                cx: [204.5, 218, 204.5, 191, 204.5, 204.5, 204.5, 204.5],
+                cy: [198, 198, 184, 198, 198, 116, 60, 60],
+                opacity: [0.55, 0.72, 0.72, 0.72, 0.95, 1, 1, 0],
+              }}
+              transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut', times: [0, 0.11, 0.22, 0.33, 0.44, 0.72, 0.86, 1] }}
+            />
+          </g>
+        )}
+
+        {isBlind && (
+          <g>
+            <motion.path
+              d="M204.5 56 L204.5 291"
+              fill="none"
+              stroke="#B96B38"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeDasharray="6 10"
+              strokeOpacity="0.28"
+              animate={{ opacity: [0.16, 0.42, 0.16] }}
+              transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.circle
+              cx="217"
+              cy="210"
+              r="22"
+              fill="none"
+              stroke="#F2551A"
+              strokeWidth="1.5"
+              strokeOpacity="0.22"
+              animate={{ r: [16, 28, 16], opacity: [0.28, 0.08, 0.28] }}
+              transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </g>
+        )}
+
+        <text x="204.5" y="32" textAnchor="middle" fill={CHALLENGE} fontSize="15" fontWeight="800">Challenge</text>
+        <text x="86" y="322" textAnchor="middle" fill={SAFETY} fontSize="15" fontWeight="800">Safety</text>
+        <text x="323" y="322" textAnchor="middle" fill={PLAY} fontSize="15" fontWeight="800">Play</text>
+      </svg>
+    </div>
+  );
+}
+
+function LegacyPathwaysGraphic() {
+  return (
+    <div className="relative mt-5 overflow-hidden rounded-[24px] bg-[#F8F3EB] p-5">
+      <svg viewBox="0 0 420 280" className="h-[280px] w-full overflow-visible" aria-hidden="true">
+        <defs>
+          <linearGradient id="legacyDoorThread" x1="72" x2="348" y1="62" y2="62" gradientUnits="userSpaceOnUse">
+            <stop stopColor={SAFETY} stopOpacity="0.8" />
+            <stop offset="0.5" stopColor="#FFBB30" stopOpacity="0.9" />
+            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.76" />
+          </linearGradient>
+        </defs>
+        <circle cx="210" cy="42" r="6" fill="#F8F3EB" stroke="#E6D7C6" strokeWidth="2" />
+        <path d="M210 42 C162 54 122 78 78 112" fill="none" stroke="url(#legacyDoorThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.52" />
+        <path d="M210 42 C210 64 210 84 210 112" fill="none" stroke="url(#legacyDoorThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.48" />
+        <path d="M210 42 C258 54 298 78 342 112" fill="none" stroke="url(#legacyDoorThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.52" />
+        <motion.circle
+          r="5"
+          fill="#FFBB30"
+          animate={{
+            cx: [210, 78, 210, 210, 210, 342, 210],
+            cy: [42, 112, 42, 112, 42, 112, 42],
+            opacity: [0.22, 0.88, 0.22, 0.88, 0.22, 0.88, 0.22],
+          }}
+          transition={{ duration: 8.4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        {[
+          { x: 28, label: 'Safety', color: SAFETY },
+          { x: 160, label: 'Play', color: PLAY },
+          { x: 292, label: 'Challenge', color: CHALLENGE },
+        ].map(item => (
+          <g key={item.label}>
+            <path d={`M${item.x} 244 L${item.x} 174 C${item.x} 126 ${item.x + 100} 126 ${item.x + 100} 174 L${item.x + 100} 244 Z`} fill="#FFFCF7" stroke="#E2D5C5" strokeWidth="1.4" />
+            <circle cx={item.x + 50} cy="170" r="13" fill={item.color} opacity="0.13" />
+            <text x={item.x + 50} y="218" textAnchor="middle" fill={item.color} fontSize="12" fontWeight="800" letterSpacing="1.4">{item.label}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
 
 function RadarShape({ scores }: { scores: RadarScores }) {
   const centre = 150;

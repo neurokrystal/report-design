@@ -457,19 +457,40 @@ function ShapeStateControls({
 }
 
 function EvolvingShape({ state }: { state: number }) {
-  const fills = {
-    Safety: getScoreFillPath('Safety', 27),
-    Play: getScoreFillPath('Play', 41),
-    Challenge: getScoreFillPath('Challenge', 78),
+  const centre = 150;
+  const maxRadius = 108;
+  const axes = [
+    { key: 'Challenge', label: 'Challenge', value: PROFILE_SCORES.Challenge, angle: -90, color: CHALLENGE },
+    { key: 'Play', label: 'Play', value: PROFILE_SCORES.Play, angle: 30, color: PLAY },
+    { key: 'Safety', label: 'Safety', value: PROFILE_SCORES.Safety, angle: 150, color: SAFETY },
+  ] as const;
+  const point = (angle: number, radius: number) => {
+    const radians = (angle * Math.PI) / 180;
+    return {
+      x: centre + Math.cos(radians) * radius,
+      y: centre + Math.sin(radians) * radius,
+    };
   };
-
-  const isMoving = state === 1;
-  const isBlindSpot = state === 2;
-  const safetyOpacity = state === 0 ? 0.88 : isBlindSpot ? 0.32 : 0.24;
-  const playOpacity = state === 0 ? 0.84 : isBlindSpot ? 0.32 : 0.24;
-  const challengeOpacity = isMoving ? 0.58 : 1;
-  const outlineOpacity = state === 0 || isBlindSpot ? 0 : 0.16;
-  const labelOpacity = isMoving ? 0.62 : 1;
+  const plotted = {
+    Challenge: point(-90, maxRadius * (PROFILE_SCORES.Challenge / 100)),
+    Play: point(30, maxRadius * (PROFILE_SCORES.Play / 100)),
+    Safety: point(150, maxRadius * (PROFILE_SCORES.Safety / 100)),
+  };
+  const ringPoints = (scale: number) => axes.map(axis => {
+    const p = point(axis.angle, maxRadius * scale);
+    return `${p.x},${p.y}`;
+  }).join(' ');
+  const profilePoints = `${plotted.Challenge.x},${plotted.Challenge.y} ${plotted.Play.x},${plotted.Play.y} ${plotted.Safety.x},${plotted.Safety.y}`;
+  const keyDomains = state === 3 ? ['Safety', 'Play', 'Challenge'] : ['Challenge'];
+  const domainPointOpacity = (domain: string) => {
+    if (keyDomains.includes(domain)) return 1;
+    return state === 0 ? 0.7 : 0.34;
+  };
+  const axisOpacity = (domain: string) => {
+    if (state === 1 && domain !== 'Challenge') return 0.18;
+    if (state === 2 && domain !== 'Challenge') return 0.28;
+    return 0.42;
+  };
 
   return (
     <div className="relative mx-auto w-full max-w-[690px] pb-16 pt-12">
@@ -477,7 +498,7 @@ function EvolvingShape({ state }: { state: number }) {
         className="absolute left-1/2 top-[5%] aspect-square w-[58%] -translate-x-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.32), rgba(255,171,0,0.14) 36%, rgba(242,85,26,0) 73%)' }}
         animate={{
-          opacity: state === 0 ? [0.6, 0.95, 0.6] : isMoving ? [0.34, 0.56, 0.34] : [0.42, 0.62, 0.42],
+          opacity: state === 0 ? [0.6, 0.95, 0.6] : state === 1 ? [0.34, 0.56, 0.34] : [0.42, 0.62, 0.42],
           scale: state === 0 ? [0.92, 1.1, 0.92] : [0.98, 1.04, 0.98],
         }}
         transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut' }}
@@ -491,176 +512,73 @@ function EvolvingShape({ state }: { state: number }) {
       <motion.div
         className="absolute left-1/2 top-[52%] aspect-square w-[46%] -translate-x-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(66,166,142,0.18), rgba(255,171,0,0.12) 38%, transparent 74%)' }}
-        animate={{ opacity: isBlindSpot ? [0.18, 0.32, 0.18] : [0.06, 0.13, 0.06], scale: [1, 1.03, 1] }}
+        animate={{ opacity: state === 2 ? [0.18, 0.32, 0.18] : [0.06, 0.13, 0.06], scale: [1, 1.03, 1] }}
         transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
       />
       <div className="absolute inset-x-16 bottom-[11%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_70%)] blur-xl" />
 
-      <ShapeLabels state={state} opacity={labelOpacity} />
-
-      <svg viewBox="0 0 409 356" className="relative z-10 w-full overflow-visible" aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
-        <title id="evolvingShapeTitle">Sharp Peak shape evolving through four states</title>
-        <desc id="evolvingShapeDesc">The same Sharp Peak shape changes to show recognition, movement, blind spot, and pathways.</desc>
+      <svg viewBox="0 0 300 300" className="relative z-10 mx-auto w-full max-w-[560px] overflow-visible" aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
+        <title id="evolvingShapeTitle">Sharp Peak radar shape evolving through states</title>
+        <desc id="evolvingShapeDesc">A three-axis radar shape shows Challenge reaching farther than Safety and Play, then animates movement and blind spot states.</desc>
         <defs>
-          <filter id="evolvingShapeDrop" x="-20%" y="-20%" width="140%" height="150%">
-            <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.13" />
-          </filter>
-          <filter id="shapeGlow" x="-35%" y="-35%" width="170%" height="170%">
-            <feGaussianBlur stdDeviation="5" result="blur" />
+          <filter id="radarStoryGlow" x="-32%" y="-32%" width="164%" height="164%">
+            <feGaussianBlur stdDeviation="4.2" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <linearGradient id="loadGradient" x1="204" x2="204" y1="72" y2="260" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#F2551A" stopOpacity="0.74" />
-            <stop offset="1" stopColor="#B96B38" stopOpacity="0.2" />
-          </linearGradient>
-          <linearGradient id="availablePath" x1="90" x2="315" y1="252" y2="252" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#42A68E" />
-            <stop offset="0.5" stopColor="#FFBB30" />
-            <stop offset="1" stopColor="#FFAB00" />
-          </linearGradient>
-          <radialGradient id="peakAura" cx="50%" cy="50%" r="50%">
+          <radialGradient id="radarPeakAura" cx="50%" cy="50%" r="50%">
             <stop offset="0" stopColor="#F2551A" stopOpacity="0.34" />
             <stop offset="0.45" stopColor="#FFBB30" stopOpacity="0.15" />
             <stop offset="1" stopColor="#F2551A" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="blindShadow" x1="190" x2="352" y1="186" y2="317" gradientUnits="userSpaceOnUse">
+          <linearGradient id="radarBlindShadow" x1="150" x2="260" y1="68" y2="246" gradientUnits="userSpaceOnUse">
             <stop stopColor="#1A1614" stopOpacity="0.18" />
             <stop offset="0.58" stopColor="#1A1614" stopOpacity="0.08" />
             <stop offset="1" stopColor="#1A1614" stopOpacity="0" />
           </linearGradient>
+          <linearGradient id="radarProfileLine" x1="116" x2="150" y1="174" y2="66" gradientUnits="userSpaceOnUse">
+            <stop stopColor={SAFETY} stopOpacity="0.88" />
+            <stop offset="0.58" stopColor="#FFBB30" stopOpacity="0.82" />
+            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.96" />
+          </linearGradient>
         </defs>
 
-        <ShapeStateOverlay state={state} layer="under" />
-
-        <motion.g
-          filter="url(#evolvingShapeDrop)"
-          style={{ transformOrigin: '204.5px 248px' }}
-          animate={{ rotate: 0, x: 0, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <motion.path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#D8D0C5" strokeWidth="1.15" animate={{ opacity: outlineOpacity }} transition={{ duration: 0.45 }} />
-          <motion.path d={DOMAIN_HEX_OUTLINES.Play} fill="none" stroke="#D8D0C5" strokeWidth="1.15" animate={{ opacity: outlineOpacity }} transition={{ duration: 0.45 }} />
-          <motion.path d={DOMAIN_HEX_OUTLINES.Challenge} fill="none" stroke="#D8D0C5" strokeWidth="1.15" animate={{ opacity: outlineOpacity }} transition={{ duration: 0.45 }} />
-
-          {fills.Safety && (
-            <motion.path
-              d={fills.Safety}
-              fill={SAFETY}
-              animate={{ opacity: safetyOpacity, x: isMoving ? -12 : 0, y: isMoving ? 8 : 0 }}
-              transition={{ duration: 0.55, ease: 'easeInOut' }}
-            />
-          )}
-          {fills.Play && (
-            <motion.path
-              d={fills.Play}
-              fill={PLAY}
-              animate={{ opacity: playOpacity, x: isMoving ? 12 : 0, y: isMoving ? 8 : 0 }}
-              transition={{ duration: 0.55, ease: 'easeInOut' }}
-            />
-          )}
-          {fills.Challenge && (
-            <motion.path
-              d={fills.Challenge}
-              fill="#F2551A"
-              animate={{ opacity: challengeOpacity, y: isMoving ? -8 : 0 }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            />
-          )}
-        </motion.g>
-
-        <ShapeStateOverlay state={state} layer="over" />
-      </svg>
-    </div>
-  );
-}
-
-function ShapeLabels({ state, opacity }: { state: number; opacity: number }) {
-  return (
-    <motion.div
-      className="pointer-events-none absolute inset-0 z-20"
-      style={{ transformOrigin: '50% 63%' }}
-      animate={{
-        opacity,
-        rotate: 0,
-        x: 0,
-        y: 0,
-      }}
-      transition={{ duration: 0.35 }}
-      aria-hidden="true"
-    >
-      <div className="absolute left-1/2 top-[10%] -translate-x-1/2 text-center">
-        <p className="rounded-full border border-[#E9D8CC] bg-white/68 px-4 py-1.5 text-[17px] leading-none text-[#B83F14] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.5)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
-          Challenge
-        </p>
-      </div>
-      <div className="absolute bottom-[18%] left-[13%] text-left md:left-[16%]">
-        <p className="rounded-full border border-[#D7E8DF] bg-white/66 px-4 py-1.5 text-[17px] leading-none text-[#166F5F] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.42)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
-          Safety
-        </p>
-      </div>
-      <div className="absolute bottom-[18%] right-[13%] text-right md:right-[16%]">
-        <p className="rounded-full border border-[#EBDDBF] bg-white/66 px-4 py-1.5 text-[17px] leading-none text-[#9A6A00] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.42)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
-          Play
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | 'over' }) {
-  if (layer === 'under') {
-    return (
-      <g pointerEvents="none">
         <motion.g
           animate={{ opacity: state === 0 ? 1 : 0 }}
           transition={{ duration: 0.45, ease: 'easeInOut' }}
         >
           <motion.circle
-            cx="204.5"
-            cy="60"
+            cx={plotted.Challenge.x}
+            cy={plotted.Challenge.y}
             r="78"
-            fill="url(#peakAura)"
-            animate={{ r: [34, 74, 34], opacity: [0.85, 0.16, 0.85] }}
+            fill="url(#radarPeakAura)"
+            animate={{ r: [24, 70, 24], opacity: [0.85, 0.14, 0.85] }}
             transition={{ duration: 5.1, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.circle
-            cx="204.5"
-            cy="60"
+            cx={plotted.Challenge.x}
+            cy={plotted.Challenge.y}
             r="58"
             fill="none"
             stroke="#F2551A"
             strokeWidth="1.4"
             strokeOpacity="0.34"
-            animate={{ r: [22, 52, 22], opacity: [0.5, 0.09, 0.5] }}
+            animate={{ r: [18, 48, 18], opacity: [0.5, 0.09, 0.5] }}
             transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.circle
-            cx="204.5"
-            cy="60"
+            cx={plotted.Challenge.x}
+            cy={plotted.Challenge.y}
             r="86"
             fill="none"
             stroke="#FFBB30"
             strokeWidth="1.2"
             strokeOpacity="0.22"
-            animate={{ r: [42, 86, 42], opacity: [0.34, 0.05, 0.34] }}
+            animate={{ r: [34, 82, 34], opacity: [0.34, 0.05, 0.34] }}
             transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: 0.35 }}
           />
-        </motion.g>
-
-        <motion.g
-          animate={{ opacity: state === 1 ? 1 : 0 }}
-          transition={{ duration: 0.45, ease: 'easeInOut' }}
-        >
-          <circle cx="204.5" cy="198" r="23" fill="#FFF8F0" stroke="#E8D9CC" strokeWidth="1.3" />
-          <path d="M204.5 198 C186 216 157 239 112 272" fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.52" />
-          <path d="M204.5 198 C225 218 256 240 304 272" fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.52" />
-          <circle cx="112" cy="272" r="5.3" fill="#FFF8F0" stroke={SAFETY} strokeWidth="2" strokeOpacity="0.7" />
-          <circle cx="304" cy="272" r="5.3" fill="#FFF8F0" stroke={PLAY} strokeWidth="2" strokeOpacity="0.7" />
-          <path d="M204.5 198 C204 157 204 112 204.5 60" fill="none" stroke="#FFF6E8" strokeWidth="7.8" strokeLinecap="round" strokeOpacity="0.8" />
-          <path d="M204.5 198 C204 157 204 112 204.5 60" fill="none" stroke="#F2551A" strokeWidth="3.8" strokeLinecap="round" strokeOpacity="0.92" />
         </motion.g>
 
         <motion.g
@@ -668,40 +586,158 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
           transition={{ duration: 0.45, ease: 'easeInOut' }}
         >
           <motion.path
-            d="M174 199 C232 244 290 282 358 313 L318 327 C263 294 216 258 185 221 Z"
-            fill="url(#blindShadow)"
-            animate={{ opacity: [0.62, 0.95, 0.62], x: [0, 6, 0] }}
+            d={`M${plotted.Challenge.x} ${plotted.Challenge.y} C${plotted.Challenge.x + 40} ${plotted.Challenge.y + 86} ${centre + 92} ${centre + 112} ${centre + 126} ${centre + 136} L${centre + 78} ${centre + 144} C${centre + 38} ${centre + 102} ${centre + 8} ${centre + 40} ${plotted.Challenge.x} ${plotted.Challenge.y} Z`}
+            fill="url(#radarBlindShadow)"
+            animate={{ opacity: [0.52, 0.88, 0.52], x: [0, 5, 0] }}
             transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <ellipse cx="207" cy="290" rx="82" ry="17" fill="#1A1614" opacity="0.05" />
+          <motion.line
+            x1={plotted.Challenge.x}
+            y1={plotted.Challenge.y}
+            x2={centre}
+            y2={centre + 92}
+            stroke="#B96B38"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeDasharray="6 10"
+            strokeOpacity="0.34"
+            animate={{ opacity: [0.16, 0.45, 0.16] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
         </motion.g>
-      </g>
-    );
-  }
 
-  return (
-    <g>
+        {[0.25, 0.5, 0.75, 1].map((scale, index) => (
+          <motion.polygon
+            key={scale}
+            points={ringPoints(scale)}
+            fill="none"
+            stroke="#D8CEC1"
+            strokeWidth="1"
+            strokeOpacity={index === 3 ? 0.44 : 0.24}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: index * 0.04 }}
+            style={{ transformOrigin: `${centre}px ${centre}px` }}
+          />
+        ))}
+
+        {axes.map((axis, index) => {
+          const end = point(axis.angle, maxRadius);
+          const label = point(axis.angle, maxRadius + 25);
+          const plottedPoint = plotted[axis.key];
+          return (
+            <g key={axis.key}>
+              <motion.line
+                x1={centre}
+                y1={centre}
+                x2={end.x}
+                y2={end.y}
+                stroke={axis.color}
+                strokeWidth="1.45"
+                strokeOpacity={axisOpacity(axis.key)}
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.56, delay: 0.12 + index * 0.08 }}
+              />
+              <text
+                x={label.x}
+                y={label.y}
+                textAnchor={axis.key === 'Challenge' ? 'middle' : axis.key === 'Safety' ? 'end' : 'start'}
+                dominantBaseline="middle"
+                fill={axis.color}
+                fillOpacity={state === 1 && axis.key !== 'Challenge' ? 0.62 : 1}
+                fontSize="14"
+                fontWeight="800"
+                letterSpacing="1.1"
+              >
+                {axis.label}
+              </text>
+              <motion.text
+                x={label.x}
+                y={label.y + 16}
+                textAnchor={axis.key === 'Challenge' ? 'middle' : axis.key === 'Safety' ? 'end' : 'start'}
+                dominantBaseline="middle"
+                fill="#5B5148"
+                fontSize="9.5"
+                fontWeight="800"
+                letterSpacing="1.6"
+                animate={{ opacity: state === 1 && axis.key !== 'Challenge' ? 0.38 : 0.76 }}
+                transition={{ duration: 0.35 }}
+              >
+                {axis.value}
+              </motion.text>
+              <motion.circle
+                cx={plottedPoint.x}
+                cy={plottedPoint.y}
+                r={axis.key === 'Challenge' ? 6.6 : 5.8}
+                fill={axis.color}
+                stroke="#FFF8F0"
+                strokeWidth="2.2"
+                animate={{ opacity: domainPointOpacity(axis.key), scale: axis.key === 'Challenge' && state === 0 ? [1, 1.14, 1] : 1 }}
+                transition={{ duration: 2.8, repeat: axis.key === 'Challenge' && state === 0 ? Infinity : 0, ease: 'easeInOut' }}
+              />
+            </g>
+          );
+        })}
+
+        <motion.g
+          animate={{ opacity: state === 1 ? 1 : 0 }}
+          transition={{ duration: 0.45, ease: 'easeInOut' }}
+        >
+          <circle cx={centre} cy={centre} r="19" fill="#FFF8F0" stroke="#E8D9CC" strokeWidth="1.3" />
+          <path d={`M${centre} ${centre} C${centre - 14} ${centre + 4} ${plotted.Safety.x + 11} ${plotted.Safety.y + 3} ${plotted.Safety.x} ${plotted.Safety.y}`} fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
+          <path d={`M${centre} ${centre} C${centre + 17} ${centre + 5} ${plotted.Play.x - 12} ${plotted.Play.y + 4} ${plotted.Play.x} ${plotted.Play.y}`} fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
+          <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#FFF6E8" strokeWidth="8" strokeLinecap="round" strokeOpacity="0.82" />
+          <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#F2551A" strokeWidth="3.8" strokeLinecap="round" strokeOpacity="0.92" />
+        </motion.g>
+
+        <motion.g
+          initial={{ opacity: 0, scale: 0.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
+          style={{ transformOrigin: `${centre}px ${centre}px` }}
+          filter="url(#radarStoryGlow)"
+        >
+          <motion.polygon
+            points={profilePoints}
+            fill="#DC4C0C"
+            animate={{ fillOpacity: state === 1 ? 0.08 : state === 2 ? 0.12 : 0.1 }}
+            transition={{ duration: 0.35 }}
+          />
+          <motion.polygon
+            points={profilePoints}
+            fill="none"
+            stroke="url(#radarProfileLine)"
+            strokeWidth={state === 1 ? 2.1 : 2.35}
+            animate={{ strokeOpacity: state === 1 ? 0.48 : 0.72 }}
+            transition={{ duration: 0.35 }}
+          />
+        </motion.g>
+
+        <circle cx={centre} cy={centre} r="4.7" fill="#FFF8F0" stroke="#CFC2B3" strokeWidth="1.4" />
+
       <motion.g
         animate={{ opacity: state === 1 ? 1 : 0 }}
         transition={{ duration: 0.45, ease: 'easeInOut' }}
         pointerEvents="none"
       >
-        <circle cx="204.5" cy="198" r="8.2" fill="#FFF8F0" stroke="#E5DACE" strokeWidth="1.2" />
+        <circle cx={centre} cy={centre} r="8.2" fill="#FFF8F0" stroke="#E5DACE" strokeWidth="1.2" />
         <motion.circle
           r="6"
           fill="#FFF8F0"
           stroke="#F2551A"
           strokeWidth="2.4"
           animate={{
-            cx: [204.5, 218, 204.5, 191, 204.5, 204.5, 204.5, 204.5],
-            cy: [198, 198, 184, 198, 198, 116, 60, 60],
+            cx: [centre, plotted.Play.x, centre, plotted.Safety.x, centre, plotted.Challenge.x, plotted.Challenge.x],
+            cy: [centre, plotted.Play.y, centre, plotted.Safety.y, centre, plotted.Challenge.y, plotted.Challenge.y],
             opacity: [0.55, 0.72, 0.72, 0.72, 0.95, 1, 1, 0],
           }}
-          transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut', times: [0, 0.11, 0.22, 0.33, 0.44, 0.72, 0.86, 1] }}
+          transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut', times: [0, 0.12, 0.24, 0.36, 0.48, 0.84, 0.92, 1] }}
         />
         <motion.circle
-          cx="204.5"
-          cy="60"
+          cx={plotted.Challenge.x}
+          cy={plotted.Challenge.y}
           r="8.5"
           fill="#F2551A"
           opacity="0.92"
@@ -716,8 +752,8 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
         pointerEvents="none"
       >
         <motion.circle
-          cx="217"
-          cy="210"
+          cx={centre}
+          cy={centre}
           r="22"
           fill="none"
           stroke="#F2551A"
@@ -726,26 +762,17 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
           animate={{ r: [16, 28, 16], opacity: [0.28, 0.08, 0.28] }}
           transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.path
-          d="M204.5 56 L204.5 291"
-          fill="none"
-          stroke="#B96B38"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeDasharray="6 10"
-          strokeOpacity="0.28"
-          animate={{ opacity: [0.16, 0.42, 0.16] }}
-          transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-        />
         <motion.g
           animate={{ x: [8, -4, 8], opacity: [0.18, 0.48, 0.18] }}
           transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <path d="M345 126 C323 146 307 173 300 207" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.52" strokeDasharray="1 9" />
-          <path d="M360 146 C335 165 318 193 313 229" fill="none" stroke="#C65D32" strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.44" strokeDasharray="1 10" />
-          <path d="M374 170 C346 188 331 215 329 250" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.36" strokeDasharray="1 9" />
+          <path d="M255 72 C237 94 229 121 230 149" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.52" strokeDasharray="1 9" />
+          <path d="M270 92 C249 114 241 144 246 174" fill="none" stroke="#C65D32" strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.44" strokeDasharray="1 10" />
+          <path d="M282 115 C260 136 255 164 263 195" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.36" strokeDasharray="1 9" />
         </motion.g>
       </motion.g>
-    </g>
+
+      </svg>
+    </div>
   );
 }
