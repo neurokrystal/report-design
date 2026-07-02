@@ -100,7 +100,6 @@ export function Orientation() {
           letterSpacing: '-0.03em',
           fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)',
           color: '#0F0F0F',
-          whiteSpace: 'nowrap',
           margin: 0,
           marginBottom: '30px',
         }}>

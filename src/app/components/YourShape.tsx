@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, DoorOpen, Eye, Flame, Info, Shield, Sun, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, Flame, Info, Shield, Sun, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
@@ -46,24 +46,24 @@ const slides = [
 const doorways = [
   {
     domain: 'Safety',
-    promise: 'See where steadiness is available, and where it has to be earned.',
-    hook: 'Open this if you want to understand your relationship with calm, trust, and ease.',
+    promise: 'Where steadiness is available, and where it has to be earned.',
+    hook: 'Read this first if you want to understand calm, trust, and ease.',
     color: SAFETY,
     Icon: Shield,
     target: 'safety',
   },
   {
     domain: 'Play',
-    promise: 'See what restores aliveness, pleasure, and flexibility.',
-    hook: 'Open this if you want to understand where lightness and enjoyment are still available.',
+    promise: 'What restores aliveness, pleasure, and flexibility.',
+    hook: 'Read this first if you want to understand lightness and enjoyment.',
     color: PLAY,
     Icon: Sun,
     target: 'play',
   },
   {
     domain: 'Challenge',
-    promise: 'See the engine behind your drive and direction.',
-    hook: 'Open this if you want to understand the strongest part of the whole profile.',
+    promise: 'The engine behind your drive and direction.',
+    hook: 'Read this first if you want to understand the strongest part of the profile.',
     color: CHALLENGE,
     Icon: Flame,
     target: 'challenge',
@@ -289,12 +289,24 @@ function MovementGraphic() {
             <stop stopColor="#D6CEC2" />
             <stop offset="1" stopColor="#F2551A" />
           </linearGradient>
+          <linearGradient id="playLine" x1="98" x2="241" y1="228" y2="174" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#E8DED2" />
+            <stop offset="1" stopColor="#FFAB00" />
+          </linearGradient>
+          <linearGradient id="safetyLine" x1="72" x2="230" y1="250" y2="234" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#D8D0C5" />
+            <stop offset="1" stopColor="#42A68E" />
+          </linearGradient>
         </defs>
+        <path d="M66 248 C112 240 166 238 230 224" fill="none" stroke="url(#safetyLine)" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.72" />
+        <path d="M94 232 C132 210 172 202 242 170" fill="none" stroke="url(#playLine)" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.76" />
         <path d="M74 238 C122 214 158 169 174 126 C187 90 206 61 238 44" fill="none" stroke="#E7DED3" strokeWidth="16" strokeLinecap="round" />
         <path d="M74 238 C122 214 158 169 174 126 C187 90 206 61 238 44" fill="none" stroke="url(#movementLine)" strokeWidth="3" strokeLinecap="round" />
         {[92, 128, 164, 198].map((x, index) => (
           <line key={x} x1={x} y1={245 - index * 38} x2={x} y2={258 - index * 38} stroke="#BFB5A8" strokeWidth="2" strokeLinecap="round" />
         ))}
+        <circle cx="66" cy="248" r="6" fill={SAFETY} opacity="0.72" />
+        <circle cx="94" cy="232" r="6" fill={PLAY} opacity="0.72" />
         <circle cx="74" cy="238" r="7" fill="#B8B0A5" opacity="0.78" />
         <circle cx="238" cy="44" r="10" fill="#F2551A" />
         <motion.circle
@@ -303,12 +315,20 @@ function MovementGraphic() {
           animate={{ cx: [74, 132, 174, 238], cy: [238, 194, 126, 44], opacity: [0.35, 0.7, 1, 0.45] }}
           transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <text x="238" y="26" textAnchor="middle" fill="#DC4C0C" fontSize="12" fontWeight="800">apex</text>
+        <g fontSize="10.5" fontWeight="800" letterSpacing="1.1" textAnchor="middle">
+          <text x="238" y="26" fill="#DC4C0C">DIRECTION</text>
+          <text x="232" y="164" fill="#B47700">ALIVENESS</text>
+          <text x="222" y="244" fill="#2C8D78">STEADINESS</text>
+        </g>
       </svg>
       <div className="absolute bottom-6 left-6 right-6 grid grid-cols-3 gap-3">
-        {['start', 'rising', 'apex'].map(label => (
-          <span key={label} className="rounded-full bg-white/72 px-3 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8C837A] ring-1 ring-[#E8DED2]">
-            {label}
+        {[
+          ['Safety', 'base'],
+          ['Play', 'lift'],
+          ['Challenge', 'drive'],
+        ].map(([domain, label]) => (
+          <span key={domain} className="rounded-full bg-white/72 px-3 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8C837A] ring-1 ring-[#E8DED2]">
+            {domain} <span className="font-semibold normal-case tracking-[0.02em] text-[#A0988F]">{label}</span>
           </span>
         ))}
       </div>
@@ -348,17 +368,20 @@ function RevelationSlide() {
 
 function RevelationGraphic() {
   return (
-    <div className="relative min-h-[350px] overflow-hidden rounded-[30px] border border-[#372337] bg-[#17121A] p-5 shadow-[0_24px_70px_-45px_rgba(26,18,28,0.82)]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(122,61,154,0.28),transparent_35%),radial-gradient(circle_at_50%_14%,rgba(242,85,26,0.18),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0))]" />
-      <div className="absolute inset-x-8 top-8 h-px bg-gradient-to-r from-transparent via-white/18 to-transparent" />
+    <div className="relative min-h-[350px] overflow-hidden rounded-[30px] border border-[#2B211B] bg-[#1A1614] p-5 shadow-[0_24px_70px_-45px_rgba(26,18,14,0.82)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_48%_30%,rgba(242,85,26,0.20),transparent_30%),radial-gradient(circle_at_52%_63%,rgba(122,61,154,0.24),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.045),rgba(255,255,255,0))]" />
+      <div className="absolute inset-x-8 top-8 h-px bg-gradient-to-r from-transparent via-[#F7E7D8]/18 to-transparent" />
       <svg viewBox="0 0 409 356" className="relative z-10 h-full min-h-[300px] w-full overflow-visible" aria-labelledby="revelationTitle revelationDesc" role="img">
-        <title id="revelationTitle">Hidden organising force inside a Sharp Peak</title>
-        <desc id="revelationDesc">The visible apex is bright above a hidden centre that sends organising currents through the whole shape.</desc>
+        <title id="revelationTitle">Visible strength layered over hidden strain</title>
+        <desc id="revelationDesc">The Sharp Peak alternates between the strong visible apex and a hidden fragile base beneath it.</desc>
         <defs>
-          <linearGradient id="hiddenCurrent" x1="204" x2="204" y1="265" y2="70" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#7A3D9A" stopOpacity="0.2" />
-            <stop offset="0.52" stopColor="#7A3D9A" stopOpacity="0.56" />
-            <stop offset="1" stopColor="#F2551A" stopOpacity="0.78" />
+          <linearGradient id="visiblePeakFill" x1="204" x2="204" y1="64" y2="210" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FF6A2D" stopOpacity="0.84" />
+            <stop offset="1" stopColor="#FF6A2D" stopOpacity="0.18" />
+          </linearGradient>
+          <linearGradient id="shadowStrain" x1="204" x2="204" y1="150" y2="296" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#E6B4FF" stopOpacity="0.48" />
+            <stop offset="1" stopColor="#E6B4FF" stopOpacity="0.1" />
           </linearGradient>
           <filter id="insideGlow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="5" result="blur" />
@@ -368,99 +391,41 @@ function RevelationGraphic() {
             </feMerge>
           </filter>
         </defs>
-        <g transform="translate(0 8)">
-          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="#F2551A" opacity="0.11" />
-          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="#42A68E" opacity="0.055" />
-          <path d={DOMAIN_HEX_OUTLINES.Play} fill="#FFAB00" opacity="0.055" />
-          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="none" stroke="#FF6A2D" strokeOpacity="0.92" strokeWidth="2.4" filter="url(#insideGlow)" />
-          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#42E0C5" strokeOpacity="0.32" strokeWidth="2" />
-          <path d={DOMAIN_HEX_OUTLINES.Play} fill="none" stroke="#FFC45A" strokeOpacity="0.32" strokeWidth="2" />
+        <motion.g
+          transform="translate(10 22) scale(0.95)"
+          animate={{ opacity: [0.32, 0.88, 0.32], y: [6, 0, 6] }}
+          transition={{ duration: 6.4, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="none" stroke="#E6B4FF" strokeOpacity="0.55" strokeWidth="2.2" strokeDasharray="8 8" />
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="url(#shadowStrain)" stroke="#C989E2" strokeOpacity="0.36" strokeWidth="2" strokeDasharray="7 9" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="url(#shadowStrain)" stroke="#C989E2" strokeOpacity="0.28" strokeWidth="2" strokeDasharray="7 9" />
+          <path d="M156 250 C178 214 193 197 204 172 C218 205 234 223 260 255" fill="none" stroke="#E6B4FF" strokeOpacity="0.48" strokeWidth="2.4" strokeLinecap="round" />
+          <path d="M204 164 L204 264" stroke="#E6B4FF" strokeOpacity="0.42" strokeWidth="3" strokeLinecap="round" strokeDasharray="10 12" />
+          <circle cx="204.5" cy="206" r="10" fill="#E6B4FF" opacity="0.46" filter="url(#insideGlow)" />
+          <text x="204.5" y="306" textAnchor="middle" fill="#E6B4FF" fontSize="11" fontWeight="900" letterSpacing="1.6">HIDDEN STRAIN</text>
+        </motion.g>
 
-          <motion.path
-            d="M83 282 C121 234 168 226 204.5 206 C241 226 288 234 326 282"
-            fill="none"
-            stroke="#C989E2"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeOpacity="0.25"
-            strokeDasharray="10 13"
-            animate={{ strokeDashoffset: [0, -46] }}
-            transition={{ duration: 5.6, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.path
-            d="M122 276 C152 228 183 224 204.5 206 C226 224 257 228 287 276"
-            fill="none"
-            stroke="#C989E2"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeOpacity="0.42"
-            strokeDasharray="8 12"
-            animate={{ strokeDashoffset: [0, -40] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.path
-            d="M204.5 255 C204.5 216 204.5 170 204.5 101"
-            fill="none"
-            stroke="url(#hiddenCurrent)"
-            strokeWidth="5"
-            strokeLinecap="round"
-            strokeDasharray="20 18"
-            animate={{ strokeDashoffset: [38, 0] }}
-            transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
+        <motion.g
+          transform="translate(-4 -2)"
+          animate={{ opacity: [0.96, 0.48, 0.96], y: [0, -4, 0] }}
+          transition={{ duration: 6.4, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="#42A68E" opacity="0.1" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="#FFAB00" opacity="0.1" />
+          <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="url(#visiblePeakFill)" stroke="#FF7542" strokeOpacity="0.95" strokeWidth="2.4" filter="url(#insideGlow)" />
+          <path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#42E0C5" strokeOpacity="0.28" strokeWidth="1.8" />
+          <path d={DOMAIN_HEX_OUTLINES.Play} fill="none" stroke="#FFC45A" strokeOpacity="0.24" strokeWidth="1.8" />
           <motion.circle
             cx="204.5"
-            cy="206"
-            r="42"
-            fill="none"
-            stroke="#C989E2"
-            strokeOpacity="0.2"
-            strokeWidth="1.6"
-            animate={{ r: [32, 48, 32], opacity: [0.72, 0.24, 0.72] }}
-            transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
+            cy="116"
+            r="14"
+            fill="#FF7542"
+            opacity="0.16"
+            animate={{ r: [10, 22, 10], opacity: [0.18, 0.05, 0.18] }}
+            transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <motion.circle
-            cx="204.5"
-            cy="206"
-            r="17"
-            fill="#C989E2"
-            opacity="0.24"
-            animate={{ scale: [0.9, 1.18, 0.9] }}
-            transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <circle cx="204.5" cy="206" r="6.5" fill="#E6B4FF" />
-
-          <motion.circle
-            cx="204.5"
-            cy="206"
-            r="4.5"
-            fill="#F2551A"
-            animate={{ cy: [206, 170, 124, 101], opacity: [0, 0.65, 1, 0] }}
-            transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.circle
-            cx="204.5"
-            cy="206"
-            r="3.5"
-            fill="#E6B4FF"
-            animate={{ cx: [204.5, 158, 122], cy: [206, 230, 276], opacity: [0, 0.7, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
-          />
-          <motion.circle
-            cx="204.5"
-            cy="206"
-            r="3.5"
-            fill="#E6B4FF"
-            animate={{ cx: [204.5, 251, 287], cy: [206, 230, 276], opacity: [0, 0.7, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 0.65 }}
-          />
-
-          <g textAnchor="middle">
-            <text x="204.5" y="64" fill="#FF7542" fontSize="11" fontWeight="900" letterSpacing="1.6">VISIBLE PEAK</text>
-            <text x="204.5" y="304" fill="#E6B4FF" fontSize="11" fontWeight="900" letterSpacing="1.6">HIDDEN ORGANISING WORK</text>
-          </g>
-        </g>
+          <text x="204.5" y="74" textAnchor="middle" fill="#FF9A75" fontSize="11" fontWeight="900" letterSpacing="1.6">VISIBLE STRENGTH</text>
+        </motion.g>
       </svg>
     </div>
   );
@@ -474,9 +439,6 @@ function DoorwaySlide() {
   return (
     <div className="space-y-8">
       <div className="mx-auto max-w-2xl text-center">
-        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-t-full rounded-b-[18px] bg-[#211A17] text-white shadow-[0_20px_48px_-34px_rgba(26,22,20,0.72)]">
-          <DoorOpen size={30} strokeWidth={1.7} />
-        </div>
         <h3
           style={{
             fontFamily: SERIF,
@@ -486,14 +448,14 @@ function DoorwaySlide() {
             color: INK,
           }}
         >
-          Where do you want to go first?
+          Your Sharp Peak opens three useful paths.
         </h3>
         <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-[#4A4139]" style={{ fontWeight: 300 }}>
-          Choose the domain you want to read first. Each door answers a different question about this Sharp Peak.
+          Your psychological shape is currently a Sharp Peak, with unique strengths and specific blind spots.
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3 md:items-stretch">
         {doorways.map((door, index) => {
           const DoorIcon = door.Icon;
           return (
@@ -501,31 +463,25 @@ function DoorwaySlide() {
               key={door.domain}
               type="button"
               onClick={() => openDoor(door.target)}
-              className="group relative min-h-[315px] overflow-hidden rounded-[28px] border border-[#E6DED3] bg-[#FFFCF7] p-5 text-left shadow-[0_24px_68px_-58px_rgba(26,22,20,0.68)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+              className="group relative min-h-[345px] overflow-hidden rounded-b-[28px] rounded-t-[130px] border border-[#E6DED3] bg-[#FFFCF7] p-6 text-left shadow-[0_24px_68px_-58px_rgba(26,22,20,0.68)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.42, delay: index * 0.08 }}
             >
-              <div
-                className="absolute inset-x-5 top-5 h-[140px] rounded-t-[90px] rounded-b-[22px] border transition-transform duration-500 group-hover:-translate-y-1"
-                style={{
-                  borderColor: `${door.color}45`,
-                  background: `linear-gradient(180deg, ${door.color}24, ${door.color}0 68%), radial-gradient(circle at 50% 30%, ${door.color}26, transparent 60%)`,
-                }}
-              />
+              <div className="absolute inset-0 opacity-80" style={{ background: `radial-gradient(circle at 50% 18%, ${door.color}24, transparent 36%), linear-gradient(180deg, ${door.color}10, transparent 52%)` }} />
               <motion.div
-                className="absolute left-1/2 top-10 h-20 w-20 -translate-x-1/2 rounded-full blur-2xl"
+                className="absolute left-1/2 top-14 h-20 w-20 -translate-x-1/2 rounded-full blur-2xl"
                 style={{ backgroundColor: door.color }}
                 animate={{ opacity: [0.16, 0.38, 0.16], scale: [0.92, 1.08, 0.92] }}
                 transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: index * 0.35 }}
               />
               <div className="relative flex h-full flex-col">
-                <div className="mx-auto mt-4 grid h-14 w-14 place-items-center rounded-full bg-white/82 shadow-[0_16px_36px_-28px_rgba(26,22,20,0.72)]" style={{ color: door.color }}>
+                <div className="mx-auto mt-9 grid h-16 w-16 place-items-center rounded-full bg-white/84 shadow-[0_16px_36px_-28px_rgba(26,22,20,0.72)]" style={{ color: door.color }}>
                   <DoorIcon size={24} strokeWidth={2.1} />
                 </div>
-                <div className="mt-24">
+                <div className="mt-16">
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.17em]" style={{ color: door.color }}>
-                    Open {door.domain}
+                    {door.domain}
                   </p>
                   <p className="mt-3 text-[17px] leading-snug text-[#17120F]" style={{ fontFamily: SERIF }}>
                     {door.promise}
@@ -536,7 +492,9 @@ function DoorwaySlide() {
                 </div>
                 <div className="mt-auto flex items-center justify-between pt-5">
                   <span className="h-px flex-1" style={{ backgroundColor: `${door.color}42` }} />
-                  <ArrowRight className="ml-3 opacity-55 transition-transform group-hover:translate-x-1 group-hover:opacity-90" size={18} strokeWidth={2.2} style={{ color: door.color }} />
+                  <span className="ml-3 inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.14em]" style={{ color: door.color }}>
+                    Start with {door.domain} <ArrowRight className="transition-transform group-hover:translate-x-1" size={16} strokeWidth={2.2} />
+                  </span>
                 </div>
               </div>
             </motion.button>
@@ -557,15 +515,22 @@ function ShapeGraphic() {
   return (
     <div className="relative w-full max-w-[650px]">
       <motion.div
-        className="absolute left-1/2 top-[4%] h-[50%] w-[58%] -translate-x-1/2 rounded-full blur-2xl"
-        style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.42), rgba(242,85,26,0.18) 46%, rgba(255,171,0,0.08) 62%, rgba(242,85,26,0) 76%)' }}
-        animate={{ opacity: [0.62, 0.98, 0.62], scale: [0.94, 1.08, 0.94] }}
-        transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute left-1/2 top-[7%] aspect-square w-[62%] -translate-x-1/2 rounded-full blur-3xl"
+        style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.23), rgba(255,171,0,0.10) 34%, rgba(242,85,26,0.04) 58%, rgba(242,85,26,0) 76%)' }}
+        animate={{ opacity: [0.58, 0.92, 0.58], scale: [0.94, 1.05, 0.94] }}
+        transition={{ duration: 6.6, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute left-1/2 top-[15%] h-[28%] w-[34%] -translate-x-1/2 rounded-full border border-[#F2551A]/25"
-        animate={{ opacity: [0.2, 0.72, 0.2], scale: [0.86, 1.12, 0.86] }}
-        transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute left-1/2 top-[14%] aspect-square w-[38%] -translate-x-1/2 rounded-full blur-xl"
+        style={{ background: 'radial-gradient(circle, rgba(255,90,31,0.34), rgba(255,90,31,0.12) 42%, rgba(255,90,31,0) 72%)' }}
+        animate={{ opacity: [0.45, 0.82, 0.45], scale: [0.9, 1.12, 0.9] }}
+        transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute left-1/2 top-[21%] aspect-square w-[17%] -translate-x-1/2 rounded-full blur-md"
+        style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.5), rgba(255,90,31,0.24) 38%, rgba(255,90,31,0) 70%)' }}
+        animate={{ opacity: [0.4, 0.9, 0.4], scale: [0.72, 1.18, 0.72] }}
+        transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
       />
       <div className="absolute inset-x-14 bottom-[5%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.12),transparent_70%)] blur-xl" />
       <svg viewBox="0 0 409 356" className="relative z-10 w-full overflow-visible" aria-labelledby="shapeGraphicTitle shapeGraphicDesc" role="img">
@@ -593,14 +558,14 @@ function ShapeGraphic() {
         </g>
 
         <g textAnchor="middle">
-          <text x="204.5" y="18" fill={CHALLENGE} fontSize="18" fontWeight="800" letterSpacing="0">Challenge</text>
-          <text x="204.5" y="39" fill="#8B3A18" fontSize="13" fontWeight="700">High</text>
+          <text x="204.5" y="17" fill="#B83F14" fontSize="20" fontWeight="600" letterSpacing="-0.5" fontFamily={SERIF}>Challenge</text>
+          <text x="204.5" y="40" fill="#7A4632" fontSize="11" fontWeight="800" letterSpacing="1.1">HIGH</text>
 
-          <text x="68" y="332" fill="#166F5F" fontSize="18" fontWeight="800" letterSpacing="0">Safety</text>
-          <text x="68" y="352" fill="#5D6864" fontSize="13" fontWeight="700">Very Low</text>
+          <text x="68" y="332" fill="#166F5F" fontSize="20" fontWeight="600" letterSpacing="-0.5" fontFamily={SERIF}>Safety</text>
+          <text x="68" y="353" fill="#5D6864" fontSize="11" fontWeight="800" letterSpacing="1.1">VERY LOW</text>
 
-          <text x="341" y="332" fill="#B47700" fontSize="18" fontWeight="800" letterSpacing="0">Play</text>
-          <text x="341" y="352" fill="#6D6254" fontSize="13" fontWeight="700">Low</text>
+          <text x="341" y="332" fill="#9A6A00" fontSize="20" fontWeight="600" letterSpacing="-0.5" fontFamily={SERIF}>Play</text>
+          <text x="341" y="353" fill="#6D6254" fontSize="11" fontWeight="800" letterSpacing="1.1">LOW</text>
         </g>
       </svg>
     </div>

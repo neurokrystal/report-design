@@ -22,10 +22,10 @@ export default function App() {
           <PartDivider
             step={1}
             title="Overview"
-            body="This opening view gives the reader the whole pattern first, so the detail that follows has a shape to attach to."
+            body="Start here to see the whole architecture before any one score asks for attention. This is the map that makes the rest of the report legible."
           />
 
-          <div id="orientation" className="scroll-mt-24">
+          <div id="orientation" className="mt-16 scroll-mt-24">
             <Orientation />
           </div>
 
@@ -40,7 +40,7 @@ export default function App() {
           <PartDivider
             step={2}
             title="Domain deep dive"
-            body="The three foundations become personal here: what steadies you, what restores you, and what drives you."
+            body="Now the map becomes personal. Each foundation opens into the specific places your system steadies, restores, and drives itself."
             className="mt-28"
           />
 
@@ -80,7 +80,7 @@ export default function App() {
           <PartDivider
             step={3}
             title="Integration"
-            body="After the parts are visible, this section puts them back into one system and turns the reading toward direction."
+            body="The final part recomposes the reading into one operating pattern, so insight can become direction rather than information."
             className="mt-28"
           />
 
@@ -116,38 +116,60 @@ function PartDivider({
   body: string;
   className?: string;
 }) {
-  const steps = [1, 2, 3];
+  const steps = [
+    { number: 1, label: 'Orient' },
+    { number: 2, label: 'Deepen' },
+    { number: 3, label: 'Integrate' },
+  ] as const;
   return (
     <section
-      className={`relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#1A1614] px-4 py-12 text-white shadow-[0_28px_76px_-54px_rgba(26,22,20,0.78)] md:w-[calc(100vw-13rem)] md:px-8 ${className}`}
+      className={`relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#191410] px-4 py-12 text-white shadow-[0_28px_76px_-54px_rgba(26,22,20,0.78)] md:w-[calc(100vw-13rem)] md:px-8 ${className}`}
     >
       <div
-        className="absolute inset-y-0 right-0 w-[42%] opacity-45"
+        className="absolute inset-0 opacity-80"
         style={{
-          background: 'linear-gradient(112deg, transparent 0%, rgba(255,187,48,0.10) 48%, rgba(220,76,12,0.13) 100%)',
+          background: 'radial-gradient(circle at 16% 28%, rgba(255,187,48,0.13), transparent 24%), radial-gradient(circle at 84% 58%, rgba(220,76,12,0.16), transparent 34%), linear-gradient(112deg, #191410 0%, #221B15 100%)',
         }}
       />
-      <div className="relative mx-auto grid max-w-5xl gap-7 md:grid-cols-[0.66fr_1fr] md:items-end">
-        <div>
-          <div className="mb-4 flex items-center gap-4">
-            <span className="h-px w-9 bg-[#FFBB30]" />
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#FFBB30]">Part {step}</p>
-            <div className="flex items-center gap-3" aria-label={`Part ${step} of 3`}>
-              {steps.map(item => {
-                const completed = item <= step;
-                return (
-                  <span
-                    key={item}
-                    className="block h-2.5 w-2.5 rotate-45"
-                    style={{
-                      backgroundColor: completed ? '#FFBB30' : 'rgba(255,255,255,0.22)',
-                      boxShadow: completed && item === step ? '0 0 30px rgba(255,187,48,0.45)' : undefined,
-                    }}
-                  />
-                );
-              })}
-            </div>
+      <div className="absolute inset-y-0 left-1/2 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+      <div className="absolute -right-16 top-1/2 h-52 w-52 -translate-y-1/2 rotate-45 border border-white/[0.06]" />
+      <div className="relative mx-auto grid max-w-5xl gap-8 md:grid-cols-[0.58fr_1fr] md:items-center">
+        <div className="space-y-5">
+          <div className="flex items-center gap-4">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#FFBB30]">Report journey</p>
+            <div className="h-px flex-1 bg-white/12" />
           </div>
+
+          <div className="grid max-w-sm grid-cols-3 gap-3" aria-label={`Report journey stage ${step} of 3`}>
+            {steps.map(item => {
+              const completed = item.number <= step;
+              const active = item.number === step;
+              return (
+                <div key={item.number} className="flex items-center gap-2">
+                  <span
+                    className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/12 bg-white/[0.035]"
+                    style={{
+                      boxShadow: active ? '0 0 34px rgba(255,187,48,0.28)' : undefined,
+                    }}
+                  >
+                    <span
+                      className="block h-2.5 w-2.5 rotate-45"
+                      style={{
+                        backgroundColor: completed ? '#FFBB30' : 'rgba(255,255,255,0.2)',
+                      }}
+                    />
+                  </span>
+                  <span
+                    className="text-[9px] font-extrabold uppercase tracking-[0.14em]"
+                    style={{ color: completed ? 'rgba(255,255,255,0.86)' : 'rgba(255,255,255,0.34)' }}
+                  >
+                    {item.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
           <h2
             style={{
               fontFamily: '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif',
@@ -160,9 +182,11 @@ function PartDivider({
             {title}
           </h2>
         </div>
-        <p className="max-w-xl text-[15px] leading-relaxed text-white/72" style={{ fontWeight: 300 }}>
-          {body}
-        </p>
+        <div className="relative max-w-2xl md:pl-4">
+          <p className="text-[15px] leading-relaxed text-white/74" style={{ fontWeight: 300 }}>
+            {body}
+          </p>
+        </div>
       </div>
     </section>
   );

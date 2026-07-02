@@ -246,9 +246,9 @@ export function YourDomains() {
                       onClear={() => setActiveDomain(null)}
                       onSelect={setSelectedDomain}
                     />
-                    <DomainMarker label="Challenge" color={DC} active={(activeDomain || selectedDomain) === 'Challenge'} delay={0} onEnter={() => setActiveDomain('Challenge')} onLeave={() => setActiveDomain(null)} className="absolute -top-5 left-1/2 -translate-x-1/2" />
-                    <DomainMarker label="Safety" color={DS} active={(activeDomain || selectedDomain) === 'Safety'} delay={0.85} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} className="absolute top-[72%] -left-14" />
-                    <DomainMarker label="Play" color={DP} active={(activeDomain || selectedDomain) === 'Play'} delay={1.7} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} className="absolute top-[72%] -right-14" />
+                    <DomainMarker label="Challenge" color={DC} active={(activeDomain || selectedDomain) === 'Challenge'} delay={0} onEnter={() => setActiveDomain('Challenge')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Challenge')} className="absolute -top-5 left-1/2 -translate-x-1/2" />
+                    <DomainMarker label="Safety" color={DS} active={(activeDomain || selectedDomain) === 'Safety'} delay={0.85} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Safety')} className="absolute top-[72%] -left-14" />
+                    <DomainMarker label="Play" color={DP} active={(activeDomain || selectedDomain) === 'Play'} delay={1.7} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Play')} className="absolute top-[72%] -right-14" />
                   </div>
                   <div className="absolute left-1/2 top-[316px] lg:top-[340px] z-30 w-[312px] -translate-x-1/2">
                     <AnimatePresence mode="wait">
@@ -276,7 +276,14 @@ export function YourDomains() {
               </div>
               <div className="space-y-6">
                 {domainData.map((d, i) => (
-                  <DomainCard key={d.key} domain={d} index={i} onNavigate={navigateWithReturn} />
+                  <DomainCard
+                    key={d.key}
+                    domain={d}
+                    index={i}
+                    onActivate={setActiveDomain}
+                    onClear={() => setActiveDomain(null)}
+                    onNavigate={navigateWithReturn}
+                  />
                 ))}
               </div>
             </motion.div>
@@ -376,16 +383,37 @@ export function YourDomains() {
   );
 }
 
-function DomainCard({ domain: d, index, onNavigate }: { domain: DomainEntry; index: number; onNavigate: (targetId: string, returnId: string, returnLabel: string) => void }) {
+function DomainCard({
+  domain: d,
+  index,
+  onActivate,
+  onClear,
+  onNavigate,
+}: {
+  domain: DomainEntry;
+  index: number;
+  onActivate: (domain: string) => void;
+  onClear: () => void;
+  onNavigate: (targetId: string, returnId: string, returnLabel: string) => void;
+}) {
   const targetId = d.key.toLowerCase();
   return (
     <motion.div
       role="button"
       tabIndex={0}
-      onClick={() => onNavigate(targetId, 'your-domains', 'Back to your domains')}
+      onMouseEnter={() => onActivate(d.key)}
+      onMouseLeave={onClear}
+      onFocus={() => onActivate(d.key)}
+      onBlur={onClear}
+      onMouseDown={() => onActivate(d.key)}
+      onClick={() => {
+        onActivate(d.key);
+        onNavigate(targetId, 'your-domains', 'Back to your domains');
+      }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
+          onActivate(d.key);
           onNavigate(targetId, 'your-domains', 'Back to your domains');
         }
       }}
@@ -564,16 +592,16 @@ function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; 
         </button>
       </div>
       <p className="text-sm leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>{copy[entry.key]}</p>
-      <div className="mt-5 rounded-[16px] bg-[#F7F4EE] p-4">
+      <div className="mt-5 border-t border-[#E8E1D6] pt-4">
         <div className="mb-3 flex items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-white" style={{ color: entry.color }}>
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-[#F8F4EE]" style={{ color: entry.color }}>
             <Layers3 size={15} strokeWidth={2.2} />
           </span>
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Dimensions inside this domain</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Dimensions of {entry.label}</p>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
           {entry.dimensions.map(dim => (
-            <div key={dim.name} className="rounded-[12px] border border-white bg-white/70 px-3 py-2">
+            <div key={dim.name} className="border-l pl-3" style={{ borderColor: `${entry.color}55` }}>
               <p className="text-[10px] font-extrabold uppercase tracking-[0.13em]" style={{ color: entry.color }}>{dim.name}</p>
               <p className="mt-1 text-[12px] text-[#5F5952]">{dim.band}</p>
             </div>
@@ -637,6 +665,7 @@ function DomainMarker({
   delay,
   onEnter,
   onLeave,
+  onSelect,
   className,
 }: {
   label: string;
@@ -645,6 +674,7 @@ function DomainMarker({
   delay: number;
   onEnter: () => void;
   onLeave: () => void;
+  onSelect: () => void;
   className: string;
 }) {
   return (
@@ -656,7 +686,10 @@ function DomainMarker({
       style={{ background: 'none', border: 'none', cursor: 'pointer' }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      onClick={onEnter}
+      onClick={() => {
+        onEnter();
+        onSelect();
+      }}
       onFocus={onEnter}
       onBlur={onLeave}
       aria-label={`Highlight ${label} domain`}
