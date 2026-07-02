@@ -78,11 +78,39 @@ const BLIND_SPOT_OPTIONS = [
 
 const RADAR_PROTOTYPES = [
   {
+    name: 'Harmonious Depleted',
+    label: 'even, close to the centre',
+    scores: { Safety: 24, Challenge: 27, Play: 25 },
+    copy: 'The triangle keeps its symmetry, but it sits close to the centre. The form reads as harmonious without pretending the system has much available range.',
+    note: 'This tests whether the radar can make low harmony feel distinct from imbalance, rather than visually collapsing into an empty shape.',
+  },
+  {
     name: 'Harmonious Mid',
     label: 'even, moderate reach',
     scores: { Safety: 56, Challenge: 58, Play: 54 },
     copy: 'The form stays even, but it sits in the middle rings. It reads as steadiness across the system without implying high capacity.',
     note: 'This is the real test: if the even mid triangle feels distinct from a high or depleted one, the radar earns its place.',
+  },
+  {
+    name: 'Harmonious High',
+    label: 'even, wide reach',
+    scores: { Safety: 82, Challenge: 85, Play: 80 },
+    copy: 'The shape stays balanced while expanding toward the outer rings. It should feel resourced and spacious without becoming a generic success badge.',
+    note: 'The visual question is whether size alone can separate high harmony from mid harmony while keeping both clearly balanced.',
+  },
+  {
+    name: 'Dual Engine',
+    label: 'two axes extended',
+    scores: { Safety: 74, Challenge: 78, Play: 31 },
+    copy: 'Two domains reach outward together while Play stays closer in. The radar turns the profile into a kite, making the missing third support immediately visible.',
+    note: 'This should read as powered by two sources, not as a Sharp Peak with a slightly better base.',
+  },
+  {
+    name: 'Steps',
+    label: 'three different reach lengths',
+    scores: { Safety: 32, Challenge: 78, Play: 55 },
+    copy: 'Each axis lands at a different distance from the centre. The result is neither balanced nor sharply peaked, but a clear progression from quieter to stronger domains.',
+    note: 'The useful test here is whether the lean feels intentional and readable, rather than like an accidental uneven triangle.',
   },
   {
     name: 'Sharp Peak',
@@ -190,7 +218,7 @@ export function DesignNotes() {
             </h2>
           </div>
           <p className="max-w-2xl text-[15.5px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
-            This sandbox keeps Section 3 unchanged. It tests whether a three-axis radar can make Harmonious Mid feel as distinct as Sharp Peak while staying connected to the existing block symbol.
+            This sandbox keeps Section 3 unchanged. It tests whether a three-axis radar can make the quiet, even, stepped, dual, and sharply imbalanced profiles feel distinct while staying connected to the existing block symbol.
           </p>
         </div>
 
