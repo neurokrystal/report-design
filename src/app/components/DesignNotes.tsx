@@ -60,6 +60,19 @@ const SHAPE_EXPERIMENTS = [
   },
 ];
 
+const BLIND_SPOT_OPTIONS = [
+  {
+    name: 'X-ray layer',
+    note: 'The visible Sharp Peak stays intact while a translucent inner layer slides behind it, showing that the hidden load sits under the apex rather than across the full base.',
+    variant: 'xray',
+  },
+  {
+    name: 'Missing counterweights',
+    note: 'Challenge is held by a strong central line while Safety and Play remain light. The reader can see why the structure feels powerful but does not have much counterbalance.',
+    variant: 'counterweight',
+  },
+];
+
 export function DesignNotes() {
   return (
     <section className="space-y-10">
@@ -119,6 +132,35 @@ export function DesignNotes() {
         </div>
       </div>
 
+      <div className="grid gap-8 rounded-[32px] border border-[#E6DED2] bg-[#FCF8F1] p-7 shadow-[0_30px_86px_-72px_rgba(26,22,20,0.48)] md:grid-cols-[0.38fr_0.62fr] md:p-8">
+        <div>
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#DC4C0C]">Blind-spot options</p>
+          <h2 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', lineHeight: 1.02, color: '#15110F' }}>
+            Two ways to show the hidden load.
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+            These are alternate concepts for the third state if the tilting-platform version still feels too literal or unstable in the wrong way.
+          </p>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {BLIND_SPOT_OPTIONS.map((option, index) => (
+            <motion.article
+              key={option.name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.42, delay: index * 0.05 }}
+              className="rounded-[28px] border border-[#E6D9CA] bg-white/78 p-5"
+            >
+              <BlindSpotOptionSketch variant={option.variant} />
+              <h3 className="mt-5" style={{ fontFamily: SERIF, fontSize: 26, lineHeight: 1, color: '#15110F' }}>{option.name}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-[#5C574F]" style={{ fontWeight: 300 }}>{option.note}</p>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+
       <div className="grid gap-8 rounded-[28px] bg-[#F8F6F1] p-7 md:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="text-[11px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">Level indicator handoff</p>
@@ -152,6 +194,58 @@ export function DesignNotes() {
         </div>
       </div>
     </section>
+  );
+}
+
+function BlindSpotOptionSketch({ variant }: { variant: string }) {
+  return (
+    <svg viewBox="0 0 260 170" className="h-40 w-full overflow-visible" aria-hidden="true">
+      <defs>
+        <filter id={`blindGlow-${variant}`} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <linearGradient id={`blindWarm-${variant}`} x1="130" x2="130" y1="20" y2="150" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#F2551A" stopOpacity="0.86" />
+          <stop offset="1" stopColor="#B96B38" stopOpacity="0.16" />
+        </linearGradient>
+      </defs>
+
+      {variant === 'xray' && (
+        <g>
+          <ellipse cx="132" cy="137" rx="84" ry="18" fill="#1A1614" opacity="0.07" />
+          <g opacity="0.24" transform="translate(12 12)">
+            <path d="M130 18 L166 80 L130 142 L94 80 Z" fill="#B96B38" />
+            <path d="M54 138 L94 68 L132 138 Z" fill="#42A68E" />
+            <path d="M128 138 L166 68 L206 138 Z" fill="#FFAB00" />
+          </g>
+          <g filter={`url(#blindGlow-${variant})`}>
+            <path d="M130 8 L168 72 L130 136 L92 72 Z" fill="url(#blindWarm-xray)" />
+            <path d="M50 136 L92 64 L132 136 Z" fill="#42A68E" opacity="0.34" />
+            <path d="M128 136 L168 64 L210 136 Z" fill="#FFAB00" opacity="0.34" />
+          </g>
+          <path d="M76 125 C104 106 118 94 130 72 C142 94 156 106 184 125" fill="none" stroke="#DC4C0C" strokeWidth="2.4" strokeLinecap="round" strokeDasharray="4 8" opacity="0.42" />
+          <circle cx="130" cy="72" r="10" fill="#FFF8F0" stroke="#DC4C0C" strokeOpacity="0.55" />
+        </g>
+      )}
+
+      {variant === 'counterweight' && (
+        <g>
+          <path d="M40 132 C82 126 174 126 220 132" fill="none" stroke="#D8D0C5" strokeWidth="2" strokeLinecap="round" />
+          <path d="M130 20 L130 134" fill="none" stroke="#DC4C0C" strokeWidth="3" strokeLinecap="round" opacity="0.58" />
+          <path d="M130 12 L164 70 L130 128 L96 70 Z" fill="#F2551A" filter={`url(#blindGlow-${variant})`} />
+          <path d="M61 130 L96 70 L130 130 Z" fill="#42A68E" opacity="0.2" />
+          <path d="M130 130 L164 70 L199 130 Z" fill="#FFAB00" opacity="0.2" />
+          <path d="M86 121 C101 112 116 106 130 88 C144 106 159 112 174 121" fill="none" stroke="#A79C90" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="5 8" opacity="0.46" />
+          <circle cx="130" cy="134" r="7" fill="#FFF8F0" stroke="#DC4C0C" strokeOpacity="0.6" />
+          <circle cx="84" cy="122" r="5" fill="#42A68E" opacity="0.34" />
+          <circle cx="176" cy="122" r="5" fill="#FFAB00" opacity="0.34" />
+        </g>
+      )}
+    </svg>
   );
 }
 

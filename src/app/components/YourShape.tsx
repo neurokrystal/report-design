@@ -167,17 +167,18 @@ function ShapeStateCopy({ state }: { state: number }) {
     return (
       <div className="flex lg:min-h-[510px] lg:items-center">
         <h2
-          className="max-w-[520px]"
+          className="max-w-[530px]"
           style={{
             fontFamily: SERIF,
-            fontSize: 'clamp(1.72rem, 2.45vw, 2.36rem)',
+            fontSize: 'clamp(1.62rem, 2.18vw, 2.12rem)',
             fontWeight: 600,
-            lineHeight: 1.18,
-            letterSpacing: '-0.028em',
+            lineHeight: 1.24,
+            letterSpacing: '-0.022em',
             color: INK,
           }}
         >
-          Together, your domains form a Sharp Peak. Challenge stands clearly above Safety and Play.
+          <span className="block">Together, your domains form a Sharp Peak.</span>
+          <span className="mt-5 block">Challenge stands clearly above Safety and Play.</span>
         </h2>
       </div>
     );
@@ -189,9 +190,20 @@ function ShapeStateCopy({ state }: { state: number }) {
         <h2 className="mb-9" style={stateTitleStyle}>
           How you move
         </h2>
-        <p className="text-[20.5px] leading-[1.82] text-[#201A16]" style={{ fontFamily: SERIF }}>
-          A Sharp Peak moves by leading with its strongest domain. You set direction easily, organise your life around what's next, and when something gets hard, you reach for drive - push harder, take it on, find the next thing to aim at. It works often enough that it's become your first move in almost any situation. When something feels off, you don't slow down to steady yourself, and you don't step back to enjoy anything - you set a goal. Drive is what you know, and it's the one thing you're sure you can rely on.
+        <p className="max-w-[560px] text-[22px] leading-[1.36] text-[#171310]" style={{ fontFamily: SERIF }}>
+          A Sharp Peak moves by leading with its strongest domain.
         </p>
+        <div className="mt-7 max-w-[610px] space-y-5 text-[16px] leading-[1.78] text-[#332E29]" style={{ fontWeight: 300 }}>
+          <p>
+            You set direction easily, organise your life around what's next, and when something gets hard, you reach for drive - push harder, take it on, find the next thing to aim at.
+          </p>
+          <p>
+            It works often enough that it's become your first move in almost any situation. When something feels off, you don't slow down to steady yourself, and you don't step back to enjoy anything - you set a goal.
+          </p>
+          <p>
+            Drive is what you know, and it's the one thing you're sure you can rely on.
+          </p>
+        </div>
       </article>
     );
   }
@@ -220,7 +232,7 @@ function ShapeStateCopy({ state }: { state: number }) {
   return (
     <article className="mx-auto max-w-[870px] text-center">
       <h2 className="mb-7" style={stateTitleStyle}>
-        Go Deeper
+        Go Deeper.
       </h2>
       <p className="mx-auto max-w-[760px] text-[20px] leading-[1.75] text-[#201A16]" style={{ fontFamily: SERIF }}>
         Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
@@ -231,10 +243,10 @@ function ShapeStateCopy({ state }: { state: number }) {
 
 function PathwayDoorways() {
   return (
-    <div className="relative mt-12">
+    <div className="relative mt-20 md:mt-24">
       <svg
         viewBox="0 0 880 116"
-        className="pointer-events-none absolute left-1/2 top-[-78px] hidden h-[128px] w-[86%] -translate-x-1/2 overflow-visible opacity-80 md:block"
+        className="pointer-events-none absolute left-1/2 top-[-64px] hidden h-[128px] w-[86%] -translate-x-1/2 overflow-visible opacity-80 md:block"
         aria-hidden="true"
       >
         <defs>
@@ -267,7 +279,7 @@ function PathwayDoorways() {
               key={door.domain}
               type="button"
               onClick={() => document.getElementById(door.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="group relative min-h-[330px] overflow-hidden border border-[#E2D5C5] bg-[#FFFCF7] px-7 pb-7 pt-14 text-left shadow-[0_28px_70px_-58px_rgba(26,22,20,0.48)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+              className="group relative min-h-[340px] overflow-hidden border border-[#E2D5C5] bg-[#FFFCF7] px-7 pb-7 pt-8 text-left shadow-[0_28px_70px_-58px_rgba(26,22,20,0.48)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
               style={{ borderTopLeftRadius: 150, borderTopRightRadius: 150, borderBottomLeftRadius: 28, borderBottomRightRadius: 28 }}
             >
               <div
@@ -275,8 +287,8 @@ function PathwayDoorways() {
                 style={{ background: `radial-gradient(circle at 50% 12%, ${door.color}3D, transparent 62%)` }}
               />
               <div className="flex h-full flex-col">
-                <div className="mb-9 flex items-center justify-center">
-                  <DomainGlyph domain={door.domain} color={door.color} />
+                <div className="mb-7 flex h-[118px] items-center justify-center">
+                  <DoorDomainSymbol domain={door.domain} color={door.color} />
                 </div>
                 <p className="text-[14px] font-extrabold uppercase tracking-[0.18em]" style={{ color: door.color }}>
                   {door.domain}
@@ -302,26 +314,29 @@ function PathwayDoorways() {
   );
 }
 
-function DomainGlyph({ domain, color }: { domain: string; color: string }) {
-  const points =
-    domain === 'Safety'
-      ? ['50% 15%', '82% 37%', '70% 76%', '30% 76%', '18% 37%']
-      : domain === 'Play'
-        ? ['50% 8%', '70% 32%', '96% 42%', '76% 63%', '78% 91%', '50% 78%', '22% 91%', '24% 63%', '4% 42%', '30% 32%']
-        : ['50% 7%', '82% 50%', '50% 93%', '18% 50%'];
-
+function DoorDomainSymbol({ domain, color }: { domain: string; color: string }) {
+  const active = (name: string) => domain === name;
   return (
-    <span className="relative grid h-16 w-16 place-items-center rounded-full bg-white/72 shadow-[0_18px_38px_-30px_rgba(26,22,20,0.62)]">
-      <span className="absolute inset-[-10px] rounded-full opacity-30" style={{ background: `radial-gradient(circle, ${color}33, transparent 68%)` }} />
-      <span
-        className="relative block h-8 w-8"
-        style={{
-          backgroundColor: `${color}1F`,
-          border: `1.5px solid ${color}`,
-          clipPath: `polygon(${points.join(', ')})`,
-        }}
-      />
-    </span>
+    <svg viewBox="0 0 160 130" className="relative z-10 h-[112px] w-full max-w-[160px] overflow-visible" aria-hidden="true">
+      <defs>
+        <filter id={`doorGlow-${domain}`} x="-35%" y="-35%" width="170%" height="170%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <radialGradient id={`doorAura-${domain}`} cx="50%" cy="50%" r="55%">
+          <stop offset="0" stopColor={color} stopOpacity="0.24" />
+          <stop offset="0.62" stopColor={color} stopOpacity="0.08" />
+          <stop offset="1" stopColor={color} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx={active('Challenge') ? 80 : active('Safety') ? 50 : 110} cy={active('Challenge') ? 45 : 92} r="46" fill={`url(#doorAura-${domain})`} />
+      <path d="M80 6 L114 64 L80 122 L46 64 Z" fill={active('Challenge') ? CHALLENGE : '#D8D0C5'} opacity={active('Challenge') ? 0.94 : 0.18} filter={active('Challenge') ? `url(#doorGlow-${domain})` : undefined} />
+      <path d="M12 118 L52 50 L90 118 Z" fill={active('Safety') ? SAFETY : '#D8D0C5'} opacity={active('Safety') ? 0.88 : 0.18} filter={active('Safety') ? `url(#doorGlow-${domain})` : undefined} />
+      <path d="M70 118 L108 50 L148 118 Z" fill={active('Play') ? PLAY : '#D8D0C5'} opacity={active('Play') ? 0.9 : 0.18} filter={active('Play') ? `url(#doorGlow-${domain})` : undefined} />
+    </svg>
   );
 }
 
@@ -435,6 +450,7 @@ function EvolvingShape({ state }: { state: number }) {
   const isBlindSpot = state === 2;
   const safetyOpacity = state === 0 ? 0.88 : isBlindSpot ? 0.36 : 0.24;
   const playOpacity = state === 0 ? 0.84 : isBlindSpot ? 0.36 : 0.24;
+  const challengeOpacity = isMoving ? 0.74 : 1;
   const outlineOpacity = state === 0 || isBlindSpot ? 0 : 0.16;
   const labelOpacity = isMoving ? 0.62 : 1;
 
@@ -488,6 +504,11 @@ function EvolvingShape({ state }: { state: number }) {
             <stop offset="0.5" stopColor="#FFBB30" />
             <stop offset="1" stopColor="#FFAB00" />
           </linearGradient>
+          <radialGradient id="peakAura" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stopColor="#F2551A" stopOpacity="0.34" />
+            <stop offset="0.45" stopColor="#FFBB30" stopOpacity="0.15" />
+            <stop offset="1" stopColor="#F2551A" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         <ShapeStateOverlay state={state} layer="under" />
@@ -522,7 +543,7 @@ function EvolvingShape({ state }: { state: number }) {
             <motion.path
               d={fills.Challenge}
               fill="#F2551A"
-              animate={{ opacity: 1, y: isMoving ? -8 : 0 }}
+              animate={{ opacity: challengeOpacity, y: isMoving ? -8 : 0 }}
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
           )}
@@ -538,21 +559,36 @@ function ShapeLabels({ state, opacity }: { state: number; opacity: number }) {
   return (
     <motion.div
       className="pointer-events-none absolute inset-0 z-20"
-      animate={{ opacity }}
-      transition={{ duration: 0.35 }}
+      style={{ transformOrigin: '50% 63%' }}
+      animate={{
+        opacity,
+        rotate: state === 2 ? [-6.8, -11.5, -6.8] : 0,
+        x: state === 2 ? [-2, -7, -2] : 0,
+        y: state === 2 ? [0, 2, 0] : 0,
+      }}
+      transition={
+        state === 2
+          ? {
+              opacity: { duration: 0.35 },
+              rotate: { duration: 5.8, repeat: Infinity, ease: 'easeInOut' },
+              x: { duration: 5.8, repeat: Infinity, ease: 'easeInOut' },
+              y: { duration: 5.8, repeat: Infinity, ease: 'easeInOut' },
+            }
+          : { duration: 0.35 }
+      }
       aria-hidden="true"
     >
-      <div className="absolute left-1/2 top-0 -translate-x-1/2 text-center">
+      <div className="absolute left-1/2 top-[10%] -translate-x-1/2 text-center">
         <p className="rounded-full border border-[#E9D8CC] bg-white/68 px-4 py-1.5 text-[17px] leading-none text-[#B83F14] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.5)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
           Challenge
         </p>
       </div>
-      <div className="absolute bottom-1 left-[4%] text-left md:left-[7%]">
+      <div className="absolute bottom-[18%] left-[13%] text-left md:left-[16%]">
         <p className="rounded-full border border-[#D7E8DF] bg-white/66 px-4 py-1.5 text-[17px] leading-none text-[#166F5F] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.42)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
           Safety
         </p>
       </div>
-      <div className="absolute bottom-1 right-[4%] text-right md:right-[7%]">
+      <div className="absolute bottom-[18%] right-[13%] text-right md:right-[16%]">
         <p className="rounded-full border border-[#EBDDBF] bg-white/66 px-4 py-1.5 text-[17px] leading-none text-[#9A6A00] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.42)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
           Play
         </p>
@@ -572,13 +608,21 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
           <motion.circle
             cx="204.5"
             cy="127"
-            r="62"
+            r="78"
+            fill="url(#peakAura)"
+            animate={{ r: [66, 92, 66], opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 5.1, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.circle
+            cx="204.5"
+            cy="127"
+            r="58"
             fill="none"
             stroke="#F2551A"
-            strokeWidth="1.2"
-            strokeOpacity="0.23"
-            animate={{ r: [50, 72, 50], opacity: [0.28, 0.08, 0.28] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+            strokeWidth="1.4"
+            strokeOpacity="0.34"
+            animate={{ r: [48, 72, 48], opacity: [0.44, 0.1, 0.44] }}
+            transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.circle
             cx="204.5"
@@ -586,10 +630,10 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
             r="86"
             fill="none"
             stroke="#FFBB30"
-            strokeWidth="1"
-            strokeOpacity="0.15"
-            animate={{ r: [72, 98, 72], opacity: [0.18, 0.05, 0.18] }}
-            transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut', delay: 0.45 }}
+            strokeWidth="1.2"
+            strokeOpacity="0.22"
+            animate={{ r: [70, 104, 70], opacity: [0.3, 0.06, 0.3] }}
+            transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: 0.35 }}
           />
         </motion.g>
 
@@ -598,11 +642,10 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
           transition={{ duration: 0.45, ease: 'easeInOut' }}
         >
           <circle cx="204.5" cy="198" r="23" fill="#FFF8F0" stroke="#E8D9CC" strokeWidth="1.3" />
-          <path d="M204.5 198 C190 216 168 232 135 252" fill="none" stroke="#BFD7CD" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.56" />
-          <path d="M204.5 198 C221 217 244 233 276 252" fill="none" stroke="#E8D29E" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.56" />
-          <path d="M204.5 198 C205 160 205 118 205 75" fill="none" stroke="#F2551A" strokeWidth="3.6" strokeLinecap="round" strokeOpacity="0.84" filter="url(#shapeGlow)" />
-          <circle cx="135" cy="252" r="3.8" fill={SAFETY} opacity="0.34" />
-          <circle cx="276" cy="252" r="3.8" fill={PLAY} opacity="0.34" />
+          <path d="M204.5 198 C188 215 164 232 128 253" fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.5" />
+          <path d="M204.5 198 C222 216 248 233 286 253" fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.5" />
+          <path d="M204.5 198 C204 159 204 118 205 72" fill="none" stroke="#FFF6E8" strokeWidth="7.4" strokeLinecap="round" strokeOpacity="0.76" />
+          <path d="M204.5 198 C204 159 204 118 205 72" fill="none" stroke="#F2551A" strokeWidth="3.7" strokeLinecap="round" strokeOpacity="0.9" />
         </motion.g>
 
         <motion.g
@@ -640,25 +683,21 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
           stroke="#F2551A"
           strokeWidth="2.4"
           animate={{
-            cx: [204.5, 218, 204.5, 191, 204.5, 204.8, 205],
-            cy: [198, 198, 184, 198, 198, 138, 75],
+            cx: [204.5, 218, 204.5, 191, 204.5, 204.7, 205],
+            cy: [198, 198, 184, 198, 198, 137, 72],
             opacity: [0.55, 0.72, 0.72, 0.72, 0.95, 1, 0.4],
           }}
           transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.circle
-          r="4.2"
-          fill={SAFETY}
-          animate={{ cx: [204.5, 168, 135], cy: [198, 231, 252], opacity: [0.16, 0.28, 0] }}
-          transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: 0.45 }}
+          cx="205"
+          cy="72"
+          r="8.5"
+          fill="#F2551A"
+          opacity="0.92"
+          animate={{ r: [7.5, 12, 7.5], opacity: [0.95, 0.35, 0.95] }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.circle
-          r="4.2"
-          fill={PLAY}
-          animate={{ cx: [204.5, 241, 276], cy: [198, 231, 252], opacity: [0.16, 0.24, 0] }}
-          transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
-        />
-        <circle cx="205" cy="75" r="8.5" fill="#F2551A" opacity="0.92" />
       </motion.g>
 
       <motion.g
@@ -677,8 +716,14 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
           animate={{ r: [16, 28, 16], opacity: [0.28, 0.08, 0.28] }}
           transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <path d="M337 142 C313 151 292 165 272 183" fill="none" stroke="#C65D32" strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.45" />
-        <path d="M279 169 L269 187 L289 181" fill="none" stroke="#C65D32" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.5" />
+        <motion.g
+          animate={{ x: [8, -4, 8], opacity: [0.18, 0.48, 0.18] }}
+          transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <path d="M345 126 C323 146 307 173 300 207" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.52" strokeDasharray="1 9" />
+          <path d="M360 146 C335 165 318 193 313 229" fill="none" stroke="#C65D32" strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.44" strokeDasharray="1 10" />
+          <path d="M374 170 C346 188 331 215 329 250" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.36" strokeDasharray="1 9" />
+        </motion.g>
       </motion.g>
     </g>
   );
