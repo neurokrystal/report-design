@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Flame, Info, Shield, Sun } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { useState } from 'react';
 import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
@@ -11,10 +11,10 @@ const PLAY = '#FFAB00';
 const INK = '#15110F';
 
 const stateNav = [
-  { label: 'Your shape', accent: CHALLENGE },
-  { label: 'How you move', accent: CHALLENGE },
-  { label: 'Your blind spot', accent: '#7A3D9A' },
-  { label: 'Pathways', accent: SAFETY },
+  { label: 'Your shape' },
+  { label: 'How you move' },
+  { label: 'Your blind spot' },
+  { label: 'Pathways' },
 ] as const;
 
 const doorways = [
@@ -23,7 +23,6 @@ const doorways = [
     copy: 'Where steadiness comes from, and where it currently has to be worked for.',
     hook: 'Start here to understand calm, trust, and ease.',
     color: SAFETY,
-    Icon: Shield,
     target: 'safety',
   },
   {
@@ -31,7 +30,6 @@ const doorways = [
     copy: 'What brings back energy, enjoyment, and flexibility.',
     hook: 'Start here to understand lightness and rest.',
     color: PLAY,
-    Icon: Sun,
     target: 'play',
   },
   {
@@ -39,7 +37,6 @@ const doorways = [
     copy: 'The engine behind your drive and direction.',
     hook: 'Start here to understand the strongest domain in your profile.',
     color: CHALLENGE,
-    Icon: Flame,
     target: 'challenge',
   },
 ] as const;
@@ -49,7 +46,6 @@ export function YourShape() {
   const [activeState, setActiveState] = useState(0);
   const isFirst = activeState === 0;
   const isLast = activeState === stateNav.length - 1;
-  const activeAccent = stateNav[activeState].accent;
 
   const goToState = (direction: 1 | -1) => {
     setActiveState(current => Math.max(0, Math.min(stateNav.length - 1, current + direction)));
@@ -114,11 +110,11 @@ export function YourShape() {
         onNext={() => goToState(1)}
       />
 
-      <section className="relative overflow-hidden rounded-[36px] border border-[#E9DED0] bg-[#F8F3EB] px-6 py-9 shadow-[0_34px_95px_-76px_rgba(26,22,20,0.62)] md:px-10 md:py-12 lg:px-14 lg:py-16">
+      <section className="relative overflow-visible px-1 py-4 md:px-0 md:py-6">
         <div
-          className="pointer-events-none absolute inset-0 opacity-90"
+          className="pointer-events-none absolute inset-x-[-5rem] bottom-[-4rem] top-[-2rem] opacity-75"
           style={{
-            background: `radial-gradient(circle at 82% 20%, ${activeAccent}18, transparent 32%), radial-gradient(circle at 18% 82%, rgba(255,187,48,0.10), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.82), rgba(255,255,255,0))`,
+            background: 'radial-gradient(circle at 78% 16%, rgba(242,85,26,0.11), transparent 30%), radial-gradient(circle at 20% 72%, rgba(255,187,48,0.08), transparent 32%), linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,255,255,0))',
           }}
         />
 
@@ -171,13 +167,13 @@ function ShapeStateCopy({ state }: { state: number }) {
     return (
       <div className="flex lg:min-h-[510px] lg:items-center">
         <h2
-          className="max-w-xl"
+          className="max-w-[520px]"
           style={{
             fontFamily: SERIF,
-            fontSize: 'clamp(2rem, 3.05vw, 2.82rem)',
+            fontSize: 'clamp(1.72rem, 2.45vw, 2.36rem)',
             fontWeight: 600,
-            lineHeight: 1.08,
-            letterSpacing: '-0.045em',
+            lineHeight: 1.18,
+            letterSpacing: '-0.028em',
             color: INK,
           }}
         >
@@ -224,10 +220,10 @@ function ShapeStateCopy({ state }: { state: number }) {
   return (
     <article className="mx-auto max-w-[870px] text-center">
       <h2 className="mb-7" style={stateTitleStyle}>
-        Begin with a domain
+        Go Deeper
       </h2>
       <p className="mx-auto max-w-[760px] text-[20px] leading-[1.75] text-[#201A16]" style={{ fontFamily: SERIF }}>
-        Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with whichever you'd like to understand first.
+        Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
       </p>
     </article>
   );
@@ -248,53 +244,50 @@ function PathwayDoorways() {
             <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.76" />
           </linearGradient>
         </defs>
-        <path d="M440 34 C360 46 284 70 190 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.2" strokeLinecap="round" strokeOpacity="0.42" />
-        <path d="M440 34 C440 58 440 78 440 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.2" strokeLinecap="round" strokeOpacity="0.42" />
-        <path d="M440 34 C520 46 596 70 690 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.2" strokeLinecap="round" strokeOpacity="0.42" />
+        <circle cx="440" cy="34" r="5.5" fill="#F8F3EB" stroke="#E6D7C6" strokeWidth="2" />
+        <path d="M440 34 C360 46 284 70 190 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.5" />
+        <path d="M440 34 C440 58 440 78 440 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.48" />
+        <path d="M440 34 C520 46 596 70 690 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.5" />
         <motion.circle
           r="5"
           fill="#FFBB30"
           animate={{
-            cx: [440, 190, 440, 440, 690, 440],
-            cy: [34, 103, 34, 103, 103, 34],
-            opacity: [0.2, 0.88, 0.2, 0.88, 0.88, 0.2],
+            cx: [440, 190, 440, 440, 440, 690, 440],
+            cy: [34, 103, 34, 103, 34, 103, 34],
+            opacity: [0.22, 0.88, 0.22, 0.88, 0.22, 0.88, 0.22],
           }}
-          transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 8.4, repeat: Infinity, ease: 'easeInOut' }}
         />
       </svg>
 
       <div className="grid gap-5 md:grid-cols-3">
         {doorways.map(door => {
-          const Icon = door.Icon;
           return (
             <button
               key={door.domain}
               type="button"
               onClick={() => document.getElementById(door.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="group relative min-h-[300px] overflow-hidden border border-[#E4D8CB] bg-[#FFFCF7] px-7 pb-7 pt-16 text-left shadow-[0_28px_70px_-56px_rgba(26,22,20,0.55)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+              className="group relative min-h-[330px] overflow-hidden border border-[#E2D5C5] bg-[#FFFCF7] px-7 pb-7 pt-14 text-left shadow-[0_28px_70px_-58px_rgba(26,22,20,0.48)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
               style={{ borderTopLeftRadius: 150, borderTopRightRadius: 150, borderBottomLeftRadius: 28, borderBottomRightRadius: 28 }}
             >
               <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-28 opacity-30 transition-opacity group-hover:opacity-50"
+                className="pointer-events-none absolute inset-x-0 top-0 h-32 opacity-28 transition-opacity group-hover:opacity-46"
                 style={{ background: `radial-gradient(circle at 50% 12%, ${door.color}3D, transparent 62%)` }}
               />
-              <span
-                className="absolute left-1/2 top-7 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full bg-white/72 shadow-[0_18px_38px_-28px_rgba(26,22,20,0.65)]"
-                style={{ color: door.color }}
-              >
-                <Icon size={20} strokeWidth={2.1} />
-              </span>
-              <div className="flex h-full flex-col justify-end">
-                <p className="text-[12px] font-extrabold uppercase tracking-[0.17em]" style={{ color: door.color }}>
+              <div className="flex h-full flex-col">
+                <div className="mb-9 flex items-center justify-center">
+                  <DomainGlyph domain={door.domain} color={door.color} />
+                </div>
+                <p className="text-[14px] font-extrabold uppercase tracking-[0.18em]" style={{ color: door.color }}>
                   {door.domain}
                 </p>
-                <p className="mt-4 text-[24px] leading-[1.22] text-[#1D1815]" style={{ fontFamily: SERIF }}>
+                <p className="mt-5 min-h-[118px] text-[24px] leading-[1.24] text-[#1D1815]" style={{ fontFamily: SERIF }}>
                   {door.copy}
                 </p>
-                <p className="mt-5 text-[15px] leading-relaxed text-[#665E55]" style={{ fontWeight: 300 }}>
+                <p className="mt-5 min-h-[66px] text-[15px] leading-relaxed text-[#665E55]" style={{ fontWeight: 300 }}>
                   {door.hook}
                 </p>
-                <div className="mt-9 flex items-center justify-between border-t border-[#E5DACE] pt-4">
+                <div className="mt-auto flex items-center justify-between border-t border-[#E5DACE] pt-4">
                   <span className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
                     Start with {door.domain}
                   </span>
@@ -306,6 +299,29 @@ function PathwayDoorways() {
         })}
       </div>
     </div>
+  );
+}
+
+function DomainGlyph({ domain, color }: { domain: string; color: string }) {
+  const points =
+    domain === 'Safety'
+      ? ['50% 15%', '82% 37%', '70% 76%', '30% 76%', '18% 37%']
+      : domain === 'Play'
+        ? ['50% 8%', '70% 32%', '96% 42%', '76% 63%', '78% 91%', '50% 78%', '22% 91%', '24% 63%', '4% 42%', '30% 32%']
+        : ['50% 7%', '82% 50%', '50% 93%', '18% 50%'];
+
+  return (
+    <span className="relative grid h-16 w-16 place-items-center rounded-full bg-white/72 shadow-[0_18px_38px_-30px_rgba(26,22,20,0.62)]">
+      <span className="absolute inset-[-10px] rounded-full opacity-30" style={{ background: `radial-gradient(circle, ${color}33, transparent 68%)` }} />
+      <span
+        className="relative block h-8 w-8"
+        style={{
+          backgroundColor: `${color}1F`,
+          border: `1.5px solid ${color}`,
+          clipPath: `polygon(${points.join(', ')})`,
+        }}
+      />
+    </span>
   );
 }
 
@@ -333,7 +349,7 @@ function ShapeStateControls({
   onNext: () => void;
 }) {
   const progress = `${(activeState / (stateNav.length - 1)) * 75}%`;
-  const activeAccent = stateNav[activeState].accent;
+  const activeAccent = NAV_ORANGE;
 
   return (
     <nav className="mb-10 mt-1" aria-label="Shape story states">
@@ -372,19 +388,19 @@ function ShapeStateControls({
                   <span
                     className="grid h-9 w-9 rotate-45 place-items-center border transition-all duration-300"
                     style={{
-                      borderColor: passed ? item.accent : '#D8CEC1',
-                      backgroundColor: active ? item.accent : passed ? '#FFF8F0' : '#FBF8F3',
-                      boxShadow: active ? `0 14px 28px -22px ${item.accent}` : 'none',
+                      borderColor: passed ? NAV_ORANGE : '#D8CEC1',
+                      backgroundColor: active ? NAV_ORANGE : passed ? '#FFF8F0' : '#FBF8F3',
+                      boxShadow: active ? `0 14px 28px -22px ${NAV_ORANGE}` : 'none',
                     }}
                   >
                     <span
                       className="block h-2.5 w-2.5 rounded-full transition-colors"
-                      style={{ backgroundColor: active ? '#FFF8F0' : passed ? item.accent : '#CFC5B8' }}
+                      style={{ backgroundColor: active ? '#FFF8F0' : passed ? NAV_ORANGE : '#CFC5B8' }}
                     />
                   </span>
                   <span
                     className="block text-[10.5px] font-extrabold uppercase tracking-[0.14em] transition-colors max-sm:text-[9.5px]"
-                    style={{ color: active ? item.accent : passed ? '#5F554B' : '#968C80' }}
+                    style={{ color: active ? NAV_ORANGE : passed ? '#5F554B' : '#968C80' }}
                   >
                     {item.label}
                   </span>
@@ -419,7 +435,7 @@ function EvolvingShape({ state }: { state: number }) {
   const isBlindSpot = state === 2;
   const safetyOpacity = state === 0 ? 0.88 : isBlindSpot ? 0.36 : 0.24;
   const playOpacity = state === 0 ? 0.84 : isBlindSpot ? 0.36 : 0.24;
-  const outlineOpacity = state === 0 ? 0 : isBlindSpot ? 0.28 : 0.2;
+  const outlineOpacity = state === 0 || isBlindSpot ? 0 : 0.16;
   const labelOpacity = isMoving ? 0.62 : 1;
 
   return (
@@ -465,7 +481,7 @@ function EvolvingShape({ state }: { state: number }) {
           </filter>
           <linearGradient id="loadGradient" x1="204" x2="204" y1="72" y2="260" gradientUnits="userSpaceOnUse">
             <stop stopColor="#F2551A" stopOpacity="0.74" />
-            <stop offset="1" stopColor="#7A3D9A" stopOpacity="0.22" />
+            <stop offset="1" stopColor="#B96B38" stopOpacity="0.2" />
           </linearGradient>
           <linearGradient id="availablePath" x1="90" x2="315" y1="252" y2="252" gradientUnits="userSpaceOnUse">
             <stop stopColor="#42A68E" />
@@ -478,8 +494,8 @@ function EvolvingShape({ state }: { state: number }) {
 
         <motion.g
           filter="url(#evolvingShapeDrop)"
-          style={{ transformOrigin: '204.5px 253px' }}
-          animate={{ rotate: isBlindSpot ? [-3.4, 2.2, -3.4] : 0, y: isBlindSpot ? [0, -1, 0] : 0 }}
+          style={{ transformOrigin: '204.5px 248px' }}
+          animate={{ rotate: isBlindSpot ? [-6.8, -11.5, -6.8] : 0, x: isBlindSpot ? [-2, -7, -2] : 0, y: isBlindSpot ? [0, 2, 0] : 0 }}
           transition={isBlindSpot ? { duration: 5.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.path d={DOMAIN_HEX_OUTLINES.Safety} fill="none" stroke="#D8D0C5" strokeWidth="1.15" animate={{ opacity: outlineOpacity }} transition={{ duration: 0.45 }} />
@@ -527,22 +543,19 @@ function ShapeLabels({ state, opacity }: { state: number; opacity: number }) {
       aria-hidden="true"
     >
       <div className="absolute left-1/2 top-0 -translate-x-1/2 text-center">
-        <p className="text-[23px] leading-none text-[#B83F14]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
+        <p className="rounded-full border border-[#E9D8CC] bg-white/68 px-4 py-1.5 text-[17px] leading-none text-[#B83F14] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.5)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
           Challenge
         </p>
-        <p className="mt-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#7A4632]">High</p>
       </div>
       <div className="absolute bottom-1 left-[4%] text-left md:left-[7%]">
-        <p className="text-[22px] leading-none text-[#166F5F]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
+        <p className="rounded-full border border-[#D7E8DF] bg-white/66 px-4 py-1.5 text-[17px] leading-none text-[#166F5F] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.42)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
           Safety
         </p>
-        <p className="mt-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#5D6864]">Very Low</p>
       </div>
       <div className="absolute bottom-1 right-[4%] text-right md:right-[7%]">
-        <p className="text-[22px] leading-none text-[#9A6A00]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
+        <p className="rounded-full border border-[#EBDDBF] bg-white/66 px-4 py-1.5 text-[17px] leading-none text-[#9A6A00] shadow-[0_16px_38px_-32px_rgba(26,22,20,0.42)]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
           Play
         </p>
-        <p className="mt-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#6D6254]">Low</p>
       </div>
     </motion.div>
   );
@@ -553,12 +566,43 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
     return (
       <g pointerEvents="none">
         <motion.g
+          animate={{ opacity: state === 0 ? 1 : 0 }}
+          transition={{ duration: 0.45, ease: 'easeInOut' }}
+        >
+          <motion.circle
+            cx="204.5"
+            cy="127"
+            r="62"
+            fill="none"
+            stroke="#F2551A"
+            strokeWidth="1.2"
+            strokeOpacity="0.23"
+            animate={{ r: [50, 72, 50], opacity: [0.28, 0.08, 0.28] }}
+            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.circle
+            cx="204.5"
+            cy="127"
+            r="86"
+            fill="none"
+            stroke="#FFBB30"
+            strokeWidth="1"
+            strokeOpacity="0.15"
+            animate={{ r: [72, 98, 72], opacity: [0.18, 0.05, 0.18] }}
+            transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut', delay: 0.45 }}
+          />
+        </motion.g>
+
+        <motion.g
           animate={{ opacity: state === 1 ? 1 : 0 }}
           transition={{ duration: 0.45, ease: 'easeInOut' }}
         >
-          <path d="M204.5 253 C184 250 154 263 104 302" fill="none" stroke="#D8CEC1" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.48" />
-          <path d="M204.5 253 C225 250 255 263 305 302" fill="none" stroke="#D8CEC1" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.48" />
-          <path d="M204.5 253 C207 209 208 158 207 75" fill="none" stroke="#F2551A" strokeWidth="3.4" strokeLinecap="round" strokeOpacity="0.82" filter="url(#shapeGlow)" />
+          <circle cx="204.5" cy="198" r="23" fill="#FFF8F0" stroke="#E8D9CC" strokeWidth="1.3" />
+          <path d="M204.5 198 C190 216 168 232 135 252" fill="none" stroke="#BFD7CD" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.56" />
+          <path d="M204.5 198 C221 217 244 233 276 252" fill="none" stroke="#E8D29E" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.56" />
+          <path d="M204.5 198 C205 160 205 118 205 75" fill="none" stroke="#F2551A" strokeWidth="3.6" strokeLinecap="round" strokeOpacity="0.84" filter="url(#shapeGlow)" />
+          <circle cx="135" cy="252" r="3.8" fill={SAFETY} opacity="0.34" />
+          <circle cx="276" cy="252" r="3.8" fill={PLAY} opacity="0.34" />
         </motion.g>
 
         <motion.g
@@ -566,17 +610,17 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
           transition={{ duration: 0.45, ease: 'easeInOut' }}
         >
           <motion.path
-            d="M89 303 L321 285"
+            d="M88 301 C141 295 214 295 318 286"
             fill="none"
             stroke="#7B7167"
-            strokeWidth="3.2"
+            strokeWidth="3"
             strokeLinecap="round"
-            strokeOpacity="0.38"
-            style={{ transformOrigin: '204.5px 294px' }}
-            animate={{ rotate: [-2.5, 2.5, -2.5] }}
+            strokeOpacity="0.32"
+            style={{ transformOrigin: '204.5px 296px' }}
+            animate={{ rotate: [-1.8, -3.4, -1.8] }}
             transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <path d="M204.5 286 L218 312 H191 Z" fill="#EFE6DA" stroke="#CFC3B6" strokeWidth="1" />
+          <ellipse cx="202" cy="288" rx="92" ry="19" fill="#1A1614" opacity="0.06" />
         </motion.g>
       </g>
     );
@@ -589,27 +633,32 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
         transition={{ duration: 0.45, ease: 'easeInOut' }}
         pointerEvents="none"
       >
-        <circle cx="204.5" cy="253" r="13" fill="#FFF8F0" stroke="#E5DACE" strokeWidth="1.2" />
+        <circle cx="204.5" cy="198" r="8.2" fill="#FFF8F0" stroke="#E5DACE" strokeWidth="1.2" />
         <motion.circle
-          r="5.8"
-          fill="#F2551A"
-          animate={{ cx: [204.5, 207, 209, 207], cy: [253, 204, 134, 75], opacity: [0.42, 0.86, 1, 0.48] }}
-          transition={{ duration: 4.9, repeat: Infinity, ease: 'easeInOut' }}
+          r="6"
+          fill="#FFF8F0"
+          stroke="#F2551A"
+          strokeWidth="2.4"
+          animate={{
+            cx: [204.5, 218, 204.5, 191, 204.5, 204.8, 205],
+            cy: [198, 198, 184, 198, 198, 138, 75],
+            opacity: [0.55, 0.72, 0.72, 0.72, 0.95, 1, 0.4],
+          }}
+          transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.circle
           r="4.2"
           fill={SAFETY}
-          animate={{ cx: [204.5, 160, 104], cy: [253, 263, 302], opacity: [0, 0.28, 0] }}
-          transition={{ duration: 4.9, repeat: Infinity, ease: 'easeInOut', delay: 0.65 }}
+          animate={{ cx: [204.5, 168, 135], cy: [198, 231, 252], opacity: [0.16, 0.28, 0] }}
+          transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: 0.45 }}
         />
         <motion.circle
           r="4.2"
           fill={PLAY}
-          animate={{ cx: [204.5, 250, 305], cy: [253, 263, 302], opacity: [0, 0.24, 0] }}
-          transition={{ duration: 4.9, repeat: Infinity, ease: 'easeInOut', delay: 1.05 }}
+          animate={{ cx: [204.5, 241, 276], cy: [198, 231, 252], opacity: [0.16, 0.24, 0] }}
+          transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
         />
-        <circle cx="207" cy="75" r="8.5" fill="#F2551A" opacity="0.94" />
-        <text x="231" y="103" fill="#B83F14" fontSize="10.5" fontWeight="900" letterSpacing="1.1">DRIVE ROUTE</text>
+        <circle cx="205" cy="75" r="8.5" fill="#F2551A" opacity="0.92" />
       </motion.g>
 
       <motion.g
@@ -617,29 +666,19 @@ function ShapeStateOverlay({ state, layer }: { state: number; layer: 'under' | '
         transition={{ duration: 0.45, ease: 'easeInOut' }}
         pointerEvents="none"
       >
-        <path d="M204.5 82 C204.5 133 204.5 194 204.5 274" fill="none" stroke="url(#loadGradient)" strokeWidth="5.4" strokeLinecap="round" strokeDasharray="16 14" filter="url(#shapeGlow)" />
-        <path d="M150 250 C167 232 187 219 204.5 198 C222 219 242 232 259 250" fill="none" stroke="#7A3D9A" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.38" strokeDasharray="7 10" />
         <motion.circle
-          cx="204.5"
-          cy="214"
+          cx="217"
+          cy="210"
           r="22"
           fill="none"
-          stroke="#7A3D9A"
-          strokeWidth="1.6"
-          strokeOpacity="0.34"
-          animate={{ r: [18, 30, 18], opacity: [0.48, 0.16, 0.48] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+          stroke="#F2551A"
+          strokeWidth="1.5"
+          strokeOpacity="0.22"
+          animate={{ r: [16, 28, 16], opacity: [0.28, 0.08, 0.28] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.circle
-          cx="204.5"
-          cy="214"
-          r="6.8"
-          fill="#7A3D9A"
-          opacity="0.84"
-          animate={{ y: [0, -4, 0] }}
-          transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <text x="204.5" y="330" textAnchor="middle" fill="#7A3D9A" fontSize="10.5" fontWeight="900" letterSpacing="1.1">TOO MUCH RESTS ON ONE POINT</text>
+        <path d="M337 142 C313 151 292 165 272 183" fill="none" stroke="#C65D32" strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.45" />
+        <path d="M279 169 L269 187 L289 181" fill="none" stroke="#C65D32" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.5" />
       </motion.g>
     </g>
   );
