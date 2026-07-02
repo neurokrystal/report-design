@@ -1,6 +1,9 @@
 import { motion } from 'motion/react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
+const SAFETY = '#42A68E';
+const CHALLENGE = '#DC4C0C';
+const PLAY = '#FFAB00';
 
 const SHAPES = [
   {
@@ -70,6 +73,23 @@ const BLIND_SPOT_OPTIONS = [
     name: 'Missing counterweights',
     note: 'Challenge is held by a strong central line while Safety and Play remain light. The reader can see why the structure feels powerful but does not have much counterbalance.',
     variant: 'counterweight',
+  },
+];
+
+const RADAR_PROTOTYPES = [
+  {
+    name: 'Harmonious Mid',
+    label: 'even, moderate reach',
+    scores: { Safety: 56, Challenge: 58, Play: 54 },
+    copy: 'The form stays even, but it sits in the middle rings. It reads as steadiness across the system without implying high capacity.',
+    note: 'This is the real test: if the even mid triangle feels distinct from a high or depleted one, the radar earns its place.',
+  },
+  {
+    name: 'Sharp Peak',
+    label: 'one axis pulls forward',
+    scores: { Safety: 27, Challenge: 78, Play: 41 },
+    copy: 'Challenge reaches outward while Safety and Play sit closer to the centre. The profile becomes a lopsided spike rather than three separate blocks.',
+    note: 'This should still read clearly, but it is less important than whether the quieter shapes become legible.',
   },
 ];
 
@@ -161,6 +181,53 @@ export function DesignNotes() {
         </div>
       </div>
 
+      <div className="overflow-hidden rounded-[34px] border border-[#E6DED2] bg-[#FFFCF7] p-7 shadow-[0_34px_95px_-78px_rgba(26,22,20,0.58)] md:p-9">
+        <div className="grid gap-6 md:grid-cols-[0.38fr_0.62fr] md:items-end">
+          <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#DC4C0C]">Radar shape prototype</p>
+            <h2 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.85rem, 3.2vw, 2.7rem)', lineHeight: 1.02, color: '#15110F' }}>
+              Testing one grammar across quiet and dramatic shapes.
+            </h2>
+          </div>
+          <p className="max-w-2xl text-[15.5px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+            This sandbox keeps Section 3 unchanged. It tests whether a three-axis radar can make Harmonious Mid feel as distinct as Sharp Peak while staying connected to the existing block symbol.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-5">
+          {RADAR_PROTOTYPES.map((profile, index) => (
+            <motion.article
+              key={profile.name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.22 }}
+              transition={{ duration: 0.45, delay: index * 0.05 }}
+              className="grid gap-6 rounded-[30px] border border-[#E5D8C8] bg-white/78 p-5 md:grid-cols-[0.42fr_0.58fr] md:p-6"
+            >
+              <div className="flex flex-col justify-between">
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8278]">{profile.label}</p>
+                  <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.8rem, 3vw, 2.45rem)', lineHeight: 1, color: '#15110F' }}>
+                    {profile.name}
+                  </h3>
+                  <p className="mt-5 text-[15px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
+                    {profile.copy}
+                  </p>
+                  <p className="mt-5 border-l border-[#E2D7CA] pl-4 text-[13.5px] leading-relaxed text-[#6A6259]" style={{ fontWeight: 300 }}>
+                    {profile.note}
+                  </p>
+                </div>
+                <div className="mt-6 max-w-[260px] rounded-[22px] bg-[#F8F3EB] p-4">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#8B8278]">Block echo</p>
+                  <ShapeMini values={[profile.scores.Safety, profile.scores.Play, profile.scores.Challenge]} />
+                </div>
+              </div>
+              <RadarShape scores={profile.scores} />
+            </motion.article>
+          ))}
+        </div>
+      </div>
+
       <div className="grid gap-8 rounded-[28px] bg-[#F8F6F1] p-7 md:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="text-[11px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">Level indicator handoff</p>
@@ -194,6 +261,148 @@ export function DesignNotes() {
         </div>
       </div>
     </section>
+  );
+}
+
+type RadarScores = {
+  Safety: number;
+  Challenge: number;
+  Play: number;
+};
+
+function RadarShape({ scores }: { scores: RadarScores }) {
+  const centre = 150;
+  const maxRadius = 96;
+  const axes = [
+    { key: 'Challenge', label: 'Challenge', value: scores.Challenge, angle: -90, color: CHALLENGE },
+    { key: 'Play', label: 'Play', value: scores.Play, angle: 30, color: PLAY },
+    { key: 'Safety', label: 'Safety', value: scores.Safety, angle: 150, color: SAFETY },
+  ] as const;
+
+  const point = (angle: number, radius: number) => {
+    const radians = (angle * Math.PI) / 180;
+    return {
+      x: centre + Math.cos(radians) * radius,
+      y: centre + Math.sin(radians) * radius,
+    };
+  };
+
+  const ringPoints = (scale: number) => axes.map(axis => {
+    const p = point(axis.angle, maxRadius * scale);
+    return `${p.x},${p.y}`;
+  }).join(' ');
+
+  const profilePoints = axes.map(axis => {
+    const p = point(axis.angle, maxRadius * (axis.value / 100));
+    return `${p.x},${p.y}`;
+  }).join(' ');
+
+  return (
+    <div className="relative overflow-hidden rounded-[28px] bg-[#F8F3EB] p-5 md:p-7">
+      <svg viewBox="0 0 300 300" className="mx-auto h-[360px] w-full max-w-[440px] overflow-visible" role="img" aria-label="Three-axis radar shape prototype">
+        <defs>
+          <filter id={`radarGlow-${scores.Safety}-${scores.Challenge}-${scores.Play}`} x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <radialGradient id={`radarAura-${scores.Safety}-${scores.Challenge}-${scores.Play}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0" stopColor="#FFBB30" stopOpacity="0.18" />
+            <stop offset="0.62" stopColor="#F2551A" stopOpacity="0.07" />
+            <stop offset="1" stopColor="#F2551A" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <motion.circle
+          cx={centre}
+          cy={centre}
+          r={maxRadius + 34}
+          fill={`url(#radarAura-${scores.Safety}-${scores.Challenge}-${scores.Play})`}
+          animate={{ opacity: [0.48, 0.82, 0.48], scale: [0.98, 1.03, 0.98] }}
+          transition={{ duration: 6.8, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ transformOrigin: `${centre}px ${centre}px` }}
+        />
+
+        {[0.25, 0.5, 0.75, 1].map((scale, index) => (
+          <motion.polygon
+            key={scale}
+            points={ringPoints(scale)}
+            fill="none"
+            stroke="#D8CEC1"
+            strokeWidth="1"
+            strokeOpacity={index === 3 ? 0.46 : 0.28}
+            initial={{ opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5, delay: index * 0.06 }}
+            style={{ transformOrigin: `${centre}px ${centre}px` }}
+          />
+        ))}
+
+        {axes.map((axis, index) => {
+          const end = point(axis.angle, maxRadius);
+          const plotted = point(axis.angle, maxRadius * (axis.value / 100));
+          const label = point(axis.angle, maxRadius + 25);
+          return (
+            <g key={axis.key}>
+              <motion.line
+                x1={centre}
+                y1={centre}
+                x2={end.x}
+                y2={end.y}
+                stroke={axis.color}
+                strokeWidth="1.4"
+                strokeOpacity="0.38"
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.56, delay: 0.12 + index * 0.08 }}
+              />
+              <motion.circle
+                cx={plotted.x}
+                cy={plotted.y}
+                r="5.5"
+                fill="#FFF8F0"
+                stroke={axis.color}
+                strokeWidth="2.3"
+                initial={{ opacity: 0, scale: 0.4 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.38, delay: 0.55 + index * 0.08 }}
+              />
+              <text
+                x={label.x}
+                y={label.y}
+                textAnchor={axis.key === 'Challenge' ? 'middle' : axis.key === 'Safety' ? 'end' : 'start'}
+                dominantBaseline="middle"
+                fill={axis.color}
+                fontSize="13"
+                fontWeight="800"
+                letterSpacing="1.2"
+              >
+                {axis.label.toUpperCase()}
+              </text>
+            </g>
+          );
+        })}
+
+        <motion.g
+          initial={{ opacity: 0, scale: 0.05 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.75, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          style={{ transformOrigin: `${centre}px ${centre}px` }}
+          filter={`url(#radarGlow-${scores.Safety}-${scores.Challenge}-${scores.Play})`}
+        >
+          <polygon points={profilePoints} fill="#DC4C0C" fillOpacity="0.11" stroke="#1A1614" strokeOpacity="0.36" strokeWidth="1.6" />
+          <polygon points={profilePoints} fill="none" stroke="#DC4C0C" strokeOpacity="0.44" strokeWidth="2.2" />
+        </motion.g>
+
+        <circle cx={centre} cy={centre} r="4.5" fill="#FFF8F0" stroke="#CFC2B3" strokeWidth="1.4" />
+      </svg>
+    </div>
   );
 }
 
