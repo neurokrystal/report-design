@@ -495,7 +495,7 @@ function ShapeStateControls({
 
 function EvolvingShape({ state }: { state: number }) {
   const centre = 150;
-  const maxRadius = 124;
+  const maxRadius = 132;
   const axes = [
     { key: 'Challenge', label: 'Challenge', value: PROFILE_SCORES.Challenge, angle: -90, color: CHALLENGE },
     { key: 'Play', label: 'Play', value: PROFILE_SCORES.Play, angle: 30, color: PLAY },
@@ -518,6 +518,13 @@ function EvolvingShape({ state }: { state: number }) {
     return `${p.x},${p.y}`;
   }).join(' ');
   const profilePoints = `${plotted.Challenge.x},${plotted.Challenge.y} ${plotted.Play.x},${plotted.Play.y} ${plotted.Safety.x},${plotted.Safety.y}`;
+  const rim = {
+    Challenge: point(-90, maxRadius),
+    Play: point(30, maxRadius),
+    Safety: point(150, maxRadius),
+  };
+  const challengeOvershoot = point(-90, maxRadius + 64);
+  const svgViewBox = state === 2 ? '-34 -84 368 430' : '-24 -24 348 352';
   const keyDomains = state === 3 ? ['Safety', 'Play', 'Challenge'] : ['Challenge'];
   const domainPointOpacity = (domain: string) => {
     if (keyDomains.includes(domain)) return 1;
@@ -531,7 +538,7 @@ function EvolvingShape({ state }: { state: number }) {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[900px] pb-20 pt-4 lg:w-[118%]">
+    <div className="relative mx-auto w-full max-w-[980px] pb-20 pt-4 lg:w-[122%]">
       <motion.div
         className="absolute left-1/2 top-[5%] aspect-square w-[58%] -translate-x-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.32), rgba(255,171,0,0.14) 36%, rgba(242,85,26,0) 73%)' }}
@@ -555,7 +562,7 @@ function EvolvingShape({ state }: { state: number }) {
       />
       <div className="absolute inset-x-16 bottom-[11%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_70%)] blur-xl" />
 
-      <svg viewBox="-24 -24 348 352" className="relative z-10 mx-auto w-full max-w-[820px] overflow-visible" aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
+      <svg viewBox={svgViewBox} className={`relative z-10 mx-auto w-full overflow-visible ${state === 2 ? 'max-w-[920px]' : 'max-w-[840px]'}`} aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
         <title id="evolvingShapeTitle">Sharp Peak radar shape evolving through states</title>
         <desc id="evolvingShapeDesc">A three-axis radar shape shows Challenge reaching farther than Safety and Play, then animates movement and blind spot states.</desc>
         <defs>
@@ -713,7 +720,7 @@ function EvolvingShape({ state }: { state: number }) {
           <motion.polygon
             points={profilePoints}
             fill={state === 2 ? '#9B9389' : '#DC4C0C'}
-            animate={{ fillOpacity: state === 1 ? 0.08 : state === 2 ? 0.1 : state === 0 ? 0.16 : 0.1 }}
+            animate={{ fillOpacity: state === 1 ? 0.08 : state === 2 ? 0.12 : state === 0 ? 0.16 : 0.1 }}
             transition={{ duration: 0.35 }}
           />
           <motion.polygon
@@ -721,7 +728,7 @@ function EvolvingShape({ state }: { state: number }) {
             fill="none"
             stroke={state === 2 ? '#8D8378' : 'url(#radarProfileLine)'}
             strokeWidth={state === 1 ? 2.1 : 2.35}
-            animate={{ strokeOpacity: state === 1 ? 0.48 : state === 2 ? 0.22 : 0.72 }}
+            animate={{ strokeOpacity: state === 1 ? 0.48 : state === 2 ? 0 : 0.72 }}
             transition={{ duration: 0.35 }}
           />
         </motion.g>
@@ -761,64 +768,92 @@ function EvolvingShape({ state }: { state: number }) {
         transition={{ duration: 0.45, ease: 'easeInOut' }}
         pointerEvents="none"
       >
-        <path d={`M${centre} ${centre} L${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#9E978E" strokeWidth="6" strokeLinecap="round" strokeOpacity="0.42" />
-        <path d={`M${centre} ${centre} L${plotted.Safety.x} ${plotted.Safety.y}`} fill="none" stroke={SAFETY} strokeWidth="5.4" strokeLinecap="round" strokeOpacity="0.58" />
-        <path d={`M${centre} ${centre} L${plotted.Play.x} ${plotted.Play.y}`} fill="none" stroke={PLAY} strokeWidth="5.4" strokeLinecap="round" strokeOpacity="0.58" />
+        <path
+          d={`M${centre} ${centre} L${challengeOvershoot.x} ${challengeOvershoot.y}`}
+          fill="none"
+          stroke="#8E877E"
+          strokeWidth="6.2"
+          strokeLinecap="round"
+          strokeOpacity="0.5"
+        />
+        <path d={`M${centre} ${centre} L${rim.Safety.x} ${rim.Safety.y}`} fill="none" stroke={SAFETY} strokeWidth="5.8" strokeLinecap="round" strokeOpacity="0.64" />
+        <path d={`M${centre} ${centre} L${rim.Play.x} ${rim.Play.y}`} fill="none" stroke={PLAY} strokeWidth="5.8" strokeLinecap="round" strokeOpacity="0.64" />
         <motion.path
-          d={`M${centre} ${centre} L${plotted.Safety.x} ${plotted.Safety.y}`}
+          d={`M${centre} ${centre} L${rim.Safety.x} ${rim.Safety.y}`}
           fill="none"
           stroke={SAFETY}
-          strokeWidth="9"
+          strokeWidth="11"
           strokeLinecap="round"
-          strokeOpacity="0.28"
-          strokeDasharray="18 74"
-          animate={{ strokeDashoffset: [80, -16], opacity: [0.05, 0.5, 0.05] }}
-          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          strokeOpacity="0.26"
+          strokeDasharray="28 124"
+          animate={{ strokeDashoffset: [132, -28], opacity: [0.04, 0.48, 0.04] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.path
-          d={`M${centre} ${centre} L${plotted.Play.x} ${plotted.Play.y}`}
+          d={`M${centre} ${centre} L${rim.Play.x} ${rim.Play.y}`}
           fill="none"
           stroke={PLAY}
-          strokeWidth="9"
+          strokeWidth="11"
           strokeLinecap="round"
-          strokeOpacity="0.28"
-          strokeDasharray="18 74"
-          animate={{ strokeDashoffset: [80, -16], opacity: [0.05, 0.48, 0.05] }}
-          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 1.9 }}
+          strokeOpacity="0.26"
+          strokeDasharray="28 124"
+          animate={{ strokeDashoffset: [132, -28], opacity: [0.04, 0.48, 0.04] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 2.1 }}
         />
-        <circle cx={plotted.Challenge.x} cy={plotted.Challenge.y} r="4.8" fill="#A49D94" stroke="#FFF8F0" strokeWidth="1.5" />
         <motion.circle
-          cx={plotted.Safety.x}
-          cy={plotted.Safety.y}
-          r="5.3"
+          cx={rim.Safety.x}
+          cy={rim.Safety.y}
+          r="6.2"
           fill={SAFETY}
           stroke="#FFF8F0"
-          strokeWidth="1.5"
-          animate={{ opacity: [0.65, 1, 0.65] }}
-          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          strokeWidth="1.7"
+          animate={{ opacity: [0.72, 1, 0.72], scale: [1, 1.2, 1] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.circle
-          cx={plotted.Play.x}
-          cy={plotted.Play.y}
-          r="5.3"
+          cx={rim.Safety.x}
+          cy={rim.Safety.y}
+          r="14"
+          fill={SAFETY}
+          animate={{ opacity: [0.02, 0.22, 0.02], scale: [0.75, 1.25, 0.75] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.circle
+          cx={rim.Play.x}
+          cy={rim.Play.y}
+          r="6.2"
           fill={PLAY}
           stroke="#FFF8F0"
-          strokeWidth="1.5"
-          animate={{ opacity: [0.65, 1, 0.65] }}
-          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 1.9 }}
+          strokeWidth="1.7"
+          animate={{ opacity: [0.72, 1, 0.72], scale: [1, 1.2, 1] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 2.1 }}
+        />
+        <motion.circle
+          cx={rim.Play.x}
+          cy={rim.Play.y}
+          r="14"
+          fill={PLAY}
+          animate={{ opacity: [0.02, 0.22, 0.02], scale: [0.75, 1.25, 0.75] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 2.1 }}
         />
         <circle cx={centre} cy={centre} r="6.2" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.4" />
         <motion.circle
-          r="5.2"
+          r="5.6"
           fill="#1A1614"
           stroke="#FFF8F0"
           strokeWidth="1.4"
           animate={{
-            cx: [centre, plotted.Challenge.x, plotted.Challenge.x, centre, centre],
-            cy: [centre, plotted.Challenge.y, plotted.Challenge.y, centre, centre],
-            opacity: [0.92, 1, 1, 0.9, 0.92],
+            cx: [centre, challengeOvershoot.x, challengeOvershoot.x + 5, challengeOvershoot.x - 4, centre, centre],
+            cy: [centre, challengeOvershoot.y, challengeOvershoot.y - 5, challengeOvershoot.y + 3, centre, centre],
+            opacity: [0.94, 1, 0.92, 0.9, 0.88, 0.94],
+            scale: [1, 1.18, 1.08, 1.02, 0.92, 1],
           }}
-          transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut', times: [0, 0.42, 0.58, 0.9, 1] }}
+          transition={{
+            duration: 5.6,
+            repeat: Infinity,
+            times: [0, 0.18, 0.31, 0.42, 0.86, 1],
+            ease: ['easeIn', 'easeInOut', 'easeInOut', [0.18, 0.02, 0.18, 1], 'linear'],
+          }}
         />
       </motion.g>
 
