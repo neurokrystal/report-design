@@ -11,11 +11,17 @@ import { DesignNotes } from './components/DesignNotes';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('orientation');
+  const [activeShapeState, setActiveShapeState] = useState(0);
 
   return (
     <div className="flex min-h-screen bg-[#FDFCFA]">
       {/* MARKER-MAKE-KIT-INVOKED */}
-      <Sidebar activeSection={activeSection} onNavigate={setActiveSection} />
+      <Sidebar
+        activeSection={activeSection}
+        activeShapeState={activeShapeState}
+        onNavigate={setActiveSection}
+        onShapeStateChange={setActiveShapeState}
+      />
 
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto px-4 py-10 md:px-8 md:py-12">
@@ -34,7 +40,7 @@ export default function App() {
           </div>
 
           <div id="your-shape" className="mt-28 scroll-mt-24">
-            <YourShape />
+            <YourShape activeState={activeShapeState} onStateChange={setActiveShapeState} />
           </div>
 
           <PartDivider

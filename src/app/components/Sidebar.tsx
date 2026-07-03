@@ -4,10 +4,18 @@ import DimensionalLogo from "../../imports/Dimensional_Symbol.svg";
 
 interface SidebarProps {
   activeSection: string;
+  activeShapeState: number;
   onNavigate: (section: string) => void;
+  onShapeStateChange: (state: number) => void;
 }
 
 const subMenus: Record<string, { id: string; label: string }[]> = {
+  'your-shape': [
+    { id: 'your-shape-state-0', label: 'Your shape' },
+    { id: 'your-shape-state-1', label: 'Your instinct' },
+    { id: 'your-shape-state-2', label: 'Your blind spot' },
+    { id: 'your-shape-state-3', label: 'Go deeper' },
+  ],
   safety: [
     { id: 'safety-overview',   label: 'Overview' },
     { id: 'safety-alignment',  label: 'Alignment' },
@@ -41,7 +49,7 @@ const sections = [
   { id: 'design-notes',         label: '10. Design Notes' },
 ];
 
-export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
+export function Sidebar({ activeSection, activeShapeState, onNavigate, onShapeStateChange }: SidebarProps) {
   const [activeSubItem, setActiveSubItem] = useState<string>('');
   const onNavigateRef = useRef(onNavigate);
   useEffect(() => { onNavigateRef.current = onNavigate; }, [onNavigate]);
@@ -64,10 +72,15 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
     return () => observer.disconnect();
   }, []);
 
-  // ── Track sub-items for the active domain ──
+  // ── Track sub-items for the active domain/shape section ──
   useEffect(() => {
     const items = subMenus[activeSection];
     if (!items) { setActiveSubItem(''); return; }
+
+    if (activeSection === 'your-shape') {
+      setActiveSubItem(items[activeShapeState]?.id ?? items[0].id);
+      return;
+    }
 
     // Default to overview when domain becomes active
     setActiveSubItem(`${activeSection}-overview`);
@@ -86,7 +99,7 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [activeSection]);
+  }, [activeSection, activeShapeState]);
 
   return (
     <aside className="hidden w-52 bg-white border-r border-[#E5E3DD] flex-col h-screen sticky top-0 md:flex">
@@ -160,16 +173,24 @@ export function Sidebar({ activeSection, onNavigate }: SidebarProps) {
                     />
                     {items.map((item) => {
                       const subActive = activeSubItem === item.id;
+                      const shapeStateIndex = section.id === 'your-shape'
+                        ? items.findIndex(shapeItem => shapeItem.id === item.id)
+                        : -1;
                       return (
                         <button
                           key={item.id}
                           onClick={() => {
                             setActiveSubItem(item.id);
-                            document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                            if (section.id === 'your-shape' && shapeStateIndex >= 0) {
+                              onShapeStateChange(shapeStateIndex);
+                              document.getElementById('your-shape')?.scrollIntoView({ behavior: 'smooth' });
+                            } else {
+                              document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                            }
                           }}
                           className={`w-full text-left py-2.5 pl-5 transition-all relative flex items-center ${
                             subActive ? 'text-[#FF6B2B] text-xs' : 'text-[#8B8682] text-[10px] hover:text-[#1A1614]'
-                          }`}
+                          } focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B2B]/20`}
                         >
                           <span className={`absolute left-[3px] top-1/2 -translate-y-1/2 rounded-full border transition-all ${
                             subActive

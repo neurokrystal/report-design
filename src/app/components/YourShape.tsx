@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Compass, DoorOpen, EyeOff, Info, Triangle } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowRight, Info } from 'lucide-react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
@@ -16,10 +16,10 @@ const PROFILE_SCORES = {
 } as const;
 
 const stateNav = [
-  { label: 'Your shape', Icon: Triangle },
-  { label: 'What you lead with', Icon: Compass },
-  { label: 'Your blind spot', Icon: EyeOff },
-  { label: 'Go deeper', Icon: DoorOpen },
+  { label: 'Your shape' },
+  { label: 'Your instinct' },
+  { label: 'Your blind spot' },
+  { label: 'Go deeper' },
 ] as const;
 
 const doorways = [
@@ -46,14 +46,17 @@ const doorways = [
   },
 ] as const;
 
-export function YourShape() {
+export function YourShape({
+  activeState,
+  onStateChange,
+}: {
+  activeState: number;
+  onStateChange: Dispatch<SetStateAction<number>>;
+}) {
   const [infoOpen, setInfoOpen] = useState(false);
-  const [activeState, setActiveState] = useState(0);
-  const isFirst = activeState === 0;
-  const isLast = activeState === stateNav.length - 1;
 
   const goToState = (direction: 1 | -1) => {
-    setActiveState(current => Math.max(0, Math.min(stateNav.length - 1, current + direction)));
+    onStateChange(current => Math.max(0, Math.min(stateNav.length - 1, current + direction)));
   };
 
   return (
@@ -108,21 +111,12 @@ export function YourShape() {
 
       <ShapeStateControls
         activeState={activeState}
-        isFirst={isFirst}
-        isLast={isLast}
-        onSelect={setActiveState}
+        onSelect={onStateChange}
         onPrevious={() => goToState(-1)}
         onNext={() => goToState(1)}
       />
 
-      <section className="relative overflow-visible px-1 py-4 md:px-0 md:py-6">
-        <div
-          className="pointer-events-none absolute inset-x-[-5rem] bottom-[-4rem] top-[-2rem] opacity-75"
-          style={{
-            background: 'radial-gradient(circle at 78% 16%, rgba(242,85,26,0.11), transparent 30%), radial-gradient(circle at 20% 72%, rgba(255,187,48,0.08), transparent 32%), linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,255,255,0))',
-          }}
-        />
-
+      <section className="relative overflow-visible py-2 md:py-4">
         {activeState === 3 ? (
           <div className="relative">
             <AnimatePresence mode="wait">
@@ -202,7 +196,7 @@ function ShapeStateCopy({ state }: { state: number }) {
     return (
       <article className="max-w-[690px] py-3 lg:py-8">
         <h2 className="mb-9" style={stateTitleStyle}>
-          What you lead with
+          Your instinct
         </h2>
         <div className="max-w-[610px] space-y-5 text-[16px] leading-[1.78] text-[#332E29]" style={{ fontWeight: 300 }}>
           <p>
@@ -405,71 +399,53 @@ const stateTitleStyle = {
 
 function ShapeStateControls({
   activeState,
-  isFirst,
-  isLast,
   onSelect,
   onPrevious,
   onNext,
 }: {
   activeState: number;
-  isFirst: boolean;
-  isLast: boolean;
   onSelect: (index: number) => void;
   onPrevious: () => void;
   onNext: () => void;
 }) {
-  const progress = `${(activeState / (stateNav.length - 1)) * 75}%`;
-  const activeAccent = NAV_ORANGE;
-
   return (
-    <nav className="mb-8 mt-1" aria-label="Shape story states">
-      <div className="flex items-start gap-3 md:gap-5">
+    <nav className="mb-12 mt-2 max-w-[620px]" aria-label="Shape story states">
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={onPrevious}
-          disabled={isFirst}
-          className="mt-[6px] grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#DDD4C8] bg-white/72 text-[#867E74] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+          disabled={activeState === 0}
+          className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#DDD4C8] bg-white/60 text-[#8A8177] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
           aria-label="Previous shape state"
         >
-          <ArrowLeft size={15} strokeWidth={2.2} />
+          <span aria-hidden="true">←</span>
         </button>
 
-        <div className="relative flex-1 pt-1">
-          <div className="absolute left-[12.5%] right-[12.5%] top-[20px] h-px bg-[#D8CEC1]" />
-          <motion.div
-            className="absolute left-[12.5%] top-[19px] h-[2px] rounded-full"
-            style={{ backgroundColor: activeAccent }}
-            animate={{ width: progress }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          />
-          <div className="relative grid grid-cols-4 gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
             {stateNav.map((item, index) => {
               const active = activeState === index;
               const passed = activeState >= index;
-              const Icon = item.Icon;
               return (
                 <button
                   key={item.label}
                   type="button"
                   onClick={() => onSelect(index)}
-                  className="group flex min-w-0 flex-col items-center gap-2 text-center focus-visible:outline-none"
+                  className="group flex items-center gap-2.5 rounded-full py-1 pr-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/18"
                   aria-current={active}
                   aria-label={`Show ${item.label}`}
                 >
                   <span
-                    className="grid h-8 w-8 place-items-center rounded-full border transition-all duration-300"
+                    className="h-2.5 w-2.5 rounded-full border transition-all duration-300"
                     style={{
-                      borderColor: passed ? NAV_ORANGE : '#D8CEC1',
-                      backgroundColor: active ? '#FFF8F0' : '#FBF8F3',
-                      boxShadow: active ? `0 13px 24px -20px ${NAV_ORANGE}` : 'none',
-                      color: active || passed ? NAV_ORANGE : '#A39B91',
+                      borderColor: active || passed ? NAV_ORANGE : '#D6CEC4',
+                      backgroundColor: active ? NAV_ORANGE : passed ? '#FFE1D2' : '#FDFCFA',
+                      boxShadow: active ? '0 0 0 4px rgba(255,90,31,0.1)' : 'none',
                     }}
-                  >
-                    <Icon size={14} strokeWidth={active ? 2.35 : 1.9} />
-                  </span>
+                  />
                   <span
-                    className="block max-w-[7.2rem] text-[9.5px] font-extrabold uppercase leading-tight tracking-[0.1em] transition-colors max-sm:text-[8.5px] max-sm:tracking-[0.07em]"
-                    style={{ color: active ? NAV_ORANGE : passed ? '#5F554B' : '#968C80' }}
+                    className="block whitespace-nowrap text-[10px] font-extrabold uppercase leading-none tracking-[0.12em] transition-colors"
+                    style={{ color: active ? NAV_ORANGE : passed ? '#5F554B' : '#9A9288' }}
                   >
                     {item.label}
                   </span>
@@ -482,11 +458,11 @@ function ShapeStateControls({
         <button
           type="button"
           onClick={onNext}
-          disabled={isLast}
-          className="mt-[6px] grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F2551A] text-white shadow-[0_16px_34px_-24px_rgba(220,76,12,0.8)] transition-colors hover:bg-[#DC4C0C] disabled:cursor-default disabled:bg-[#D9D0C4] disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+          disabled={activeState === stateNav.length - 1}
+          className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#DDD4C8] bg-white/60 text-[#8A8177] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
           aria-label="Next shape state"
         >
-          <ArrowRight size={15} strokeWidth={2.2} />
+          <span aria-hidden="true">→</span>
         </button>
       </div>
     </nav>
