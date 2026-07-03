@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Compass, DoorOpen, EyeOff, Info, Triangle } from 'lucide-react';
 import { useState } from 'react';
 import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
@@ -16,10 +16,10 @@ const PROFILE_SCORES = {
 } as const;
 
 const stateNav = [
-  { label: 'Your shape' },
-  { label: 'How you move' },
-  { label: 'Your blind spot' },
-  { label: 'Pathways' },
+  { label: 'Your shape', Icon: Triangle },
+  { label: 'What you lead with', Icon: Compass },
+  { label: 'Your blind spot', Icon: EyeOff },
+  { label: 'Go deeper', Icon: DoorOpen },
 ] as const;
 
 const doorways = [
@@ -182,7 +182,16 @@ function ShapeStateCopy({ state }: { state: number }) {
             color: INK,
           }}
         >
-          <span className="block">Together, your domains form a Sharp Peak.</span>
+          <span className="block">
+            Together, your domains form a{' '}
+            <span className="relative inline-block pr-4 text-[#DC4C0C]">
+              Sharp Peak
+              <span className="absolute -right-1 top-0 inline-grid h-4 w-4 place-items-center" aria-hidden="true">
+                <span className="absolute h-3.5 w-3.5 rotate-45 border border-[#DC4C0C]/42 bg-[#FFF3EC]" />
+                <span className="absolute top-0 h-2 w-2 rotate-45 bg-[#DC4C0C]" />
+              </span>
+            </span>.
+          </span>
           <span className="mt-5 block">Challenge stands clearly above Safety and Play.</span>
         </h2>
       </div>
@@ -193,17 +202,17 @@ function ShapeStateCopy({ state }: { state: number }) {
     return (
       <article className="max-w-[690px] py-3 lg:py-8">
         <h2 className="mb-9" style={stateTitleStyle}>
-          How you move
+          What you lead with
         </h2>
         <div className="max-w-[610px] space-y-5 text-[16px] leading-[1.78] text-[#332E29]" style={{ fontWeight: 300 }}>
           <p>
-            You often lean into Challenge. You set direction easily, organise your life around what's next, and when something gets hard, you reach for drive - push harder, take it on, find the next thing to aim at.
+            You lead with Challenge — your drive. It's the domain you reach for first, and the one you're most sure of. When you want to get somewhere, this is the part you trust.
           </p>
           <p>
-            It works often enough that it's become your first move in almost any situation. When something feels off, you don't slow down to steady yourself, and you don't step back to enjoy anything - you set a goal.
+            It shows up as a way of moving: you set direction easily, organise your life around what's next, and when something gets hard, you push harder rather than pause. Over time it's become your answer to almost everything — when something feels off, you don't slow down to steady yourself or step back to enjoy anything. You set a goal.
           </p>
           <p>
-            Drive is what you know, and it's the one thing you're sure you can rely on.
+            There's good reason for it. Drive is what you know, and it's the one thing you're sure will respond when you call on it.
           </p>
         </div>
       </article>
@@ -218,14 +227,17 @@ function ShapeStateCopy({ state }: { state: number }) {
         </h2>
         <div className="max-w-[640px] space-y-6 text-[16px] leading-[1.72] text-[#332E29]" style={{ fontWeight: 300 }}>
           <p className="text-[18px] leading-[1.55] text-[#1A1614]" style={{ fontFamily: SERIF }}>
-            Inside and out, you look driven. The harder thing to see is what drive is being asked to carry.
+            Here's what's easy to miss: you reach for Challenge even when it's the one thing that can't help.
+          </p>
+          <p>
+            Confidence and steadiness come from Safety and Play — not from the next goal. But drive is the move you trust, so you make it again and again, for things it can't give you.
           </p>
           <div className="space-y-4 border-l border-[#E4D8CB] pl-6">
             {[
-              'A goal can focus you, but it cannot give you a settled sense of your own worth.',
-              'When the target is reached, the question underneath tends to return.',
-              'Because Safety and Play are quieter, pressure lands on Challenge first.',
-              'The shape can look powerful while the base has less balance than it needs.',
+              'You chase a goal, partly to feel better about yourself.',
+              'You reach it, yet nothing underneath actually shifts.',
+              "The feeling you wanted isn't something a goal can give.",
+              "So you pick a new goal — when it's your approach that keeps you stuck.",
             ].map(point => (
               <p key={point} className="relative">
                 <span className="absolute -left-[30px] top-[0.72em] h-1.5 w-1.5 rounded-full bg-[#DC4C0C]" />
@@ -233,6 +245,9 @@ function ShapeStateCopy({ state }: { state: number }) {
               </p>
             ))}
           </div>
+          <p className="text-[17px] leading-[1.58] text-[#1A1614]" style={{ fontFamily: SERIF }}>
+            Your blind spot: you keep choosing drive to get what it can't give — instead of the two routes that can.
+          </p>
         </div>
       </article>
     );
@@ -247,7 +262,7 @@ function ShapeStateCopy({ state }: { state: number }) {
           fontSize: 'clamp(2.15rem, 3.6vw, 3.35rem)',
         }}
       >
-        Go Deeper.
+        Go deeper.
       </h2>
       <p className="mx-auto max-w-[760px] text-[20px] leading-[1.75] text-[#201A16]" style={{ fontFamily: SERIF }}>
         Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
@@ -331,7 +346,7 @@ function PathwayDoorways() {
 
 function DoorDomainSymbol({ domain, color }: { domain: string; color: string }) {
   const active = (name: string) => domain === name;
-  const activeFill = getScoreFillPath(domain, PROFILE_SCORES[domain as keyof typeof PROFILE_SCORES]);
+  const domains = ['Challenge', 'Safety', 'Play'] as const;
   return (
     <svg viewBox="18 8 373 322" className="relative z-10 h-[112px] w-full max-w-[160px] overflow-visible" aria-hidden="true">
       <defs>
@@ -349,10 +364,33 @@ function DoorDomainSymbol({ domain, color }: { domain: string; color: string }) 
         </radialGradient>
       </defs>
       <circle cx={active('Challenge') ? 204.5 : active('Safety') ? 124 : 285} cy={active('Challenge') ? 126 : 254} r="92" fill={`url(#doorAura-${domain})`} />
-      <path d={DOMAIN_HEX_OUTLINES.Challenge} fill="#D8D0C5" opacity="0.13" />
-      <path d={DOMAIN_HEX_OUTLINES.Safety} fill="#D8D0C5" opacity="0.13" />
-      <path d={DOMAIN_HEX_OUTLINES.Play} fill="#D8D0C5" opacity="0.13" />
-      {activeFill && <path d={activeFill} fill={color} opacity="0.92" filter={`url(#doorGlow-${domain})`} />}
+      {domains.map(name => (
+        <path key={`${name}-field`} d={DOMAIN_HEX_OUTLINES[name]} fill="#DED6CB" opacity="0.18" />
+      ))}
+      {domains.map(name => {
+        const fill = getScoreFillPath(name, PROFILE_SCORES[name]);
+        if (!fill) return null;
+        const isActive = active(name);
+        return (
+          <path
+            key={`${name}-fill`}
+            d={fill}
+            fill={isActive ? color : '#CFC6B9'}
+            opacity={isActive ? 0.94 : 0.5}
+            filter={isActive ? `url(#doorGlow-${domain})` : undefined}
+          />
+        );
+      })}
+      {domains.map(name => (
+        <path
+          key={`${name}-outline`}
+          d={DOMAIN_HEX_OUTLINES[name]}
+          fill="none"
+          stroke={active(name) ? color : '#BFB5A8'}
+          strokeWidth={active(name) ? 1.7 : 1.1}
+          opacity={active(name) ? 0.62 : 0.36}
+        />
+      ))}
     </svg>
   );
 }
@@ -384,22 +422,22 @@ function ShapeStateControls({
   const activeAccent = NAV_ORANGE;
 
   return (
-    <nav className="mb-10 mt-1" aria-label="Shape story states">
-      <div className="flex items-start gap-4 md:gap-6">
+    <nav className="mb-8 mt-1" aria-label="Shape story states">
+      <div className="flex items-start gap-3 md:gap-5">
         <button
           type="button"
           onClick={onPrevious}
           disabled={isFirst}
-          className="mt-[11px] grid h-11 w-11 shrink-0 place-items-center rounded-full border border-[#DDD4C8] bg-white/72 text-[#867E74] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+          className="mt-[6px] grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#DDD4C8] bg-white/72 text-[#867E74] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
           aria-label="Previous shape state"
         >
-          <ArrowLeft size={17} strokeWidth={2.35} />
+          <ArrowLeft size={15} strokeWidth={2.2} />
         </button>
 
-        <div className="relative flex-1 pt-2">
-          <div className="absolute left-[12.5%] right-[12.5%] top-[27px] h-px bg-[#D8CEC1]" />
+        <div className="relative flex-1 pt-1">
+          <div className="absolute left-[12.5%] right-[12.5%] top-[20px] h-px bg-[#D8CEC1]" />
           <motion.div
-            className="absolute left-[12.5%] top-[26px] h-[3px] rounded-full"
+            className="absolute left-[12.5%] top-[19px] h-[2px] rounded-full"
             style={{ backgroundColor: activeAccent }}
             animate={{ width: progress }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
@@ -408,30 +446,29 @@ function ShapeStateControls({
             {stateNav.map((item, index) => {
               const active = activeState === index;
               const passed = activeState >= index;
+              const Icon = item.Icon;
               return (
                 <button
                   key={item.label}
                   type="button"
                   onClick={() => onSelect(index)}
-                  className="group flex min-w-0 flex-col items-center gap-3 text-center focus-visible:outline-none"
+                  className="group flex min-w-0 flex-col items-center gap-2 text-center focus-visible:outline-none"
                   aria-current={active}
                   aria-label={`Show ${item.label}`}
                 >
                   <span
-                    className="grid h-9 w-9 rotate-45 place-items-center border transition-all duration-300"
+                    className="grid h-8 w-8 place-items-center rounded-full border transition-all duration-300"
                     style={{
                       borderColor: passed ? NAV_ORANGE : '#D8CEC1',
-                      backgroundColor: active ? NAV_ORANGE : passed ? '#FFF8F0' : '#FBF8F3',
-                      boxShadow: active ? `0 14px 28px -22px ${NAV_ORANGE}` : 'none',
+                      backgroundColor: active ? '#FFF8F0' : '#FBF8F3',
+                      boxShadow: active ? `0 13px 24px -20px ${NAV_ORANGE}` : 'none',
+                      color: active || passed ? NAV_ORANGE : '#A39B91',
                     }}
                   >
-                    <span
-                      className="block h-2.5 w-2.5 rounded-full transition-colors"
-                      style={{ backgroundColor: active ? '#FFF8F0' : passed ? NAV_ORANGE : '#CFC5B8' }}
-                    />
+                    <Icon size={14} strokeWidth={active ? 2.35 : 1.9} />
                   </span>
                   <span
-                    className="block text-[10.5px] font-extrabold uppercase tracking-[0.14em] transition-colors max-sm:text-[9.5px]"
+                    className="block max-w-[7.2rem] text-[9.5px] font-extrabold uppercase leading-tight tracking-[0.1em] transition-colors max-sm:text-[8.5px] max-sm:tracking-[0.07em]"
                     style={{ color: active ? NAV_ORANGE : passed ? '#5F554B' : '#968C80' }}
                   >
                     {item.label}
@@ -446,10 +483,10 @@ function ShapeStateControls({
           type="button"
           onClick={onNext}
           disabled={isLast}
-          className="mt-[11px] grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F2551A] text-white shadow-[0_16px_34px_-24px_rgba(220,76,12,0.8)] transition-colors hover:bg-[#DC4C0C] disabled:cursor-default disabled:bg-[#D9D0C4] disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+          className="mt-[6px] grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#F2551A] text-white shadow-[0_16px_34px_-24px_rgba(220,76,12,0.8)] transition-colors hover:bg-[#DC4C0C] disabled:cursor-default disabled:bg-[#D9D0C4] disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
           aria-label="Next shape state"
         >
-          <ArrowRight size={17} strokeWidth={2.35} />
+          <ArrowRight size={15} strokeWidth={2.2} />
         </button>
       </div>
     </nav>
@@ -458,7 +495,7 @@ function ShapeStateControls({
 
 function EvolvingShape({ state }: { state: number }) {
   const centre = 150;
-  const maxRadius = 108;
+  const maxRadius = 116;
   const axes = [
     { key: 'Challenge', label: 'Challenge', value: PROFILE_SCORES.Challenge, angle: -90, color: CHALLENGE },
     { key: 'Play', label: 'Play', value: PROFILE_SCORES.Play, angle: 30, color: PLAY },
@@ -484,16 +521,17 @@ function EvolvingShape({ state }: { state: number }) {
   const keyDomains = state === 3 ? ['Safety', 'Play', 'Challenge'] : ['Challenge'];
   const domainPointOpacity = (domain: string) => {
     if (keyDomains.includes(domain)) return 1;
-    return state === 0 ? 0.7 : 0.34;
+    return state === 0 ? 0.36 : 0.34;
   };
   const axisOpacity = (domain: string) => {
     if (state === 1 && domain !== 'Challenge') return 0.18;
-    if (state === 2 && domain !== 'Challenge') return 0.28;
+    if (state === 2) return domain === 'Challenge' ? 0.28 : 0.22;
+    if (state === 0 && domain !== 'Challenge') return 0.18;
     return 0.42;
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[690px] pb-16 pt-12">
+    <div className="relative mx-auto w-full max-w-[760px] pb-16 pt-8">
       <motion.div
         className="absolute left-1/2 top-[5%] aspect-square w-[58%] -translate-x-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.32), rgba(255,171,0,0.14) 36%, rgba(242,85,26,0) 73%)' }}
@@ -517,7 +555,7 @@ function EvolvingShape({ state }: { state: number }) {
       />
       <div className="absolute inset-x-16 bottom-[11%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_70%)] blur-xl" />
 
-      <svg viewBox="0 0 300 300" className="relative z-10 mx-auto w-full max-w-[560px] overflow-visible" aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
+      <svg viewBox="-28 -18 356 344" className="relative z-10 mx-auto w-full max-w-[660px] overflow-visible" aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
         <title id="evolvingShapeTitle">Sharp Peak radar shape evolving through states</title>
         <desc id="evolvingShapeDesc">A three-axis radar shape shows Challenge reaching farther than Safety and Play, then animates movement and blind spot states.</desc>
         <defs>
@@ -533,14 +571,9 @@ function EvolvingShape({ state }: { state: number }) {
             <stop offset="0.45" stopColor="#FFBB30" stopOpacity="0.15" />
             <stop offset="1" stopColor="#F2551A" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="radarBlindShadow" x1="150" x2="260" y1="68" y2="246" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#1A1614" stopOpacity="0.18" />
-            <stop offset="0.58" stopColor="#1A1614" stopOpacity="0.08" />
-            <stop offset="1" stopColor="#1A1614" stopOpacity="0" />
-          </linearGradient>
           <linearGradient id="radarProfileLine" x1="116" x2="150" y1="174" y2="66" gradientUnits="userSpaceOnUse">
-            <stop stopColor={SAFETY} stopOpacity="0.88" />
-            <stop offset="0.58" stopColor="#FFBB30" stopOpacity="0.82" />
+            <stop stopColor="#AAA196" stopOpacity="0.58" />
+            <stop offset="0.58" stopColor="#D7A35F" stopOpacity="0.66" />
             <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.96" />
           </linearGradient>
         </defs>
@@ -581,31 +614,6 @@ function EvolvingShape({ state }: { state: number }) {
           />
         </motion.g>
 
-        <motion.g
-          animate={{ opacity: state === 2 ? 1 : 0 }}
-          transition={{ duration: 0.45, ease: 'easeInOut' }}
-        >
-          <motion.path
-            d={`M${plotted.Challenge.x} ${plotted.Challenge.y} C${plotted.Challenge.x + 40} ${plotted.Challenge.y + 86} ${centre + 92} ${centre + 112} ${centre + 126} ${centre + 136} L${centre + 78} ${centre + 144} C${centre + 38} ${centre + 102} ${centre + 8} ${centre + 40} ${plotted.Challenge.x} ${plotted.Challenge.y} Z`}
-            fill="url(#radarBlindShadow)"
-            animate={{ opacity: [0.52, 0.88, 0.52], x: [0, 5, 0] }}
-            transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.line
-            x1={plotted.Challenge.x}
-            y1={plotted.Challenge.y}
-            x2={centre}
-            y2={centre + 92}
-            stroke="#B96B38"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeDasharray="6 10"
-            strokeOpacity="0.34"
-            animate={{ opacity: [0.16, 0.45, 0.16] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.g>
-
         {[0.25, 0.5, 0.75, 1].map((scale, index) => (
           <motion.polygon
             key={scale}
@@ -623,8 +631,12 @@ function EvolvingShape({ state }: { state: number }) {
 
         {axes.map((axis, index) => {
           const end = point(axis.angle, maxRadius);
-          const label = point(axis.angle, maxRadius + 25);
+          const label = point(axis.angle, maxRadius + 21);
           const plottedPoint = plotted[axis.key];
+          const mutedForPeak = state === 0 && axis.key !== 'Challenge';
+          const mutedForLead = state === 1 && axis.key !== 'Challenge';
+          const axisColor = mutedForPeak ? '#A9A097' : axis.color;
+          const pointFill = mutedForPeak ? '#B7AEA5' : axis.color;
           return (
             <g key={axis.key}>
               <motion.line
@@ -632,7 +644,7 @@ function EvolvingShape({ state }: { state: number }) {
                 y1={centre}
                 x2={end.x}
                 y2={end.y}
-                stroke={axis.color}
+                stroke={axisColor}
                 strokeWidth="1.45"
                 strokeOpacity={axisOpacity(axis.key)}
                 strokeLinecap="round"
@@ -645,38 +657,27 @@ function EvolvingShape({ state }: { state: number }) {
                 y={label.y}
                 textAnchor={axis.key === 'Challenge' ? 'middle' : axis.key === 'Safety' ? 'end' : 'start'}
                 dominantBaseline="middle"
-                fill={axis.color}
-                fillOpacity={state === 1 && axis.key !== 'Challenge' ? 0.62 : 1}
-                fontSize="14"
-                fontWeight="800"
-                letterSpacing="1.1"
+                fill={axisColor}
+                fillOpacity={mutedForLead ? 0.48 : mutedForPeak ? 0.54 : 1}
+                fontSize="12.5"
+                fontFamily={SERIF}
+                fontWeight="600"
+                letterSpacing="0"
               >
                 {axis.label}
               </text>
-              <motion.text
-                x={label.x}
-                y={label.y + 16}
-                textAnchor={axis.key === 'Challenge' ? 'middle' : axis.key === 'Safety' ? 'end' : 'start'}
-                dominantBaseline="middle"
-                fill="#5B5148"
-                fontSize="9.5"
-                fontWeight="800"
-                letterSpacing="1.6"
-                animate={{ opacity: state === 1 && axis.key !== 'Challenge' ? 0.38 : 0.76 }}
-                transition={{ duration: 0.35 }}
-              >
-                {axis.value}
-              </motion.text>
-              <motion.circle
-                cx={plottedPoint.x}
-                cy={plottedPoint.y}
-                r={axis.key === 'Challenge' ? 6.6 : 5.8}
-                fill={axis.color}
-                stroke="#FFF8F0"
-                strokeWidth="2.2"
-                animate={{ opacity: domainPointOpacity(axis.key), scale: axis.key === 'Challenge' && state === 0 ? [1, 1.14, 1] : 1 }}
-                transition={{ duration: 2.8, repeat: axis.key === 'Challenge' && state === 0 ? Infinity : 0, ease: 'easeInOut' }}
-              />
+              {state !== 2 && (
+                <motion.circle
+                  cx={plottedPoint.x}
+                  cy={plottedPoint.y}
+                  r={axis.key === 'Challenge' ? 7.2 : 5.8}
+                  fill={pointFill}
+                  stroke="#FFF8F0"
+                  strokeWidth={axis.key === 'Challenge' ? 2.8 : 2}
+                  animate={{ opacity: domainPointOpacity(axis.key), scale: axis.key === 'Challenge' && state === 0 ? [1, 1.16, 1] : 1 }}
+                  transition={{ duration: 2.8, repeat: axis.key === 'Challenge' && state === 0 ? Infinity : 0, ease: 'easeInOut' }}
+                />
+              )}
             </g>
           );
         })}
@@ -685,11 +686,21 @@ function EvolvingShape({ state }: { state: number }) {
           animate={{ opacity: state === 1 ? 1 : 0 }}
           transition={{ duration: 0.45, ease: 'easeInOut' }}
         >
-          <circle cx={centre} cy={centre} r="19" fill="#FFF8F0" stroke="#E8D9CC" strokeWidth="1.3" />
           <path d={`M${centre} ${centre} C${centre - 14} ${centre + 4} ${plotted.Safety.x + 11} ${plotted.Safety.y + 3} ${plotted.Safety.x} ${plotted.Safety.y}`} fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
           <path d={`M${centre} ${centre} C${centre + 17} ${centre + 5} ${plotted.Play.x - 12} ${plotted.Play.y + 4} ${plotted.Play.x} ${plotted.Play.y}`} fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
           <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#FFF6E8" strokeWidth="8" strokeLinecap="round" strokeOpacity="0.82" />
           <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#F2551A" strokeWidth="3.8" strokeLinecap="round" strokeOpacity="0.92" />
+          {[0.26, 0.48, 0.7].map((amount, index) => (
+            <motion.circle
+              key={amount}
+              cx={centre + (plotted.Challenge.x - centre) * amount}
+              cy={centre + (plotted.Challenge.y - centre) * amount}
+              r={4.2}
+              fill="#1A1614"
+              animate={{ opacity: [0.03, 0.15 + index * 0.04, 0.03] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.28 }}
+            />
+          ))}
         </motion.g>
 
         <motion.g
@@ -701,16 +712,16 @@ function EvolvingShape({ state }: { state: number }) {
         >
           <motion.polygon
             points={profilePoints}
-            fill="#DC4C0C"
-            animate={{ fillOpacity: state === 1 ? 0.08 : state === 2 ? 0.12 : 0.1 }}
+            fill={state === 2 ? '#9B9389' : '#DC4C0C'}
+            animate={{ fillOpacity: state === 1 ? 0.08 : state === 2 ? 0.1 : state === 0 ? 0.16 : 0.1 }}
             transition={{ duration: 0.35 }}
           />
           <motion.polygon
             points={profilePoints}
             fill="none"
-            stroke="url(#radarProfileLine)"
+            stroke={state === 2 ? '#8D8378' : 'url(#radarProfileLine)'}
             strokeWidth={state === 1 ? 2.1 : 2.35}
-            animate={{ strokeOpacity: state === 1 ? 0.48 : 0.72 }}
+            animate={{ strokeOpacity: state === 1 ? 0.48 : state === 2 ? 0.22 : 0.72 }}
             transition={{ duration: 0.35 }}
           />
         </motion.g>
@@ -722,18 +733,17 @@ function EvolvingShape({ state }: { state: number }) {
         transition={{ duration: 0.45, ease: 'easeInOut' }}
         pointerEvents="none"
       >
-        <circle cx={centre} cy={centre} r="8.2" fill="#FFF8F0" stroke="#E5DACE" strokeWidth="1.2" />
         <motion.circle
-          r="6"
-          fill="#FFF8F0"
-          stroke="#F2551A"
-          strokeWidth="2.4"
+          r="4.9"
+          fill="#1A1614"
+          stroke="#FFF8F0"
+          strokeWidth="1.4"
           animate={{
-            cx: [centre, plotted.Play.x, centre, plotted.Safety.x, centre, plotted.Challenge.x, plotted.Challenge.x],
-            cy: [centre, plotted.Play.y, centre, plotted.Safety.y, centre, plotted.Challenge.y, plotted.Challenge.y],
-            opacity: [0.55, 0.72, 0.72, 0.72, 0.95, 1, 1, 0],
+            cx: [centre + 11, centre + 1, centre - 11, centre - 1, centre + 11, centre, plotted.Challenge.x, plotted.Challenge.x],
+            cy: [centre, centre - 11, centre, centre + 11, centre, centre, plotted.Challenge.y, plotted.Challenge.y],
+            opacity: [0.58, 0.78, 0.78, 0.78, 0.82, 0.94, 1, 0],
           }}
-          transition={{ duration: 6.2, repeat: Infinity, ease: 'easeInOut', times: [0, 0.12, 0.24, 0.36, 0.48, 0.84, 0.92, 1] }}
+          transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', times: [0, 0.12, 0.24, 0.36, 0.48, 0.56, 0.86, 1] }}
         />
         <motion.circle
           cx={plotted.Challenge.x}
@@ -751,25 +761,65 @@ function EvolvingShape({ state }: { state: number }) {
         transition={{ duration: 0.45, ease: 'easeInOut' }}
         pointerEvents="none"
       >
-        <motion.circle
-          cx={centre}
-          cy={centre}
-          r="22"
+        <path d={`M${centre} ${centre} L${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#9E978E" strokeWidth="6" strokeLinecap="round" strokeOpacity="0.42" />
+        <path d={`M${centre} ${centre} L${plotted.Safety.x} ${plotted.Safety.y}`} fill="none" stroke={SAFETY} strokeWidth="5.4" strokeLinecap="round" strokeOpacity="0.58" />
+        <path d={`M${centre} ${centre} L${plotted.Play.x} ${plotted.Play.y}`} fill="none" stroke={PLAY} strokeWidth="5.4" strokeLinecap="round" strokeOpacity="0.58" />
+        <motion.path
+          d={`M${centre} ${centre} L${plotted.Safety.x} ${plotted.Safety.y}`}
           fill="none"
-          stroke="#F2551A"
-          strokeWidth="1.5"
-          strokeOpacity="0.22"
-          animate={{ r: [16, 28, 16], opacity: [0.28, 0.08, 0.28] }}
-          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
+          stroke={SAFETY}
+          strokeWidth="9"
+          strokeLinecap="round"
+          strokeOpacity="0.28"
+          strokeDasharray="18 74"
+          animate={{ strokeDashoffset: [80, -16], opacity: [0.05, 0.5, 0.05] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.g
-          animate={{ x: [8, -4, 8], opacity: [0.18, 0.48, 0.18] }}
-          transition={{ duration: 4.6, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <path d="M255 72 C237 94 229 121 230 149" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.52" strokeDasharray="1 9" />
-          <path d="M270 92 C249 114 241 144 246 174" fill="none" stroke="#C65D32" strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.44" strokeDasharray="1 10" />
-          <path d="M282 115 C260 136 255 164 263 195" fill="none" stroke="#C65D32" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.36" strokeDasharray="1 9" />
-        </motion.g>
+        <motion.path
+          d={`M${centre} ${centre} L${plotted.Play.x} ${plotted.Play.y}`}
+          fill="none"
+          stroke={PLAY}
+          strokeWidth="9"
+          strokeLinecap="round"
+          strokeOpacity="0.28"
+          strokeDasharray="18 74"
+          animate={{ strokeDashoffset: [80, -16], opacity: [0.05, 0.48, 0.05] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 1.9 }}
+        />
+        <circle cx={plotted.Challenge.x} cy={plotted.Challenge.y} r="4.8" fill="#A49D94" stroke="#FFF8F0" strokeWidth="1.5" />
+        <motion.circle
+          cx={plotted.Safety.x}
+          cy={plotted.Safety.y}
+          r="5.3"
+          fill={SAFETY}
+          stroke="#FFF8F0"
+          strokeWidth="1.5"
+          animate={{ opacity: [0.65, 1, 0.65] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.circle
+          cx={plotted.Play.x}
+          cy={plotted.Play.y}
+          r="5.3"
+          fill={PLAY}
+          stroke="#FFF8F0"
+          strokeWidth="1.5"
+          animate={{ opacity: [0.65, 1, 0.65] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 1.9 }}
+        />
+        <circle cx={centre} cy={centre} r="6.2" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.4" />
+        <motion.circle
+          r="5.2"
+          fill="#1A1614"
+          stroke="#FFF8F0"
+          strokeWidth="1.4"
+          animate={{
+            cx: [centre, plotted.Challenge.x, plotted.Challenge.x, centre, centre],
+            cy: [centre, plotted.Challenge.y, plotted.Challenge.y, centre, centre],
+            opacity: [0.92, 1, 1, 0.9, 0.92],
+          }}
+          transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut', times: [0, 0.42, 0.58, 0.9, 1] }}
+        />
       </motion.g>
 
       </svg>

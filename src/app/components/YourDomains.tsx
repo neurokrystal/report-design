@@ -229,12 +229,12 @@ export function YourDomains() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-20 items-center max-w-6xl mx-auto w-full"
+              className="grid lg:grid-cols-[1.34fr_0.9fr] gap-10 lg:gap-14 items-center max-w-6xl mx-auto w-full"
             >
               <div className="flex justify-center lg:justify-center px-8 lg:px-0">
                 <div
                   data-domain-symbol="true"
-                  className="relative w-full max-w-[280px] lg:max-w-[320px] min-h-[470px] lg:min-h-[500px] mx-auto lg:mx-0 group mt-2 lg:mt-4 mb-8 lg:mb-0"
+                  className="relative w-full max-w-[360px] lg:max-w-[460px] min-h-[535px] lg:min-h-[610px] mx-auto lg:mx-0 group mt-2 lg:mt-4 mb-8 lg:mb-0"
                   onMouseLeave={() => setActiveDomain(null)}
                   style={{ perspective: '900px' }}
                 >
@@ -247,10 +247,10 @@ export function YourDomains() {
                       onSelect={setSelectedDomain}
                     />
                     <DomainMarker label="Challenge" color={DC} active={(activeDomain || selectedDomain) === 'Challenge'} delay={0} onEnter={() => setActiveDomain('Challenge')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Challenge')} className="absolute -top-5 left-1/2 -translate-x-1/2" />
-                    <DomainMarker label="Safety" color={DS} active={(activeDomain || selectedDomain) === 'Safety'} delay={0.85} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Safety')} className="absolute top-[72%] -left-14" />
-                    <DomainMarker label="Play" color={DP} active={(activeDomain || selectedDomain) === 'Play'} delay={1.7} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Play')} className="absolute top-[72%] -right-14" />
+                    <DomainMarker label="Safety" color={DS} active={(activeDomain || selectedDomain) === 'Safety'} delay={0.85} onEnter={() => setActiveDomain('Safety')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Safety')} className="absolute top-[70%] -left-12 lg:-left-14" />
+                    <DomainMarker label="Play" color={DP} active={(activeDomain || selectedDomain) === 'Play'} delay={1.7} onEnter={() => setActiveDomain('Play')} onLeave={() => setActiveDomain(null)} onSelect={() => setSelectedDomain('Play')} className="absolute top-[70%] -right-12 lg:-right-14" />
                   </div>
-                  <div className="absolute left-1/2 top-[316px] lg:top-[340px] z-30 w-[312px] -translate-x-1/2">
+                  <div className="absolute left-1/2 top-[382px] lg:top-[458px] z-30 w-[300px] -translate-x-1/2">
                     <AnimatePresence mode="wait">
                       {selectedDomain ? (
                         <DomainDescriptionPopover
@@ -372,7 +372,7 @@ export function YourDomains() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            className="fixed bottom-7 right-7 z-50 inline-flex items-center gap-2 rounded-full bg-[#1A1614] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_-24px_rgba(26,22,20,0.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/40"
+            className="fixed bottom-7 right-7 z-[999] inline-flex items-center gap-2 rounded-full bg-[#1A1614] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_-24px_rgba(26,22,20,0.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/40"
           >
             <ArrowLeft size={16} strokeWidth={2.4} />
             {returnTarget.label}
@@ -582,28 +582,28 @@ function DomainDescriptionPopover({ domain, onClose }: { domain: string | null; 
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.98 }}
       transition={{ duration: 0.22 }}
-      className="w-full rounded-[20px] border bg-white p-5 text-left shadow-[0_22px_48px_-32px_rgba(26,22,20,0.35)]"
+      className="w-full rounded-[18px] border bg-white p-4 text-left shadow-[0_20px_42px_-32px_rgba(26,22,20,0.35)]"
       style={{ borderColor: `${entry.color}3A` }}
     >
-      <div className="mb-2 flex items-center justify-between gap-4">
+      <div className="mb-1.5 flex items-center justify-between gap-4">
         <p className="text-[11px] uppercase tracking-[0.16em] font-bold" style={{ color: entry.color }}>{entry.label}</p>
-        <button type="button" onClick={onClose} className="-mr-2 -mt-2 grid h-9 w-9 place-items-center rounded-full text-[#8B8682] transition-colors hover:bg-[#F4F1EA] hover:text-[#1A1614]" aria-label="Close domain description">
+        <button type="button" onClick={onClose} className="-mr-2 -mt-2 grid h-8 w-8 place-items-center rounded-full text-[#8B8682] transition-colors hover:bg-[#F4F1EA] hover:text-[#1A1614]" aria-label="Close domain description">
           <X size={15} strokeWidth={2.4} />
         </button>
       </div>
-      <p className="text-sm leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>{copy[entry.key]}</p>
-      <div className="mt-5 border-t border-[#E8E1D6] pt-4">
-        <div className="mb-3 flex items-center gap-2">
-          <span className="grid h-7 w-7 place-items-center rounded-full bg-[#F8F4EE]" style={{ color: entry.color }}>
-            <Layers3 size={15} strokeWidth={2.2} />
+      <p className="text-[13px] leading-[1.55] text-[#3F3A35]" style={{ fontWeight: 300 }}>{copy[entry.key]}</p>
+      <div className="mt-3 border-t border-[#E8E1D6] pt-3">
+        <div className="mb-2.5 flex items-center gap-2">
+          <span className="grid h-6 w-6 place-items-center rounded-full bg-[#F8F4EE]" style={{ color: entry.color }}>
+            <Layers3 size={13} strokeWidth={2.2} />
           </span>
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#8B8682]">Dimensions of {entry.label}</p>
+          <p className="text-[9.5px] font-extrabold uppercase tracking-[0.14em] text-[#8B8682]">Dimensions of {entry.label}</p>
         </div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
           {entry.dimensions.map(dim => (
-            <div key={dim.name} className="border-l pl-3" style={{ borderColor: `${entry.color}55` }}>
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.13em]" style={{ color: entry.color }}>{dim.name}</p>
-              <p className="mt-1 text-[12px] text-[#5F5952]">{dim.band}</p>
+            <div key={dim.name} className="border-l pl-2.5" style={{ borderColor: `${entry.color}55` }}>
+              <p className="text-[9.5px] font-extrabold uppercase tracking-[0.11em]" style={{ color: entry.color }}>{dim.name}</p>
+              <p className="mt-0.5 text-[11.5px] text-[#5F5952]">{dim.band}</p>
             </div>
           ))}
         </div>
