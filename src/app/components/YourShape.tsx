@@ -523,8 +523,8 @@ function EvolvingShape({ state }: { state: number }) {
     Play: point(30, maxRadius),
     Safety: point(150, maxRadius),
   };
-  const challengeOvershoot = point(-90, maxRadius + 64);
-  const svgViewBox = state === 2 ? '-34 -84 368 430' : '-24 -24 348 352';
+  const challengeBeyond = point(-90, maxRadius + 7);
+  const svgViewBox = state === 2 ? '-24 -34 348 372' : '-24 -24 348 352';
   const keyDomains = state === 3 ? ['Safety', 'Play', 'Challenge'] : ['Challenge'];
   const domainPointOpacity = (domain: string) => {
     if (keyDomains.includes(domain)) return 1;
@@ -538,7 +538,7 @@ function EvolvingShape({ state }: { state: number }) {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[980px] pb-20 pt-4 lg:w-[122%]">
+    <div className="relative mx-auto w-full max-w-[920px] pb-16 pt-4 lg:w-[114%]">
       <motion.div
         className="absolute left-1/2 top-[5%] aspect-square w-[58%] -translate-x-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.32), rgba(255,171,0,0.14) 36%, rgba(242,85,26,0) 73%)' }}
@@ -562,7 +562,7 @@ function EvolvingShape({ state }: { state: number }) {
       />
       <div className="absolute inset-x-16 bottom-[11%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_70%)] blur-xl" />
 
-      <svg viewBox={svgViewBox} className={`relative z-10 mx-auto w-full overflow-visible ${state === 2 ? 'max-w-[920px]' : 'max-w-[840px]'}`} aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
+      <svg viewBox={svgViewBox} className={`relative z-10 mx-auto w-full overflow-visible ${state === 2 ? 'max-w-[820px]' : 'max-w-[800px]'}`} aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
         <title id="evolvingShapeTitle">Sharp Peak radar shape evolving through states</title>
         <desc id="evolvingShapeDesc">A three-axis radar shape shows Challenge reaching farther than Safety and Play, then animates movement and blind spot states.</desc>
         <defs>
@@ -582,6 +582,11 @@ function EvolvingShape({ state }: { state: number }) {
             <stop stopColor="#AAA196" stopOpacity="0.58" />
             <stop offset="0.58" stopColor="#D7A35F" stopOpacity="0.66" />
             <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.96" />
+          </linearGradient>
+          <linearGradient id="blindSpotCometTrail" x1="150" x2="150" y1="128" y2="166" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#F2551A" stopOpacity="0" />
+            <stop offset="0.62" stopColor="#F2551A" stopOpacity="0.32" />
+            <stop offset="1" stopColor="#FFF3D2" stopOpacity="0.9" />
           </linearGradient>
         </defs>
 
@@ -769,36 +774,57 @@ function EvolvingShape({ state }: { state: number }) {
         pointerEvents="none"
       >
         <path
-          d={`M${centre} ${centre} L${challengeOvershoot.x} ${challengeOvershoot.y}`}
+          d={`M${centre} ${centre} L${rim.Challenge.x} ${rim.Challenge.y}`}
           fill="none"
           stroke="#8E877E"
           strokeWidth="6.2"
           strokeLinecap="round"
           strokeOpacity="0.5"
         />
-        <path d={`M${centre} ${centre} L${rim.Safety.x} ${rim.Safety.y}`} fill="none" stroke={SAFETY} strokeWidth="5.8" strokeLinecap="round" strokeOpacity="0.64" />
-        <path d={`M${centre} ${centre} L${rim.Play.x} ${rim.Play.y}`} fill="none" stroke={PLAY} strokeWidth="5.8" strokeLinecap="round" strokeOpacity="0.64" />
         <motion.path
           d={`M${centre} ${centre} L${rim.Safety.x} ${rim.Safety.y}`}
           fill="none"
           stroke={SAFETY}
-          strokeWidth="11"
+          strokeWidth="5.8"
           strokeLinecap="round"
-          strokeOpacity="0.26"
-          strokeDasharray="28 124"
-          animate={{ strokeDashoffset: [132, -28], opacity: [0.04, 0.48, 0.04] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ opacity: [0.5, 0.9, 0.5] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.path
           d={`M${centre} ${centre} L${rim.Play.x} ${rim.Play.y}`}
           fill="none"
           stroke={PLAY}
-          strokeWidth="11"
+          strokeWidth="5.8"
           strokeLinecap="round"
-          strokeOpacity="0.26"
-          strokeDasharray="28 124"
-          animate={{ strokeDashoffset: [132, -28], opacity: [0.04, 0.48, 0.04] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 2.1 }}
+          animate={{ opacity: [0.46, 0.88, 0.46] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', delay: 2.2 }}
+        />
+        <motion.path
+          d={`M${centre} ${centre} L${rim.Safety.x} ${rim.Safety.y}`}
+          fill="none"
+          stroke={SAFETY}
+          strokeWidth="12"
+          strokeLinecap="round"
+          animate={{ opacity: [0.02, 0.24, 0.02] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.path
+          d={`M${centre} ${centre} L${rim.Play.x} ${rim.Play.y}`}
+          fill="none"
+          stroke={PLAY}
+          strokeWidth="12"
+          strokeLinecap="round"
+          animate={{ opacity: [0.02, 0.24, 0.02] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', delay: 2.2 }}
+        />
+        <circle cx={rim.Challenge.x} cy={rim.Challenge.y} r="6.2" fill="#9E978E" stroke="#FFF8F0" strokeWidth="1.7" />
+        <motion.circle
+          cx={rim.Challenge.x}
+          cy={rim.Challenge.y}
+          r="12"
+          fill="#8E877E"
+          animate={{ opacity: [0.06, 0.14, 0.06], scale: [0.88, 1.08, 0.88] }}
+          transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.circle
           cx={rim.Safety.x}
@@ -807,16 +833,16 @@ function EvolvingShape({ state }: { state: number }) {
           fill={SAFETY}
           stroke="#FFF8F0"
           strokeWidth="1.7"
-          animate={{ opacity: [0.72, 1, 0.72], scale: [1, 1.2, 1] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.2, 1] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.circle
           cx={rim.Safety.x}
           cy={rim.Safety.y}
           r="14"
           fill={SAFETY}
-          animate={{ opacity: [0.02, 0.22, 0.02], scale: [0.75, 1.25, 0.75] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ opacity: [0.02, 0.24, 0.02], scale: [0.75, 1.25, 0.75] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.circle
           cx={rim.Play.x}
@@ -825,36 +851,51 @@ function EvolvingShape({ state }: { state: number }) {
           fill={PLAY}
           stroke="#FFF8F0"
           strokeWidth="1.7"
-          animate={{ opacity: [0.72, 1, 0.72], scale: [1, 1.2, 1] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 2.1 }}
+          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.2, 1] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', delay: 2.2 }}
         />
         <motion.circle
           cx={rim.Play.x}
           cy={rim.Play.y}
           r="14"
           fill={PLAY}
-          animate={{ opacity: [0.02, 0.22, 0.02], scale: [0.75, 1.25, 0.75] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 2.1 }}
+          animate={{ opacity: [0.02, 0.24, 0.02], scale: [0.75, 1.25, 0.75] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', delay: 2.2 }}
         />
         <circle cx={centre} cy={centre} r="6.2" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.4" />
-        <motion.circle
-          r="5.6"
-          fill="#1A1614"
-          stroke="#FFF8F0"
-          strokeWidth="1.4"
+        <motion.g
           animate={{
-            cx: [centre, challengeOvershoot.x, challengeOvershoot.x + 5, challengeOvershoot.x - 4, centre, centre],
-            cy: [centre, challengeOvershoot.y, challengeOvershoot.y - 5, challengeOvershoot.y + 3, centre, centre],
-            opacity: [0.94, 1, 0.92, 0.9, 0.88, 0.94],
-            scale: [1, 1.18, 1.08, 1.02, 0.92, 1],
+            y: [centre, challengeBeyond.y, challengeBeyond.y, centre, centre],
+            opacity: [0, 1, 1, 0.84, 0],
+            scale: [0.88, 1.1, 1.02, 0.94, 0.88],
           }}
           transition={{
-            duration: 5.6,
+            duration: 4.8,
             repeat: Infinity,
-            times: [0, 0.18, 0.31, 0.42, 0.86, 1],
-            ease: ['easeIn', 'easeInOut', 'easeInOut', [0.18, 0.02, 0.18, 1], 'linear'],
+            times: [0, 0.16, 0.25, 0.82, 1],
+            ease: ['easeIn', 'linear', [0.12, 0.02, 0.3, 1], 'linear'],
           }}
-        />
+        >
+          <motion.line
+            x1={centre}
+            x2={centre}
+            y1="14"
+            y2="36"
+            stroke="url(#blindSpotCometTrail)"
+            strokeWidth="6.6"
+            strokeLinecap="round"
+            animate={{ y1: [14, 16, -30, -34, 14], y2: [34, 38, -4, -10, 34], opacity: [0, 0.96, 0.42, 0.28, 0] }}
+            transition={{
+              duration: 4.8,
+              repeat: Infinity,
+              times: [0, 0.16, 0.25, 0.82, 1],
+              ease: ['easeIn', 'linear', [0.12, 0.02, 0.3, 1], 'linear'],
+            }}
+          />
+          <circle cx={centre} cy="0" r="10" fill="#F2551A" opacity="0.12" />
+          <circle cx={centre} cy="0" r="6.2" fill="#FFF3D2" opacity="0.82" />
+          <circle cx={centre} cy="0" r="4.1" fill="#F2551A" opacity="0.9" />
+        </motion.g>
       </motion.g>
 
       </svg>
