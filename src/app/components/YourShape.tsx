@@ -756,11 +756,11 @@ function EvolvingShape({ state }: { state: number }) {
           stroke="#FFF8F0"
           strokeWidth="1.4"
           animate={{
-            cx: [centre, centre, plotted.Challenge.x, plotted.Challenge.x],
-            cy: [centre, centre, plotted.Challenge.y, plotted.Challenge.y],
-            opacity: [0.82, 0.94, 1, 0],
+            cx: [centre, centre, centre, plotted.Challenge.x, plotted.Challenge.x],
+            cy: [centre, centre, centre, plotted.Challenge.y, plotted.Challenge.y],
+            opacity: [0, 0.82, 0.94, 1, 0],
           }}
-          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', times: [0, 0.22, 0.78, 1] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', times: [0, 0.12, 0.24, 0.78, 1] }}
         />
         <motion.circle
           cx={plotted.Challenge.x}
@@ -781,10 +781,10 @@ function EvolvingShape({ state }: { state: number }) {
         <path
           d={`M${centre} ${centre} L${rim.Challenge.x} ${rim.Challenge.y}`}
           fill="none"
-          stroke="#8E877E"
-          strokeWidth="5.8"
+          stroke="#A49D94"
+          strokeWidth="3.2"
           strokeLinecap="round"
-          strokeOpacity="0.5"
+          strokeOpacity="0.28"
         />
         <motion.path
           d={`M${centre} ${centre} L${rim.Safety.x} ${rim.Safety.y}`}
@@ -870,15 +870,15 @@ function EvolvingShape({ state }: { state: number }) {
         <circle cx={centre} cy={centre} r="5.8" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.4" />
         <motion.g
           animate={{
-            y: [centre, centre, challengeBeyond.y, challengeBeyond.y, centre - 32, centre, centre],
-            opacity: [1, 1, 1, 1, 1, 1, 1],
-            scale: [1, 1, 1.08, 1.02, 1, 0.94, 1],
+            y: [centre, centre, challengeBeyond.y, challengeBeyond.y, centre, centre],
+            opacity: [1, 1, 1, 1, 1, 1],
+            scale: [1, 1, 1.06, 1.02, 1, 1],
           }}
           transition={{
             duration: 5.8,
             repeat: Infinity,
-            times: [0, 0.14, 0.64, 0.76, 0.9, 0.96, 1],
-            ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.62, 0, 0.9, 0.48], 'easeIn', 'linear'],
+            times: [0, 0.14, 0.64, 0.76, 0.94, 1],
+            ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.68, 0, 1, 0.62], 'linear'],
           }}
         >
           <motion.line
@@ -890,15 +890,15 @@ function EvolvingShape({ state }: { state: number }) {
             strokeWidth="6.6"
             strokeLinecap="round"
             animate={{
-              y1: [18, 18, 16, 8, 13, 20, 18],
-              y2: [36, 36, 40, 44, 39, 28, 36],
-              opacity: [0.1, 0.12, 0.72, 0.42, 0.62, 0.95, 0.1],
+              y1: [18, 18, 16, 8, 18, 18],
+              y2: [36, 36, 40, 44, 30, 36],
+              opacity: [0.1, 0.12, 0.72, 0.42, 0.88, 0.1],
             }}
             transition={{
               duration: 5.8,
               repeat: Infinity,
-              times: [0, 0.14, 0.64, 0.76, 0.9, 0.96, 1],
-              ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.62, 0, 0.9, 0.48], 'easeIn', 'linear'],
+              times: [0, 0.14, 0.64, 0.76, 0.94, 1],
+              ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.68, 0, 1, 0.62], 'linear'],
             }}
           />
           <circle cx={centre} cy="0" r="10" fill="#F2551A" opacity="0.12" />
