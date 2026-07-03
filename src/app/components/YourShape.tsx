@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowRight, Info } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
@@ -112,8 +112,6 @@ export function YourShape({
       <ShapeStateControls
         activeState={activeState}
         onSelect={onStateChange}
-        onPrevious={() => goToState(-1)}
-        onNext={() => goToState(1)}
       />
 
       <section className="relative overflow-visible py-2 md:py-4">
@@ -130,6 +128,12 @@ export function YourShape({
                 <ShapeStateCopy state={activeState} />
               </motion.div>
             </AnimatePresence>
+            <StateArrowControls
+              activeState={activeState}
+              onPrevious={() => goToState(-1)}
+              onNext={() => goToState(1)}
+              className="mx-auto mt-10 max-w-[870px]"
+            />
             <PathwayDoorways />
           </div>
         ) : (
@@ -145,6 +149,12 @@ export function YourShape({
                   className="lg:min-h-[510px]"
                 >
                   <ShapeStateCopy state={activeState} />
+                  <StateArrowControls
+                    activeState={activeState}
+                    onPrevious={() => goToState(-1)}
+                    onNext={() => goToState(1)}
+                    className={activeState === 0 ? 'mt-8 max-w-[530px]' : 'mt-9 max-w-[610px]'}
+                  />
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -164,7 +174,7 @@ export function YourShape({
 function ShapeStateCopy({ state }: { state: number }) {
   if (state === 0) {
     return (
-      <div className="flex lg:min-h-[510px] lg:items-center">
+      <div className="flex pt-4 lg:pt-20">
         <h2
           className="max-w-[530px]"
           style={{
@@ -400,29 +410,21 @@ const stateTitleStyle = {
 function ShapeStateControls({
   activeState,
   onSelect,
-  onPrevious,
-  onNext,
 }: {
   activeState: number;
   onSelect: (index: number) => void;
-  onPrevious: () => void;
-  onNext: () => void;
 }) {
   return (
-    <nav className="mb-12 mt-2 max-w-[620px]" aria-label="Shape story states">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onPrevious}
-          disabled={activeState === 0}
-          className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#DDD4C8] bg-white/60 text-[#8A8177] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
-          aria-label="Previous shape state"
-        >
-          <span aria-hidden="true">←</span>
-        </button>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+    <nav className="mb-12 mt-2 max-w-[690px]" aria-label="Shape story states">
+      <div className="relative">
+        <div className="absolute left-0 right-0 top-[calc(100%+0.55rem)] h-px bg-[#E3DBD0]" aria-hidden="true" />
+        <motion.div
+          className="absolute left-0 top-[calc(100%+0.5rem)] h-[2px] rounded-full bg-[#FF5A1F]"
+          animate={{ width: `${((activeState + 1) / stateNav.length) * 100}%` }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          aria-hidden="true"
+        />
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {stateNav.map((item, index) => {
               const active = activeState === index;
               const passed = activeState >= index;
@@ -431,20 +433,12 @@ function ShapeStateControls({
                   key={item.label}
                   type="button"
                   onClick={() => onSelect(index)}
-                  className="group flex items-center gap-2.5 rounded-full py-1 pr-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/18"
+                  className="group rounded-sm px-1.5 py-2 text-left focus:outline-none focus-visible:underline focus-visible:decoration-[#DC4C0C]/45 focus-visible:decoration-2 focus-visible:underline-offset-4"
                   aria-current={active}
                   aria-label={`Show ${item.label}`}
                 >
                   <span
-                    className="h-2.5 w-2.5 rounded-full border transition-all duration-300"
-                    style={{
-                      borderColor: active || passed ? NAV_ORANGE : '#D6CEC4',
-                      backgroundColor: active ? NAV_ORANGE : passed ? '#FFE1D2' : '#FDFCFA',
-                      boxShadow: active ? '0 0 0 4px rgba(255,90,31,0.1)' : 'none',
-                    }}
-                  />
-                  <span
-                    className="block whitespace-nowrap text-[10px] font-extrabold uppercase leading-none tracking-[0.12em] transition-colors"
+                    className="block whitespace-nowrap text-[10px] font-extrabold uppercase leading-none tracking-[0.13em] transition-colors"
                     style={{ color: active ? NAV_ORANGE : passed ? '#5F554B' : '#9A9288' }}
                   >
                     {item.label}
@@ -452,20 +446,46 @@ function ShapeStateControls({
                 </button>
               );
             })}
-          </div>
         </div>
-
-        <button
-          type="button"
-          onClick={onNext}
-          disabled={activeState === stateNav.length - 1}
-          className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#DDD4C8] bg-white/60 text-[#8A8177] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
-          aria-label="Next shape state"
-        >
-          <span aria-hidden="true">→</span>
-        </button>
       </div>
     </nav>
+  );
+}
+
+function StateArrowControls({
+  activeState,
+  onPrevious,
+  onNext,
+  className = '',
+}: {
+  activeState: number;
+  onPrevious: () => void;
+  onNext: () => void;
+  className?: string;
+}) {
+  return (
+    <div className={`flex justify-end gap-3 ${className}`}>
+      <button
+        type="button"
+        onClick={onPrevious}
+        disabled={activeState === 0}
+        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#DCD2C6] bg-white/72 px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#7A7168] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
+        aria-label="Previous shape state"
+      >
+        <ArrowLeft size={15} strokeWidth={2.2} />
+        Previous
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={activeState === stateNav.length - 1}
+        className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#F2551A] px-5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_18px_34px_-26px_rgba(220,76,12,0.85)] transition-colors hover:bg-[#DC4C0C] disabled:cursor-default disabled:bg-[#D9D0C4] disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+        aria-label="Next shape state"
+      >
+        Next
+        <ArrowRight size={15} strokeWidth={2.2} />
+      </button>
+    </div>
   );
 }
 
