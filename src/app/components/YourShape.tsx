@@ -188,13 +188,7 @@ function ShapeStateCopy({ state }: { state: number }) {
         >
           <span className="block">
             Together, your domains form a{' '}
-            <span className="relative inline-block pr-4 text-[#DC4C0C]">
-              Sharp Peak
-              <span className="absolute -right-1 top-0 inline-grid h-4 w-4 place-items-center" aria-hidden="true">
-                <span className="absolute h-3.5 w-3.5 rotate-45 border border-[#DC4C0C]/42 bg-[#FFF3EC]" />
-                <span className="absolute top-0 h-2 w-2 rotate-45 bg-[#DC4C0C]" />
-              </span>
-            </span>.
+            <span className="text-[#DC4C0C]">Sharp Peak</span>.
           </span>
           <span className="mt-5 block">Challenge stands clearly above Safety and Play.</span>
         </h2>
@@ -464,26 +458,24 @@ function StateArrowControls({
   className?: string;
 }) {
   return (
-    <div className={`flex justify-end gap-3 ${className}`}>
+    <div className={`flex justify-end gap-2.5 ${className}`}>
       <button
         type="button"
         onClick={onPrevious}
         disabled={activeState === 0}
-        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#DCD2C6] bg-white/72 px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#7A7168] transition-colors hover:bg-white disabled:cursor-default disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
+        className="grid h-9 w-9 place-items-center rounded-full border border-[#DCD2C6] bg-white/68 text-[#786F66] transition-colors hover:border-[#CBBFB2] hover:bg-white disabled:cursor-default disabled:opacity-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/18"
         aria-label="Previous shape state"
       >
-        <ArrowLeft size={15} strokeWidth={2.2} />
-        Previous
+        <ArrowLeft size={16} strokeWidth={2} />
       </button>
       <button
         type="button"
         onClick={onNext}
         disabled={activeState === stateNav.length - 1}
-        className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#F2551A] px-5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_18px_34px_-26px_rgba(220,76,12,0.85)] transition-colors hover:bg-[#DC4C0C] disabled:cursor-default disabled:bg-[#D9D0C4] disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
+        className="grid h-9 w-9 place-items-center rounded-full bg-[#F2551A] text-white shadow-[0_14px_24px_-20px_rgba(220,76,12,0.75)] transition-colors hover:bg-[#DC4C0C] disabled:cursor-default disabled:bg-[#D9D0C4] disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22"
         aria-label="Next shape state"
       >
-        Next
-        <ArrowRight size={15} strokeWidth={2.2} />
+        <ArrowRight size={16} strokeWidth={2} />
       </button>
     </div>
   );
