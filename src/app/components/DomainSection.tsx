@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import {
   AlertCircle,
-  ArrowLeft,
   ArrowDownRight,
   ArrowUpRight,
   Activity,
@@ -31,6 +30,7 @@ import safetyDimensionsSymbol from '../../imports/Safety_dimensions.svg';
 import lowSelfNew from '../../imports/10_Low_Self_new.svg';
 import lowOthersNew from '../../imports/10_Low_Others_new.svg';
 import { getScoreFillPath, DOMAIN_HEX_OUTLINES, DOMAIN_SPOKE_LINES, DOMAIN_SPOKE_TRANSFORM } from '../data/symbolFillPaths';
+import { FloatingReturnButton } from './FloatingReturnButton';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const FLAG_COLOR = '#DC4C0C';
@@ -380,17 +380,7 @@ function DomainImmersiveSection({ domain, content, score, band, felt, expressed,
         ))}
       </div>
       {returnTarget && (
-        <motion.button
-          type="button"
-          onClick={returnToOrigin}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 16 }}
-          className="fixed bottom-7 right-7 z-[999] inline-flex items-center gap-2 rounded-full bg-[#1A1614] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_-24px_rgba(26,22,20,0.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
-        >
-          <ArrowLeft size={16} strokeWidth={2.4} />
-          {returnTarget.label}
-        </motion.button>
+        <FloatingReturnButton label={returnTarget.label} onClick={returnToOrigin} accent="#FF5A1F" />
       )}
     </div>
   );

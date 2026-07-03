@@ -139,7 +139,7 @@ export function YourShape() {
             <PathwayDoorways />
           </div>
         ) : (
-          <div className={`relative grid gap-12 lg:grid-cols-[0.95fr_1.05fr] ${activeState === 0 ? 'lg:items-center' : 'lg:items-start'}`}>
+          <div className={`relative grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.28fr)] lg:gap-4 xl:gap-2 ${activeState === 0 ? 'lg:items-center' : 'lg:items-start'}`}>
             <div className="order-2 lg:order-1">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -155,7 +155,7 @@ export function YourShape() {
               </AnimatePresence>
             </div>
 
-            <div className="order-1 lg:order-2">
+            <div className="order-1 lg:order-2 lg:-mr-8 xl:-mr-12">
               <div className="lg:sticky lg:top-8">
                 <EvolvingShape state={activeState} />
               </div>
@@ -495,7 +495,7 @@ function ShapeStateControls({
 
 function EvolvingShape({ state }: { state: number }) {
   const centre = 150;
-  const maxRadius = 116;
+  const maxRadius = 124;
   const axes = [
     { key: 'Challenge', label: 'Challenge', value: PROFILE_SCORES.Challenge, angle: -90, color: CHALLENGE },
     { key: 'Play', label: 'Play', value: PROFILE_SCORES.Play, angle: 30, color: PLAY },
@@ -531,7 +531,7 @@ function EvolvingShape({ state }: { state: number }) {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[760px] pb-16 pt-8">
+    <div className="relative mx-auto w-full max-w-[900px] pb-20 pt-4 lg:w-[118%]">
       <motion.div
         className="absolute left-1/2 top-[5%] aspect-square w-[58%] -translate-x-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.32), rgba(255,171,0,0.14) 36%, rgba(242,85,26,0) 73%)' }}
@@ -555,7 +555,7 @@ function EvolvingShape({ state }: { state: number }) {
       />
       <div className="absolute inset-x-16 bottom-[11%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_70%)] blur-xl" />
 
-      <svg viewBox="-28 -18 356 344" className="relative z-10 mx-auto w-full max-w-[660px] overflow-visible" aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
+      <svg viewBox="-24 -24 348 352" className="relative z-10 mx-auto w-full max-w-[820px] overflow-visible" aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
         <title id="evolvingShapeTitle">Sharp Peak radar shape evolving through states</title>
         <desc id="evolvingShapeDesc">A three-axis radar shape shows Challenge reaching farther than Safety and Play, then animates movement and blind spot states.</desc>
         <defs>

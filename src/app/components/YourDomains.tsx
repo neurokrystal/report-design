@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flag, ArrowLeft, ArrowRight, Sparkles, Sprout, X, Layers3 } from 'lucide-react';
+import { Flag, ArrowRight, Sparkles, Sprout, X, Layers3 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { getScoreFillPath, DOMAIN_HEX_OUTLINES, DOMAIN_SPOKE_LINES, DOMAIN_SPOKE_TRANSFORM, DOMAIN_VERTEX_DOTS } from '../data/symbolFillPaths';
+import { FloatingReturnButton } from './FloatingReturnButton';
 
 import lowFuture from "../../imports/10__Low_Future.svg";
 import lowOthers from "../../imports/10__Low_Others.svg";
@@ -366,17 +367,7 @@ export function YourDomains() {
 
       <AnimatePresence>
         {returnTarget && (
-          <motion.button
-            type="button"
-            onClick={returnToOrigin}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            className="fixed bottom-7 right-7 z-[999] inline-flex items-center gap-2 rounded-full bg-[#1A1614] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_-24px_rgba(26,22,20,0.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/40"
-          >
-            <ArrowLeft size={16} strokeWidth={2.4} />
-            {returnTarget.label}
-          </motion.button>
+          <FloatingReturnButton label={returnTarget.label} onClick={returnToOrigin} accent="#DC4C0C" />
         )}
       </AnimatePresence>
     </div>
