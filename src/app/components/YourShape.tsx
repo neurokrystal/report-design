@@ -525,6 +525,11 @@ function EvolvingShape({ state }: { state: number }) {
   };
   const challengeBeyond = point(-90, maxRadius + 6);
   const svgViewBox = state === 2 ? '-18 -24 336 350' : '-18 -18 336 336';
+  const labelPoint = (domain: keyof typeof PROFILE_SCORES) => {
+    if (domain === 'Challenge') return { x: centre, y: rim.Challenge.y - 30, anchor: 'middle' as const };
+    if (domain === 'Safety') return { x: centre - 70, y: centre + 100, anchor: 'middle' as const };
+    return { x: centre + 70, y: centre + 100, anchor: 'middle' as const };
+  };
   const keyDomains = state === 3 ? ['Safety', 'Play', 'Challenge'] : ['Challenge'];
   const domainPointOpacity = (domain: string) => {
     if (keyDomains.includes(domain)) return 1;
@@ -643,7 +648,7 @@ function EvolvingShape({ state }: { state: number }) {
 
         {axes.map((axis, index) => {
           const end = point(axis.angle, maxRadius);
-          const label = point(axis.angle, maxRadius + 13);
+          const label = labelPoint(axis.key);
           const plottedPoint = plotted[axis.key];
           const mutedForPeak = state === 0 && axis.key !== 'Challenge';
           const mutedForLead = state === 1 && axis.key !== 'Challenge';
@@ -667,7 +672,7 @@ function EvolvingShape({ state }: { state: number }) {
               <text
                 x={label.x}
                 y={label.y}
-                textAnchor={axis.key === 'Challenge' ? 'middle' : axis.key === 'Safety' ? 'end' : 'start'}
+                textAnchor={label.anchor}
                 dominantBaseline="middle"
                 fill={axisColor}
                 fillOpacity={mutedForLead ? 0.48 : mutedForPeak ? 0.54 : 1}
@@ -698,8 +703,8 @@ function EvolvingShape({ state }: { state: number }) {
           animate={{ opacity: state === 1 ? 1 : 0 }}
           transition={{ duration: 0.45, ease: 'easeInOut' }}
         >
-          <path d={`M${centre} ${centre} C${centre - 14} ${centre + 4} ${plotted.Safety.x + 11} ${plotted.Safety.y + 3} ${plotted.Safety.x} ${plotted.Safety.y}`} fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
-          <path d={`M${centre} ${centre} C${centre + 17} ${centre + 5} ${plotted.Play.x - 12} ${plotted.Play.y + 4} ${plotted.Play.x} ${plotted.Play.y}`} fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
+          <path d={`M${centre} ${centre} L${plotted.Safety.x} ${plotted.Safety.y}`} fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
+          <path d={`M${centre} ${centre} L${plotted.Play.x} ${plotted.Play.y}`} fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
           <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#FFF6E8" strokeWidth="8" strokeLinecap="round" strokeOpacity="0.82" />
           <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#F2551A" strokeWidth="3.8" strokeLinecap="round" strokeOpacity="0.92" />
           {[0.26, 0.48, 0.7].map((amount, index) => (
@@ -751,11 +756,11 @@ function EvolvingShape({ state }: { state: number }) {
           stroke="#FFF8F0"
           strokeWidth="1.4"
           animate={{
-            cx: [centre + 11, centre + 1, centre - 11, centre - 1, centre + 11, centre, plotted.Challenge.x, plotted.Challenge.x],
-            cy: [centre, centre - 11, centre, centre + 11, centre, centre, plotted.Challenge.y, plotted.Challenge.y],
-            opacity: [0.58, 0.78, 0.78, 0.78, 0.82, 0.94, 1, 0],
+            cx: [centre, centre, plotted.Challenge.x, plotted.Challenge.x],
+            cy: [centre, centre, plotted.Challenge.y, plotted.Challenge.y],
+            opacity: [0.82, 0.94, 1, 0],
           }}
-          transition={{ duration: 5.6, repeat: Infinity, ease: 'easeInOut', times: [0, 0.12, 0.24, 0.36, 0.48, 0.56, 0.86, 1] }}
+          transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut', times: [0, 0.22, 0.78, 1] }}
         />
         <motion.circle
           cx={plotted.Challenge.x}
@@ -865,15 +870,15 @@ function EvolvingShape({ state }: { state: number }) {
         <circle cx={centre} cy={centre} r="5.8" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.4" />
         <motion.g
           animate={{
-            y: [centre, centre, challengeBeyond.y, challengeBeyond.y, centre, centre],
-            opacity: [1, 1, 1, 1, 1, 1],
-            scale: [1, 1, 1.08, 1.02, 0.94, 1],
+            y: [centre, centre, challengeBeyond.y, challengeBeyond.y, centre - 32, centre, centre],
+            opacity: [1, 1, 1, 1, 1, 1, 1],
+            scale: [1, 1, 1.08, 1.02, 1, 0.94, 1],
           }}
           transition={{
-            duration: 5.6,
+            duration: 5.8,
             repeat: Infinity,
-            times: [0, 0.16, 0.7, 0.79, 0.88, 1],
-            ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.05, 0.85, 0.12, 1], 'linear'],
+            times: [0, 0.14, 0.64, 0.76, 0.9, 0.96, 1],
+            ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.62, 0, 0.9, 0.48], 'easeIn', 'linear'],
           }}
         >
           <motion.line
@@ -885,15 +890,15 @@ function EvolvingShape({ state }: { state: number }) {
             strokeWidth="6.6"
             strokeLinecap="round"
             animate={{
-              y1: [18, 18, 16, 8, 18, 18],
-              y2: [36, 36, 40, 44, 30, 36],
-              opacity: [0.1, 0.12, 0.72, 0.42, 0.95, 0.1],
+              y1: [18, 18, 16, 8, 13, 20, 18],
+              y2: [36, 36, 40, 44, 39, 28, 36],
+              opacity: [0.1, 0.12, 0.72, 0.42, 0.62, 0.95, 0.1],
             }}
             transition={{
-              duration: 5.6,
+              duration: 5.8,
               repeat: Infinity,
-              times: [0, 0.16, 0.7, 0.79, 0.88, 1],
-              ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.05, 0.85, 0.12, 1], 'linear'],
+              times: [0, 0.14, 0.64, 0.76, 0.9, 0.96, 1],
+              ease: ['linear', [0.58, 0, 0.9, 1], 'linear', [0.62, 0, 0.9, 0.48], 'easeIn', 'linear'],
             }}
           />
           <circle cx={centre} cy="0" r="10" fill="#F2551A" opacity="0.12" />
