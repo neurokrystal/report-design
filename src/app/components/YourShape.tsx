@@ -13,6 +13,7 @@ const PROFILE_SCORES = {
   Play: 41,
   Challenge: 78,
 } as const;
+type DomainKey = keyof typeof PROFILE_SCORES;
 
 const stateNav = [
   { label: 'Your shape' },
@@ -56,6 +57,7 @@ export function YourShape({
   onStateChange: Dispatch<SetStateAction<number>>;
 }) {
   const [infoOpen, setInfoOpen] = useState(false);
+  const [activePathway, setActivePathway] = useState<DomainKey | null>(null);
 
   const goToState = (direction: 1 | -1) => {
     onStateChange(current => Math.max(0, Math.min(stateNav.length - 1, current + direction)));
@@ -117,8 +119,8 @@ export function YourShape({
       />
 
       <section className="relative overflow-visible py-2 md:py-4">
-        <div className={`relative grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.28fr)] lg:gap-4 xl:gap-2 ${activeState === 0 ? 'lg:items-center' : 'lg:items-start'}`}>
-          <div className="order-2 lg:order-1">
+        {activeState === 3 ? (
+          <div className="relative">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeState}
@@ -126,25 +128,51 @@ export function YourShape({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                className="lg:min-h-[510px]"
               >
                 <ShapeStateCopy state={activeState} />
-                <StateArrowControls
-                  activeState={activeState}
-                  onPrevious={() => goToState(-1)}
-                  onNext={() => goToState(1)}
-                  className={activeState === 0 ? 'mt-8 max-w-[530px]' : 'mt-9 max-w-[610px]'}
-                />
               </motion.div>
             </AnimatePresence>
+            <div className="mx-auto -mt-2 max-w-[920px]">
+              <EvolvingShape state={activeState} highlightedDomain={activePathway} />
+            </div>
+            <PathwayActions highlightedDomain={activePathway} onHighlight={setActivePathway} />
+            <StateArrowControls
+              activeState={activeState}
+              onPrevious={() => goToState(-1)}
+              onNext={() => goToState(1)}
+              className="mx-auto mt-8 max-w-[920px]"
+            />
           </div>
+        ) : (
+          <div className={`relative grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.28fr)] lg:gap-4 xl:gap-2 ${activeState === 0 ? 'lg:items-center' : 'lg:items-start'}`}>
+            <div className="order-2 lg:order-1">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeState}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                  className="lg:min-h-[510px]"
+                >
+                  <ShapeStateCopy state={activeState} />
+                  <StateArrowControls
+                    activeState={activeState}
+                    onPrevious={() => goToState(-1)}
+                    onNext={() => goToState(1)}
+                    className={activeState === 0 ? 'mt-8 max-w-[530px]' : 'mt-9 max-w-[610px]'}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-          <div className="order-1 lg:order-2 lg:-mr-8 xl:-mr-12">
-            <div className="lg:sticky lg:top-8">
-              <EvolvingShape state={activeState} />
+            <div className="order-1 lg:order-2 lg:-mr-8 xl:-mr-12">
+              <div className="lg:sticky lg:top-8">
+                <EvolvingShape state={activeState} />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
     </div>
   );
@@ -231,84 +259,75 @@ function ShapeStateCopy({ state }: { state: number }) {
   }
 
   return (
-    <article className="max-w-[690px] py-3 lg:py-8">
+    <article className="mx-auto max-w-[940px] py-3 text-center lg:py-6">
       <h2 className="mb-9" style={stateTitleStyle}>
         Go deeper.
       </h2>
-      <p className="max-w-[610px] text-[17px] leading-[1.76] text-[#332E29]" style={{ fontWeight: 300 }}>
+      <p className="mx-auto max-w-[790px] text-[19px] leading-[1.72] text-[#332E29]" style={{ fontFamily: SERIF }}>
         Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
       </p>
-      <PathwayActions />
     </article>
   );
 }
 
-function PathwayActions() {
+function PathwayActions({
+  highlightedDomain,
+  onHighlight,
+}: {
+  highlightedDomain: DomainKey | null;
+  onHighlight: (domain: DomainKey | null) => void;
+}) {
   return (
-    <div className="relative mt-10 max-w-[620px]">
-      <div className="pointer-events-none absolute left-[31px] top-9 hidden h-[calc(100%-4.5rem)] w-px bg-gradient-to-b from-[#42A68E]/45 via-[#FFAB00]/45 to-[#DC4C0C]/45 sm:block" />
+    <div className="mx-auto -mt-4 grid max-w-[1010px] gap-4 md:grid-cols-3">
       {doorways.map((door, index) => (
         <motion.button
           key={door.domain}
           type="button"
           onClick={() => document.getElementById(door.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-          className="group relative mb-3 w-full overflow-hidden rounded-[24px] border border-[#E5DACE] bg-[#FFFCF7]/82 py-4 pl-5 pr-4 text-left shadow-[0_22px_54px_-48px_rgba(26,22,20,0.46)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22 sm:pl-20"
+          onMouseEnter={() => onHighlight(door.domain)}
+          onMouseLeave={() => onHighlight(null)}
+          onFocus={() => onHighlight(door.domain)}
+          onBlur={() => onHighlight(null)}
+          className="group relative min-h-[228px] overflow-hidden rounded-[28px] border bg-[#FFFCF7]/86 p-5 text-left shadow-[0_24px_62px_-54px_rgba(26,22,20,0.52)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22"
+          style={{
+            borderColor: highlightedDomain === door.domain ? door.color : '#E5DACE',
+          }}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.36, delay: index * 0.05 }}
         >
           <div
-            className="pointer-events-none absolute -right-10 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-35"
+            className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-45"
+            style={{ background: `radial-gradient(circle, ${door.color}88, transparent 68%)` }}
+          />
+          <div
+            className="absolute inset-x-5 top-0 h-[3px] rounded-full opacity-80"
             style={{ backgroundColor: door.color }}
           />
-          <div className="absolute left-4 top-1/2 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/80 bg-white shadow-[0_12px_32px_-26px_rgba(26,22,20,0.55)] sm:grid">
-            <PathwayGlyph domain={door.domain} color={door.color} />
-          </div>
-          <div className="relative grid gap-3 sm:grid-cols-[0.68fr_auto] sm:items-center">
-            <div>
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <p className="text-[12px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
+          <div className="relative flex h-full flex-col">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[13px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
                   {door.domain}
                 </p>
-                <span className="h-px w-6 opacity-45" style={{ backgroundColor: door.color }} />
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8E857B]">
+                <p className="mt-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8E857B]">
                   {door.result}
                 </p>
               </div>
-              <p className="text-[16px] leading-snug text-[#1D1815]" style={{ fontFamily: SERIF }}>
-                {door.copy}
-              </p>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-[#70675E]" style={{ fontWeight: 300 }}>
-                {door.hook}
-              </p>
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/82 transition-transform group-hover:translate-x-1" style={{ color: door.color }}>
+                <ArrowRight size={16} strokeWidth={2.1} />
+              </span>
             </div>
-            <div className="grid h-8 w-8 place-items-center rounded-full bg-white/82 transition-transform group-hover:translate-x-1" style={{ color: door.color }}>
-              <ArrowRight size={16} strokeWidth={2.1} />
-            </div>
+            <p className="mt-7 text-[20px] leading-[1.18] text-[#1D1815]" style={{ fontFamily: SERIF }}>
+              {door.copy}
+            </p>
+            <p className="mt-auto pt-5 text-[13.5px] leading-relaxed text-[#70675E]" style={{ fontWeight: 300 }}>
+              {door.hook}
+            </p>
           </div>
         </motion.button>
       ))}
     </div>
-  );
-}
-
-function PathwayGlyph({ domain, color }: { domain: string; color: string }) {
-  const active = {
-    Challenge: { x: 18, y: 4 },
-    Safety: { x: 6, y: 25 },
-    Play: { x: 30, y: 25 },
-  }[domain] || { x: 18, y: 4 };
-
-  return (
-    <svg viewBox="0 0 36 32" className="h-6 w-7 overflow-visible" aria-hidden="true">
-      <path d="M18 16 L18 4" stroke="#CFC5B8" strokeWidth="1" strokeLinecap="round" />
-      <path d="M18 16 L6 25" stroke="#CFC5B8" strokeWidth="1" strokeLinecap="round" />
-      <path d="M18 16 L30 25" stroke="#CFC5B8" strokeWidth="1" strokeLinecap="round" />
-      <path d={`M18 16 L${active.x} ${active.y}`} stroke={color} strokeWidth="2" strokeLinecap="round" />
-      <circle cx="18" cy="16" r="2.4" fill="#FFF8F0" stroke="#CFC5B8" strokeWidth="1" />
-      <circle cx={active.x} cy={active.y} r="3.4" fill={color} />
-      <path d="M18 4 L30 25 L6 25 Z" fill="none" stroke="#E3D9CC" strokeWidth="0.8" opacity="0.6" />
-    </svg>
   );
 }
 
@@ -400,7 +419,13 @@ function StateArrowControls({
   );
 }
 
-function EvolvingShape({ state }: { state: number }) {
+function EvolvingShape({
+  state,
+  highlightedDomain = null,
+}: {
+  state: number;
+  highlightedDomain?: DomainKey | null;
+}) {
   const centre = 150;
   const maxRadius = 116;
   const axes = [
@@ -872,56 +897,49 @@ function EvolvingShape({ state }: { state: number }) {
           transition={{ duration: 8.4, repeat: Infinity, ease: 'easeInOut', delay: 1.15 }}
         />
         {[
-          { key: 'Safety', point: plotted.Safety, color: SAFETY, delay: 0 },
-          { key: 'Play', point: plotted.Play, color: PLAY, delay: 1.45 },
-          { key: 'Challenge', point: plotted.Challenge, color: CHALLENGE, delay: 2.9 },
-        ].map(route => (
-          <g key={route.key}>
-            <motion.path
-              d={`M${centre} ${centre} L${route.point.x} ${route.point.y}`}
-              fill="none"
-              stroke={route.color}
-              strokeWidth="3.8"
-              strokeLinecap="round"
-              animate={{ opacity: [0.24, 0.92, 0.24], strokeWidth: [2.1, 5.1, 2.1] }}
-              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: route.delay }}
-            />
-            <motion.path
-              d={`M${centre} ${centre} L${route.point.x} ${route.point.y}`}
-              fill="none"
-              stroke={route.color}
-              strokeWidth="16"
-              strokeLinecap="round"
-              animate={{ opacity: [0, 0.2, 0] }}
-              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: route.delay }}
-            />
-            <motion.circle
-              cx={route.point.x}
-              cy={route.point.y}
-              r="7.4"
-              fill={route.color}
-              stroke="#FFF8F0"
-              strokeWidth="2"
-              filter="url(#pathwaySparkGlow)"
-              animate={{ scale: [0.86, 1.24, 0.86], opacity: [0.72, 1, 0.72] }}
-              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: route.delay }}
-            />
-            <motion.rect
-              x={route.point.x - 3.8}
-              y={route.point.y - 3.8}
-              width="7.6"
-              height="7.6"
-              rx="1.2"
-              fill="#FFF8F0"
-              stroke={route.color}
-              strokeWidth="1.2"
-              transform={`rotate(45 ${route.point.x} ${route.point.y})`}
-              animate={{ opacity: [0, 0.72, 0], scale: [0.62, 1.08, 0.62] }}
-              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: route.delay + 0.25 }}
-              style={{ transformOrigin: `${route.point.x}px ${route.point.y}px` }}
-            />
-          </g>
-        ))}
+          { key: 'Safety' as DomainKey, point: plotted.Safety, color: SAFETY, delay: 0 },
+          { key: 'Play' as DomainKey, point: plotted.Play, color: PLAY, delay: 1.45 },
+          { key: 'Challenge' as DomainKey, point: plotted.Challenge, color: CHALLENGE, delay: 2.9 },
+        ].map(route => {
+          const selected = highlightedDomain === route.key;
+          const dimmed = highlightedDomain !== null && !selected;
+          return (
+            <g key={route.key}>
+              <motion.path
+                d={`M${centre} ${centre} L${route.point.x} ${route.point.y}`}
+                fill="none"
+                stroke={route.color}
+                strokeWidth={selected ? 5.6 : 3.8}
+                strokeLinecap="round"
+                animate={{
+                  opacity: dimmed ? 0.16 : selected ? [0.82, 1, 0.82] : [0.24, 0.92, 0.24],
+                  strokeWidth: selected ? [4.8, 6.2, 4.8] : [2.1, 5.1, 2.1],
+                }}
+                transition={{ duration: selected ? 2.4 : 4.2, repeat: Infinity, ease: 'easeInOut', delay: selected ? 0 : route.delay }}
+              />
+              <motion.path
+                d={`M${centre} ${centre} L${route.point.x} ${route.point.y}`}
+                fill="none"
+                stroke={route.color}
+                strokeWidth={selected ? 22 : 16}
+                strokeLinecap="round"
+                animate={{ opacity: dimmed ? 0 : selected ? [0.08, 0.28, 0.08] : [0, 0.2, 0] }}
+                transition={{ duration: selected ? 2.4 : 4.2, repeat: Infinity, ease: 'easeInOut', delay: selected ? 0 : route.delay }}
+              />
+              <motion.circle
+                cx={route.point.x}
+                cy={route.point.y}
+                r={selected ? 8.8 : 7.4}
+                fill={route.color}
+                stroke="#FFF8F0"
+                strokeWidth="2"
+                filter="url(#pathwaySparkGlow)"
+                animate={{ scale: dimmed ? 0.78 : selected ? [1.05, 1.36, 1.05] : [0.86, 1.24, 0.86], opacity: dimmed ? 0.34 : [0.72, 1, 0.72] }}
+                transition={{ duration: selected ? 2.4 : 4.2, repeat: Infinity, ease: 'easeInOut', delay: selected ? 0 : route.delay }}
+              />
+            </g>
+          );
+        })}
         <motion.circle
           cx={centre}
           cy={centre}
@@ -953,15 +971,12 @@ function EvolvingShape({ state }: { state: number }) {
             { x: centre + 36, y: centre + 28, color: '#F2551A' },
           ][index];
           return (
-            <motion.rect
+            <motion.circle
               key={index}
-              x={spark.x - 2.4}
-              y={spark.y - 2.4}
-              width="4.8"
-              height="4.8"
-              rx="0.8"
+              cx={spark.x}
+              cy={spark.y}
+              r="2.6"
               fill={spark.color}
-              transform={`rotate(45 ${spark.x} ${spark.y})`}
               animate={{ opacity: [0.05, 0.72, 0.05], scale: [0.72, 1.2, 0.72] }}
               transition={{ duration: 3.9, repeat: Infinity, ease: 'easeInOut', delay: index * 0.42 }}
               style={{ transformOrigin: `${spark.x}px ${spark.y}px` }}
