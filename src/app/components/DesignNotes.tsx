@@ -1,10 +1,16 @@
 import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const SAFETY = '#42A68E';
 const CHALLENGE = '#DC4C0C';
 const PLAY = '#FFAB00';
+const ARCHIVE_PROFILE_SCORES = {
+  Safety: 27,
+  Play: 41,
+  Challenge: 78,
+} as const;
 
 const SHAPES = [
   {
@@ -129,6 +135,27 @@ const RADAR_PROTOTYPES = [
   },
 ];
 
+const ARCHIVED_DOORWAYS = [
+  {
+    domain: 'Safety',
+    copy: 'Where steadiness comes from, and where it currently has to be worked for.',
+    hook: 'Start here to understand calm, trust, and ease.',
+    color: SAFETY,
+  },
+  {
+    domain: 'Play',
+    copy: 'What brings back energy, enjoyment, and flexibility.',
+    hook: 'Start here to understand lightness and rest.',
+    color: PLAY,
+  },
+  {
+    domain: 'Challenge',
+    copy: 'The engine behind your drive and direction.',
+    hook: 'Start here to understand the strongest domain in your profile.',
+    color: CHALLENGE,
+  },
+] as const;
+
 export function DesignNotes() {
   return (
     <section className="space-y-10">
@@ -244,6 +271,21 @@ export function DesignNotes() {
               <LegacySectionThreeGraphic state={item.state} />
             </motion.article>
           ))}
+        </div>
+
+        <div className="mt-8 rounded-[30px] border border-[#E5D8C8] bg-white/72 p-5 md:p-6">
+          <div className="grid gap-4 md:grid-cols-[0.28fr_0.72fr] md:items-end">
+            <div>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#8B8278]">Archived panel 4</p>
+              <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.55rem, 2.6vw, 2.2rem)', lineHeight: 1, color: '#15110F' }}>
+                Doorway action concept.
+              </h3>
+            </div>
+            <p className="text-[14.5px] leading-relaxed text-[#5C574F]" style={{ fontWeight: 300 }}>
+              Preserved from the earlier Go Deeper state in case the doorway metaphor needs to return.
+            </p>
+          </div>
+          <ArchivedDoorwayPanel />
         </div>
       </div>
 
@@ -515,6 +557,126 @@ function LegacyPathwaysGraphic() {
         ))}
       </svg>
     </div>
+  );
+}
+
+function ArchivedDoorwayPanel() {
+  return (
+    <div className="relative mt-8">
+      <svg
+        viewBox="0 0 880 116"
+        className="pointer-events-none absolute left-1/2 top-[-72px] hidden h-[120px] w-[86%] -translate-x-1/2 overflow-visible opacity-70 md:block"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="archivedDoorwayThread" x1="130" x2="750" y1="70" y2="70" gradientUnits="userSpaceOnUse">
+            <stop stopColor={SAFETY} stopOpacity="0.82" />
+            <stop offset="0.5" stopColor="#FFBB30" stopOpacity="0.88" />
+            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.76" />
+          </linearGradient>
+        </defs>
+        <circle cx="440" cy="34" r="5.5" fill="#F8F3EB" stroke="#E6D7C6" strokeWidth="2" />
+        <path d="M440 34 C360 46 284 70 190 103" fill="none" stroke="url(#archivedDoorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.5" />
+        <path d="M440 34 C440 58 440 78 440 103" fill="none" stroke="url(#archivedDoorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.48" />
+        <path d="M440 34 C520 46 596 70 690 103" fill="none" stroke="url(#archivedDoorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.5" />
+        <motion.circle
+          r="5"
+          fill="#FFBB30"
+          animate={{
+            cx: [440, 190, 440, 440, 440, 690, 440],
+            cy: [34, 103, 34, 103, 34, 103, 34],
+            opacity: [0.22, 0.88, 0.22, 0.88, 0.22, 0.88, 0.22],
+          }}
+          transition={{ duration: 8.4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </svg>
+
+      <div className="grid gap-5 md:grid-cols-3">
+        {ARCHIVED_DOORWAYS.map(door => (
+          <div
+            key={door.domain}
+            className="group relative min-h-[318px] overflow-hidden border border-[#E2D5C5] bg-[#FFFCF7] px-6 pb-6 pt-7 text-left shadow-[0_28px_70px_-58px_rgba(26,22,20,0.48)]"
+            style={{ borderTopLeftRadius: 150, borderTopRightRadius: 150, borderBottomLeftRadius: 28, borderBottomRightRadius: 28 }}
+          >
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-32 opacity-28"
+              style={{ background: `radial-gradient(circle at 50% 12%, ${door.color}3D, transparent 62%)` }}
+            />
+            <div className="relative flex h-full flex-col">
+              <div className="mb-5 flex h-[104px] items-center justify-center">
+                <ArchivedDoorDomainSymbol domain={door.domain} color={door.color} />
+              </div>
+              <p className="text-[13px] font-extrabold uppercase tracking-[0.18em]" style={{ color: door.color }}>
+                {door.domain}
+              </p>
+              <p className="mt-4 min-h-[98px] text-[21px] leading-[1.22] text-[#1D1815]" style={{ fontFamily: SERIF }}>
+                {door.copy}
+              </p>
+              <p className="mt-4 min-h-[58px] text-[14px] leading-relaxed text-[#665E55]" style={{ fontWeight: 300 }}>
+                {door.hook}
+              </p>
+              <div className="mt-auto flex items-center justify-between border-t border-[#E5DACE] pt-4">
+                <span className="text-[10.5px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
+                  Start with {door.domain}
+                </span>
+                <ArrowRight size={17} strokeWidth={2.2} style={{ color: door.color }} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ArchivedDoorDomainSymbol({ domain, color }: { domain: string; color: string }) {
+  const active = (name: string) => domain === name;
+  const domains = ['Challenge', 'Safety', 'Play'] as const;
+  return (
+    <svg viewBox="18 8 373 322" className="relative z-10 h-[104px] w-full max-w-[150px] overflow-visible" aria-hidden="true">
+      <defs>
+        <filter id={`archivedDoorGlow-${domain}`} x="-35%" y="-35%" width="170%" height="170%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <radialGradient id={`archivedDoorAura-${domain}`} cx="50%" cy="50%" r="55%">
+          <stop offset="0" stopColor={color} stopOpacity="0.24" />
+          <stop offset="0.62" stopColor={color} stopOpacity="0.08" />
+          <stop offset="1" stopColor={color} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx={active('Challenge') ? 204.5 : active('Safety') ? 124 : 285} cy={active('Challenge') ? 126 : 254} r="92" fill={`url(#archivedDoorAura-${domain})`} />
+      {domains.map(name => (
+        <path key={`${name}-field`} d={DOMAIN_HEX_OUTLINES[name]} fill="#DED6CB" opacity="0.18" />
+      ))}
+      {domains.map(name => {
+        const fill = getScoreFillPath(name, ARCHIVE_PROFILE_SCORES[name]);
+        if (!fill) return null;
+        const isActive = active(name);
+        return (
+          <path
+            key={`${name}-fill`}
+            d={fill}
+            fill={isActive ? color : '#CFC6B9'}
+            opacity={isActive ? 0.94 : 0.5}
+            filter={isActive ? `url(#archivedDoorGlow-${domain})` : undefined}
+          />
+        );
+      })}
+      {domains.map(name => (
+        <path
+          key={`${name}-outline`}
+          d={DOMAIN_HEX_OUTLINES[name]}
+          fill="none"
+          stroke={active(name) ? color : '#BFB5A8'}
+          strokeWidth={active(name) ? 1.7 : 1.1}
+          opacity={active(name) ? 0.62 : 0.36}
+        />
+      ))}
+    </svg>
   );
 }
 

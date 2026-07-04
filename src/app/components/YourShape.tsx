@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { DOMAIN_HEX_OUTLINES, getScoreFillPath } from '../data/symbolFillPaths';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const NAV_ORANGE = '#FF5A1F';
@@ -115,8 +114,8 @@ export function YourShape({
       />
 
       <section className="relative overflow-visible py-2 md:py-4">
-        {activeState === 3 ? (
-          <div className="relative">
+        <div className={`relative grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.28fr)] lg:gap-4 xl:gap-2 ${activeState === 0 ? 'lg:items-center' : 'lg:items-start'}`}>
+          <div className="order-2 lg:order-1">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeState}
@@ -124,48 +123,25 @@ export function YourShape({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                className="lg:min-h-[510px]"
               >
                 <ShapeStateCopy state={activeState} />
+                <StateArrowControls
+                  activeState={activeState}
+                  onPrevious={() => goToState(-1)}
+                  onNext={() => goToState(1)}
+                  className={activeState === 0 ? 'mt-8 max-w-[530px]' : 'mt-9 max-w-[610px]'}
+                />
               </motion.div>
             </AnimatePresence>
-            <StateArrowControls
-              activeState={activeState}
-              onPrevious={() => goToState(-1)}
-              onNext={() => goToState(1)}
-              className="mx-auto mt-10 max-w-[870px]"
-            />
-            <PathwayDoorways />
           </div>
-        ) : (
-          <div className={`relative grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.28fr)] lg:gap-4 xl:gap-2 ${activeState === 0 ? 'lg:items-center' : 'lg:items-start'}`}>
-            <div className="order-2 lg:order-1">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeState}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                  className="lg:min-h-[510px]"
-                >
-                  <ShapeStateCopy state={activeState} />
-                  <StateArrowControls
-                    activeState={activeState}
-                    onPrevious={() => goToState(-1)}
-                    onNext={() => goToState(1)}
-                    className={activeState === 0 ? 'mt-8 max-w-[530px]' : 'mt-9 max-w-[610px]'}
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
 
-            <div className="order-1 lg:order-2 lg:-mr-8 xl:-mr-12">
-              <div className="lg:sticky lg:top-8">
-                <EvolvingShape state={activeState} />
-              </div>
+          <div className="order-1 lg:order-2 lg:-mr-8 xl:-mr-12">
+            <div className="lg:sticky lg:top-8">
+              <EvolvingShape state={activeState} />
             </div>
           </div>
-        )}
+        </div>
       </section>
     </div>
   );
@@ -252,144 +228,58 @@ function ShapeStateCopy({ state }: { state: number }) {
   }
 
   return (
-    <article className="mx-auto max-w-[870px] text-center">
-      <h2
-        className="mb-7"
-        style={{
-          ...stateTitleStyle,
-          fontSize: 'clamp(2.15rem, 3.6vw, 3.35rem)',
-        }}
-      >
+    <article className="max-w-[690px] py-3 lg:py-8">
+      <h2 className="mb-9" style={stateTitleStyle}>
         Go deeper.
       </h2>
-      <p className="mx-auto max-w-[760px] text-[20px] leading-[1.75] text-[#201A16]" style={{ fontFamily: SERIF }}>
+      <p className="max-w-[610px] text-[17px] leading-[1.76] text-[#332E29]" style={{ fontWeight: 300 }}>
         Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
       </p>
+      <PathwayActions />
     </article>
   );
 }
 
-function PathwayDoorways() {
+function PathwayActions() {
   return (
-    <div className="relative mt-28 md:mt-32">
-      <svg
-        viewBox="0 0 880 116"
-        className="pointer-events-none absolute left-1/2 top-[-92px] hidden h-[128px] w-[86%] -translate-x-1/2 overflow-visible opacity-80 md:block"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="doorwayThread" x1="130" x2="750" y1="70" y2="70" gradientUnits="userSpaceOnUse">
-            <stop stopColor={SAFETY} stopOpacity="0.82" />
-            <stop offset="0.5" stopColor="#FFBB30" stopOpacity="0.88" />
-            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.76" />
-          </linearGradient>
-        </defs>
-        <circle cx="440" cy="34" r="5.5" fill="#F8F3EB" stroke="#E6D7C6" strokeWidth="2" />
-        <path d="M440 34 C360 46 284 70 190 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.5" />
-        <path d="M440 34 C440 58 440 78 440 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.48" />
-        <path d="M440 34 C520 46 596 70 690 103" fill="none" stroke="url(#doorwayThread)" strokeWidth="2.4" strokeLinecap="round" strokeOpacity="0.5" />
-        <motion.circle
-          r="5"
-          fill="#FFBB30"
-          animate={{
-            cx: [440, 190, 440, 440, 440, 690, 440],
-            cy: [34, 103, 34, 103, 34, 103, 34],
-            opacity: [0.22, 0.88, 0.22, 0.88, 0.22, 0.88, 0.22],
-          }}
-          transition={{ duration: 8.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </svg>
-
-      <div className="grid gap-5 md:grid-cols-3">
-        {doorways.map(door => {
-          return (
-            <button
-              key={door.domain}
-              type="button"
-              onClick={() => document.getElementById(door.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="group relative min-h-[340px] overflow-hidden border border-[#E2D5C5] bg-[#FFFCF7] px-7 pb-7 pt-8 text-left shadow-[0_28px_70px_-58px_rgba(26,22,20,0.48)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/25"
-              style={{ borderTopLeftRadius: 150, borderTopRightRadius: 150, borderBottomLeftRadius: 28, borderBottomRightRadius: 28 }}
-            >
-              <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-32 opacity-28 transition-opacity group-hover:opacity-46"
-                style={{ background: `radial-gradient(circle at 50% 12%, ${door.color}3D, transparent 62%)` }}
-              />
-              <div className="flex h-full flex-col">
-                <div className="mb-7 flex h-[118px] items-center justify-center">
-                  <DoorDomainSymbol domain={door.domain} color={door.color} />
-                </div>
-                <p className="text-[14px] font-extrabold uppercase tracking-[0.18em]" style={{ color: door.color }}>
-                  {door.domain}
-                </p>
-                <p className="mt-5 min-h-[118px] text-[24px] leading-[1.24] text-[#1D1815]" style={{ fontFamily: SERIF }}>
-                  {door.copy}
-                </p>
-                <p className="mt-5 min-h-[66px] text-[15px] leading-relaxed text-[#665E55]" style={{ fontWeight: 300 }}>
-                  {door.hook}
-                </p>
-                <div className="mt-auto flex items-center justify-between border-t border-[#E5DACE] pt-4">
-                  <span className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
-                    Start with {door.domain}
-                  </span>
-                  <ArrowRight className="transition-transform group-hover:translate-x-1" size={18} strokeWidth={2.2} style={{ color: door.color }} />
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function DoorDomainSymbol({ domain, color }: { domain: string; color: string }) {
-  const active = (name: string) => domain === name;
-  const domains = ['Challenge', 'Safety', 'Play'] as const;
-  return (
-    <svg viewBox="18 8 373 322" className="relative z-10 h-[112px] w-full max-w-[160px] overflow-visible" aria-hidden="true">
-      <defs>
-        <filter id={`doorGlow-${domain}`} x="-35%" y="-35%" width="170%" height="170%">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <radialGradient id={`doorAura-${domain}`} cx="50%" cy="50%" r="55%">
-          <stop offset="0" stopColor={color} stopOpacity="0.24" />
-          <stop offset="0.62" stopColor={color} stopOpacity="0.08" />
-          <stop offset="1" stopColor={color} stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx={active('Challenge') ? 204.5 : active('Safety') ? 124 : 285} cy={active('Challenge') ? 126 : 254} r="92" fill={`url(#doorAura-${domain})`} />
-      {domains.map(name => (
-        <path key={`${name}-field`} d={DOMAIN_HEX_OUTLINES[name]} fill="#DED6CB" opacity="0.18" />
-      ))}
-      {domains.map(name => {
-        const fill = getScoreFillPath(name, PROFILE_SCORES[name]);
-        if (!fill) return null;
-        const isActive = active(name);
-        return (
-          <path
-            key={`${name}-fill`}
-            d={fill}
-            fill={isActive ? color : '#CFC6B9'}
-            opacity={isActive ? 0.94 : 0.5}
-            filter={isActive ? `url(#doorGlow-${domain})` : undefined}
+    <div className="mt-9 max-w-[610px] space-y-3">
+      {doorways.map((door, index) => (
+        <motion.button
+          key={door.domain}
+          type="button"
+          onClick={() => document.getElementById(door.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          className="group relative w-full overflow-hidden rounded-[18px] border border-[#E5DACE] bg-[#FFFCF7]/82 px-5 py-4 text-left shadow-[0_18px_46px_-42px_rgba(26,22,20,0.45)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.36, delay: index * 0.05 }}
+        >
+          <div
+            className="pointer-events-none absolute inset-y-3 left-0 w-[3px] rounded-full"
+            style={{ backgroundColor: door.color }}
           />
-        );
-      })}
-      {domains.map(name => (
-        <path
-          key={`${name}-outline`}
-          d={DOMAIN_HEX_OUTLINES[name]}
-          fill="none"
-          stroke={active(name) ? color : '#BFB5A8'}
-          strokeWidth={active(name) ? 1.7 : 1.1}
-          opacity={active(name) ? 0.62 : 0.36}
-        />
+          <div
+            className="pointer-events-none absolute -right-10 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full opacity-0 blur-2xl transition-opacity group-hover:opacity-35"
+            style={{ backgroundColor: door.color }}
+          />
+          <div className="relative grid gap-3 sm:grid-cols-[0.28fr_0.72fr_auto] sm:items-center">
+            <p className="text-[12px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
+              {door.domain}
+            </p>
+            <div>
+              <p className="text-[16px] leading-snug text-[#1D1815]" style={{ fontFamily: SERIF }}>
+                {door.copy}
+              </p>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-[#70675E]" style={{ fontWeight: 300 }}>
+                {door.hook}
+              </p>
+            </div>
+            <div className="grid h-8 w-8 place-items-center rounded-full bg-white/82 transition-transform group-hover:translate-x-1" style={{ color: door.color }}>
+              <ArrowRight size={16} strokeWidth={2.1} />
+            </div>
+          </div>
+        </motion.button>
       ))}
-    </svg>
+    </div>
   );
 }
 
@@ -893,6 +783,61 @@ function EvolvingShape({ state }: { state: number }) {
           <circle cx={centre} cy="0" r="6.2" fill="#FFF3D2" opacity="0.82" />
           <circle cx={centre} cy="0" r="4.1" fill="#F2551A" opacity="0.9" />
         </motion.g>
+      </motion.g>
+
+      <motion.g
+        animate={{ opacity: state === 3 ? 1 : 0 }}
+        transition={{ duration: 0.45, ease: 'easeInOut' }}
+        pointerEvents="none"
+      >
+        {[
+          { key: 'Safety', point: plotted.Safety, color: SAFETY, delay: 0 },
+          { key: 'Play', point: plotted.Play, color: PLAY, delay: 1.45 },
+          { key: 'Challenge', point: plotted.Challenge, color: CHALLENGE, delay: 2.9 },
+        ].map(route => (
+          <g key={route.key}>
+            <motion.path
+              d={`M${centre} ${centre} L${route.point.x} ${route.point.y}`}
+              fill="none"
+              stroke={route.color}
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              animate={{ opacity: [0.26, 0.82, 0.26], strokeWidth: [2.2, 4.2, 2.2] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: route.delay }}
+            />
+            <motion.path
+              d={`M${centre} ${centre} L${route.point.x} ${route.point.y}`}
+              fill="none"
+              stroke={route.color}
+              strokeWidth="10"
+              strokeLinecap="round"
+              animate={{ opacity: [0, 0.18, 0] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: route.delay }}
+            />
+            <motion.circle
+              cx={route.point.x}
+              cy={route.point.y}
+              r="7"
+              fill={route.color}
+              stroke="#FFF8F0"
+              strokeWidth="2"
+              animate={{ scale: [0.9, 1.18, 0.9], opacity: [0.72, 1, 0.72] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: route.delay }}
+            />
+          </g>
+        ))}
+        <motion.circle
+          r="5.2"
+          fill="#FFF3D2"
+          stroke="#F2551A"
+          strokeWidth="2"
+          animate={{
+            cx: [centre, plotted.Safety.x, centre, plotted.Play.x, centre, plotted.Challenge.x, centre],
+            cy: [centre, plotted.Safety.y, centre, plotted.Play.y, centre, plotted.Challenge.y, centre],
+            opacity: [0.86, 1, 0.72, 1, 0.72, 1, 0.86],
+          }}
+          transition={{ duration: 8.8, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </motion.g>
 
       </svg>
