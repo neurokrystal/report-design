@@ -192,13 +192,13 @@ function GoDeeperFinale({
           Go deeper.
         </h2>
         <p className="mx-auto max-w-[790px] text-[19px] leading-[1.72] text-[#332E29]" style={{ fontFamily: SERIF }}>
-          Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
+          Most people who lead with drive aren't looking to slow down. This isn't about doing less. When you lead with drive, you don't like slowing down. What you can grow is a steadier, more settled sense of yourself, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
         </p>
       </article>
 
-      <div className="relative mt-6 hidden min-h-[720px] w-full lg:block">
-        <GoDeeperPathField highlightedDomain={highlightedDomain} />
-        <div className="absolute left-0 top-[92px] z-20 h-[286px] w-[310px]">
+      <div className="relative mt-3 hidden min-h-[790px] w-full lg:block">
+        <GoDeeperPathField highlightedDomain={highlightedDomain} onHighlight={onHighlight} />
+        <div className="absolute left-0 top-[72px] z-20 h-[340px] w-[250px]">
           <PathwayActionCard
             door={doorways[0]}
             highlightedDomain={highlightedDomain}
@@ -207,7 +207,7 @@ function GoDeeperFinale({
             index={0}
           />
         </div>
-        <div className="absolute right-0 top-[92px] z-20 h-[286px] w-[310px]">
+        <div className="absolute right-0 top-[72px] z-20 h-[340px] w-[250px]">
           <PathwayActionCard
             door={doorways[2]}
             highlightedDomain={highlightedDomain}
@@ -216,7 +216,7 @@ function GoDeeperFinale({
             index={1}
           />
         </div>
-        <div className="absolute left-1/2 top-[414px] z-20 h-[286px] w-[310px] -translate-x-1/2">
+        <div className="absolute left-1/2 top-[450px] z-20 h-[340px] w-[250px] -translate-x-1/2">
           <PathwayActionCard
             door={doorways[1]}
             highlightedDomain={highlightedDomain}
@@ -229,7 +229,7 @@ function GoDeeperFinale({
 
       <div className="relative mt-8 space-y-4 lg:hidden">
         <div className="mx-auto h-[280px] max-w-[390px]">
-          <GoDeeperPathField highlightedDomain={highlightedDomain} mobile />
+          <GoDeeperPathField highlightedDomain={highlightedDomain} onHighlight={onHighlight} mobile />
         </div>
         {doorways.map((door, index) => (
           <PathwayActionCard
@@ -247,16 +247,27 @@ function GoDeeperFinale({
 
 function GoDeeperPathField({
   highlightedDomain,
+  onHighlight,
   mobile = false,
 }: {
   highlightedDomain: DomainKey | null;
+  onHighlight: (domain: DomainKey | null) => void;
   mobile?: boolean;
 }) {
   const centre = { x: 480, y: 242 };
+  const maxRadius = 142;
+  const domainPoint = (angle: number, score: number) => {
+    const radians = (angle * Math.PI) / 180;
+    const radius = maxRadius * (score / 100);
+    return {
+      x: centre.x + Math.cos(radians) * radius,
+      y: centre.y + Math.sin(radians) * radius,
+    };
+  };
   const radar = {
-    Challenge: { x: 480, y: 134 },
-    Safety: { x: 445, y: 258 },
-    Play: { x: 536, y: 266 },
+    Challenge: domainPoint(-90, PROFILE_SCORES.Challenge),
+    Safety: domainPoint(150, PROFILE_SCORES.Safety),
+    Play: domainPoint(30, PROFILE_SCORES.Play),
   };
   const routes = [
     {
@@ -265,9 +276,10 @@ function GoDeeperPathField({
       beam: 'M520 224 L680 150 L680 470 L512 278 Z',
       glow: { x: 820, y: 306, rx: 180, ry: 150 },
       dots: [
-        { x: 468, y: 110, r: 2.2, delay: 0.1 },
-        { x: 494, y: 118, r: 1.9, delay: 0.58 },
-        { x: 482, y: 98, r: 1.6, delay: 1.04 },
+        { x: 468, y: 106, r: 2.2, delay: 0.1, duration: 2.3 },
+        { x: 496, y: 116, r: 1.8, delay: 0.64, duration: 1.9 },
+        { x: 484, y: 92, r: 1.5, delay: 1.18, duration: 2.7 },
+        { x: 508, y: 100, r: 1.3, delay: 1.7, duration: 2.1 },
       ],
     },
     {
@@ -276,9 +288,11 @@ function GoDeeperPathField({
       beam: 'M438 238 L280 150 L280 470 L452 278 Z',
       glow: { x: 140, y: 306, rx: 180, ry: 150 },
       dots: [
-        { x: 424, y: 258, r: 2.7, delay: 0 },
-        { x: 438, y: 282, r: 1.9, delay: 0.46 },
-        { x: 414, y: 274, r: 1.7, delay: 0.92 },
+        { x: 420, y: 260, r: 2.7, delay: 0, duration: 2.1 },
+        { x: 436, y: 286, r: 1.9, delay: 0.38, duration: 2.8 },
+        { x: 410, y: 276, r: 1.6, delay: 1.02, duration: 1.95 },
+        { x: 426, y: 296, r: 1.4, delay: 1.54, duration: 2.45 },
+        { x: 400, y: 258, r: 1.2, delay: 2.04, duration: 1.8 },
       ],
     },
     {
@@ -287,14 +301,13 @@ function GoDeeperPathField({
       beam: 'M444 302 L340 492 L620 492 L520 302 Z',
       glow: { x: 480, y: 628, rx: 190, ry: 150 },
       dots: [
-        { x: 558, y: 262, r: 2.5, delay: 0.18 },
-        { x: 542, y: 286, r: 1.9, delay: 0.64 },
-        { x: 568, y: 282, r: 1.7, delay: 1.1 },
+        { x: 558, y: 264, r: 2.5, delay: 0.18, duration: 2.55 },
+        { x: 542, y: 290, r: 1.9, delay: 0.74, duration: 2.15 },
+        { x: 570, y: 286, r: 1.6, delay: 1.26, duration: 2.85 },
       ],
     },
   ];
   const rings = [0.35, 0.58, 0.82, 1];
-  const maxRadius = 118;
   const rim = {
     Challenge: { x: centre.x, y: centre.y - maxRadius },
     Safety: {
@@ -315,7 +328,7 @@ function GoDeeperPathField({
   };
 
   return (
-    <div className={mobile ? 'pointer-events-none relative h-full' : 'pointer-events-none absolute inset-0'}>
+    <div className={mobile ? 'relative h-full' : 'absolute inset-0'}>
       <svg
         viewBox="0 0 960 760"
         className="absolute inset-0 h-full w-full overflow-visible"
@@ -384,8 +397,8 @@ function GoDeeperPathField({
                   cy={dot.y}
                   r={dot.r}
                   fill={route.color}
-                  animate={{ opacity: dimmed ? 0.06 : [0.12, 0.78, 0.12], scale: [0.8, 1.24, 0.8] }}
-                  transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: dot.delay }}
+                  animate={{ opacity: dimmed ? 0.06 : [0.08, 0.86, 0.18, 0.58, 0.08], scale: [0.72, 1.28, 0.9, 1.12, 0.72] }}
+                  transition={{ duration: dot.duration, repeat: Infinity, ease: 'easeInOut', delay: dot.delay }}
                 />
               ))}
             </g>
@@ -414,19 +427,26 @@ function GoDeeperPathField({
             animate={{ opacity: [0.82, 1, 0.82] }}
             transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
           />
+          <circle cx={centre.x} cy={centre.y} r="7.2" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.6" />
           {[
             { key: 'Challenge', point: radar.Challenge, color: CHALLENGE },
             { key: 'Safety', point: radar.Safety, color: SAFETY },
             { key: 'Play', point: radar.Play, color: PLAY },
           ].map(({ key, point, color }) => (
-            <circle
+            <motion.circle
               key={key}
               cx={point.x}
               cy={point.y}
-              r="6"
+              r="6.4"
               fill={color}
               stroke="#FFF9F2"
               strokeWidth="2"
+              className="pointer-events-auto cursor-pointer"
+              onMouseEnter={() => onHighlight(key as DomainKey)}
+              onMouseLeave={() => onHighlight(null)}
+              animate={{ scale: highlightedDomain === key ? [1.08, 1.48, 1.08] : 1, opacity: highlightedDomain && highlightedDomain !== key ? 0.42 : 1 }}
+              transition={{ duration: 1.8, repeat: highlightedDomain === key ? Infinity : 0, ease: 'easeInOut' }}
+              style={{ transformOrigin: `${point.x}px ${point.y}px` }}
             />
           ))}
         </g>
@@ -551,21 +571,21 @@ function PathwayActionCard({
       onMouseLeave={() => onHighlight(null)}
       onFocus={() => onHighlight(door.domain)}
       onBlur={() => onHighlight(null)}
-      className={`group relative h-full min-h-0 overflow-hidden rounded-[22px] border p-5 text-left shadow-[0_26px_68px_-54px_rgba(26,22,20,0.52)] transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22 ${className}`}
+      className={`group relative h-full min-h-0 overflow-visible rounded-[22px] border p-6 text-left shadow-[0_26px_68px_-54px_rgba(26,22,20,0.52)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22 ${className}`}
       style={{
-        borderColor: active ? door.color : '#E6DCCF',
-        background: active
-          ? `linear-gradient(140deg, #FFFCF7 0%, ${door.color}14 100%)`
-          : 'rgba(255, 252, 247, 0.82)',
+        borderColor: '#E6DCCF',
+        background: 'rgba(255, 252, 247, 0.92)',
         opacity: dimmed ? 0.66 : 1,
       }}
       initial={{ opacity: 0, y: 14, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.38, delay: index * 0.06 }}
     >
-      <div
-        className="pointer-events-none absolute -right-10 -top-12 h-32 w-32 rounded-full opacity-18 blur-2xl transition-opacity group-hover:opacity-45"
-        style={{ background: `radial-gradient(circle, ${door.color}8F, transparent 70%)` }}
+      <motion.div
+        className="pointer-events-none absolute inset-x-2 -bottom-7 -z-10 h-28 rounded-full blur-2xl"
+        style={{ background: `radial-gradient(ellipse, ${door.color}94, ${door.color}2B 42%, transparent 74%)` }}
+        animate={{ opacity: active ? [0.36, 0.72, 0.36] : 0.22, scale: active ? [0.94, 1.08, 0.94] : 1 }}
+        transition={{ duration: 2.6, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
       />
       <motion.div
         className="absolute inset-x-6 top-0 h-[3px] rounded-full"
@@ -574,17 +594,17 @@ function PathwayActionCard({
         transition={{ duration: 2.3, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
       />
       <div className="relative flex h-full flex-col">
-        <p className="text-[13px] font-extrabold uppercase tracking-[0.15em]" style={{ color: door.color }}>
+        <p className="pr-8 text-[13px] font-extrabold uppercase tracking-[0.15em]" style={{ color: door.color }}>
           {door.domain}
         </p>
-        <p className="mt-4 text-[18px] leading-[1.18] text-[#1D1815]" style={{ fontFamily: SERIF }}>
+        <p className="mt-5 pr-8 text-[18px] leading-[1.2] text-[#1D1815]" style={{ fontFamily: SERIF }}>
           {door.copy}
         </p>
-        <p className="mt-auto pt-4 text-[13px] leading-[1.48] text-[#70675E]" style={{ fontWeight: 300 }}>
+        <p className="mt-auto pr-6 pt-5 text-[13px] leading-[1.5] text-[#70675E]" style={{ fontWeight: 300 }}>
           {door.hook}
         </p>
         <div
-          className="mt-4 flex h-9 items-center justify-between rounded-full px-4 text-[12px] font-semibold text-white shadow-[0_16px_28px_-22px_rgba(26,22,20,0.55)]"
+          className="mx-auto mt-5 flex h-11 w-full max-w-[200px] items-center justify-between rounded-full px-5 text-[12px] font-semibold text-white shadow-[0_16px_28px_-22px_rgba(26,22,20,0.55)]"
           style={{ background: `linear-gradient(90deg, ${door.color}, ${door.color}D8)` }}
         >
           <span>Start with {door.domain}</span>
@@ -721,12 +741,12 @@ function EvolvingShape({
     Play: point(30, maxRadius),
     Safety: point(150, maxRadius),
   };
-  const challengeBeyond = point(-90, maxRadius + 6);
-  const svgViewBox = state === 2 ? '-18 -24 336 350' : '-18 -18 336 336';
+  const challengeTarget = plotted.Challenge;
+  const svgViewBox = '-18 -18 336 336';
   const labelPoint = (domain: keyof typeof PROFILE_SCORES) => {
-    if (domain === 'Challenge') return { x: centre, y: rim.Challenge.y - 30, anchor: 'middle' as const };
-    if (domain === 'Safety') return { x: centre - 70, y: centre + 100, anchor: 'middle' as const };
-    return { x: centre + 70, y: centre + 100, anchor: 'middle' as const };
+    if (domain === 'Challenge') return { x: centre, y: rim.Challenge.y - 38, anchor: 'middle' as const };
+    if (domain === 'Safety') return { x: centre - 62, y: centre + 90, anchor: 'middle' as const };
+    return { x: centre + 62, y: centre + 90, anchor: 'middle' as const };
   };
   const keyDomains = state === 3 ? ['Safety', 'Play', 'Challenge'] : ['Challenge'];
   const domainPointOpacity = (domain: string) => {
@@ -916,8 +936,8 @@ function EvolvingShape({
         >
           <path d={`M${centre} ${centre} L${plotted.Safety.x} ${plotted.Safety.y}`} fill="none" stroke="#9ECABD" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
           <path d={`M${centre} ${centre} L${plotted.Play.x} ${plotted.Play.y}`} fill="none" stroke="#E7C879" strokeWidth="3.2" strokeLinecap="round" strokeOpacity="0.4" />
-          <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#FFF6E8" strokeWidth="8" strokeLinecap="round" strokeOpacity="0.82" />
-          <path d={`M${centre} ${centre} C${centre} ${centre - 30} ${plotted.Challenge.x} ${plotted.Challenge.y + 38} ${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#F2551A" strokeWidth="3.8" strokeLinecap="round" strokeOpacity="0.92" />
+          <path d={`M${centre} ${centre} L${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#FFF6E8" strokeWidth="8" strokeLinecap="round" strokeOpacity="0.82" />
+          <path d={`M${centre} ${centre} L${plotted.Challenge.x} ${plotted.Challenge.y}`} fill="none" stroke="#F2551A" strokeWidth="3.8" strokeLinecap="round" strokeOpacity="0.92" />
           {[0.26, 0.48, 0.7].map((amount, index) => (
             <motion.circle
               key={amount}
@@ -1078,10 +1098,10 @@ function EvolvingShape({
           animate={{ opacity: [0, 0.34, 0], scale: [0.68, 1.32, 0.68] }}
           transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 2.4 }}
         />
-        <circle cx={centre} cy={centre} r="5.8" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.4" />
+        <circle cx={centre} cy={centre} r="4.7" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.4" />
         <motion.g
           animate={{
-            y: [centre, centre, challengeBeyond.y, challengeBeyond.y, centre, centre],
+            y: [centre, centre, challengeTarget.y, challengeTarget.y, centre, centre],
             opacity: [1, 1, 1, 1, 1, 1],
             scale: [1, 1, 1.06, 1.02, 1, 1],
           }}
