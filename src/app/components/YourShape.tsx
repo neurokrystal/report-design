@@ -198,28 +198,32 @@ function GoDeeperFinale({
         </p>
       </article>
 
-      <div className="relative mt-1 hidden min-h-[420px] w-full lg:block">
+      <div className="relative mt-10 hidden min-h-[660px] w-full lg:block">
         <GoDeeperPathField highlightedDomain={highlightedDomain} />
-        <div className="relative z-20 grid grid-cols-[212px_minmax(0,1fr)_212px] grid-rows-[184px_184px] gap-x-5 pt-[132px]">
+        <div className="absolute left-0 top-[170px] z-20 h-[220px] w-[220px]">
           <PathwayActionCard
             door={doorways[0]}
             highlightedDomain={highlightedDomain}
             onHighlight={onHighlight}
-            className="col-start-1 row-start-1 w-[212px]"
+            className="h-full w-full"
             index={0}
           />
+        </div>
+        <div className="absolute right-0 top-[170px] z-20 h-[220px] w-[220px]">
           <PathwayActionCard
             door={doorways[2]}
             highlightedDomain={highlightedDomain}
             onHighlight={onHighlight}
-            className="col-start-3 row-start-1 w-[212px]"
+            className="h-full w-full"
             index={1}
           />
+        </div>
+        <div className="absolute left-[235px] top-[420px] z-20 h-[220px] w-[220px]">
           <PathwayActionCard
             door={doorways[1]}
             highlightedDomain={highlightedDomain}
             onHighlight={onHighlight}
-            className="col-start-2 row-start-2 -mt-28 mx-auto w-[260px]"
+            className="h-full w-full"
             index={2}
           />
         </div>
@@ -250,49 +254,49 @@ function GoDeeperPathField({
   highlightedDomain: DomainKey | null;
   mobile?: boolean;
 }) {
-  const centre = { x: 345, y: 90 };
+  const centre = { x: 345, y: 180 };
   const radar = {
-    Challenge: { x: 345, y: 30 },
-    Safety: { x: 323, y: 100 },
-    Play: { x: 378, y: 106 },
+    Challenge: { x: 345, y: 108 },
+    Safety: { x: 320, y: 193 },
+    Play: { x: 382, y: 198 },
   };
   const routes = [
     {
       key: 'Challenge' as DomainKey,
       color: CHALLENGE,
-      beam: 'M361 46 L476 22 L476 202 L352 76 Z',
-      glow: { x: 582, y: 126, rx: 118, ry: 98 },
+      beam: 'M360 163 L470 150 L470 410 L350 204 Z',
+      glow: { x: 580, y: 280, rx: 140, ry: 128 },
       dots: [
-        { x: 336, y: 12, r: 2.1, delay: 0.1 },
-        { x: 357, y: 18, r: 1.8, delay: 0.58 },
-        { x: 346, y: 4, r: 1.5, delay: 1.04 },
+        { x: 336, y: 88, r: 2.1, delay: 0.1 },
+        { x: 358, y: 96, r: 1.8, delay: 0.58 },
+        { x: 347, y: 78, r: 1.5, delay: 1.04 },
       ],
     },
     {
       key: 'Safety' as DomainKey,
       color: SAFETY,
-      beam: 'M316 95 L214 22 L214 202 L331 115 Z',
-      glow: { x: 108, y: 126, rx: 118, ry: 98 },
+      beam: 'M316 174 L220 150 L220 410 L332 204 Z',
+      glow: { x: 110, y: 280, rx: 140, ry: 128 },
       dots: [
-        { x: 302, y: 100, r: 2.6, delay: 0 },
-        { x: 313, y: 118, r: 1.8, delay: 0.46 },
-        { x: 294, y: 114, r: 1.6, delay: 0.92 },
+        { x: 298, y: 192, r: 2.6, delay: 0 },
+        { x: 310, y: 214, r: 1.8, delay: 0.46 },
+        { x: 290, y: 207, r: 1.6, delay: 0.92 },
       ],
     },
     {
       key: 'Play' as DomainKey,
       color: PLAY,
-      beam: 'M365 112 L486 226 L204 226 L330 110 Z',
-      glow: { x: 345, y: 324, rx: 150, ry: 104 },
+      beam: 'M322 216 L235 420 L455 420 L372 216 Z',
+      glow: { x: 345, y: 530, rx: 150, ry: 126 },
       dots: [
-        { x: 398, y: 106, r: 2.4, delay: 0.18 },
-        { x: 386, y: 126, r: 1.8, delay: 0.64 },
-        { x: 408, y: 124, r: 1.6, delay: 1.1 },
+        { x: 402, y: 196, r: 2.4, delay: 0.18 },
+        { x: 388, y: 218, r: 1.8, delay: 0.64 },
+        { x: 410, y: 216, r: 1.6, delay: 1.1 },
       ],
     },
   ];
   const rings = [0.35, 0.58, 0.82, 1];
-  const maxRadius = 68;
+  const maxRadius = 76;
   const rim = {
     Challenge: { x: centre.x, y: centre.y - maxRadius },
     Safety: {
@@ -315,7 +319,7 @@ function GoDeeperPathField({
   return (
     <div className={mobile ? 'pointer-events-none relative h-full' : 'pointer-events-none absolute inset-0'}>
       <svg
-        viewBox="0 0 690 420"
+        viewBox="0 0 690 660"
         className="absolute inset-0 h-full w-full overflow-visible"
         aria-hidden="true"
       >
@@ -330,29 +334,19 @@ function GoDeeperPathField({
           <filter id="goDeeperCardGlow" x="-20%" y="-35%" width="150%" height="170%">
             <feGaussianBlur stdDeviation="18" />
           </filter>
-          <linearGradient id="radarFillGradient" x1="323" x2="378" y1="30" y2="106" gradientUnits="userSpaceOnUse">
-            <stop stopColor={CHALLENGE} stopOpacity="0.55" />
-            <stop offset="0.55" stopColor="#E9A83C" stopOpacity="0.24" />
-            <stop offset="1" stopColor={SAFETY} stopOpacity="0.4" />
-          </linearGradient>
-          <linearGradient id="radarStrokeGradient" x1="323" x2="378" y1="30" y2="106" gradientUnits="userSpaceOnUse">
-            <stop stopColor={CHALLENGE} stopOpacity="0.84" />
-            <stop offset="0.5" stopColor={PLAY} stopOpacity="0.52" />
-            <stop offset="1" stopColor={SAFETY} stopOpacity="0.72" />
-          </linearGradient>
-          <linearGradient id="ChallengeBeam" x1="358" x2="476" y1="70" y2="138" gradientUnits="userSpaceOnUse">
-            <stop stopColor={CHALLENGE} stopOpacity="0.3" />
-            <stop offset="0.64" stopColor={CHALLENGE} stopOpacity="0.15" />
+          <linearGradient id="ChallengeBeam" x1="354" x2="470" y1="184" y2="280" gradientUnits="userSpaceOnUse">
+            <stop stopColor={CHALLENGE} stopOpacity="0.28" />
+            <stop offset="0.68" stopColor={CHALLENGE} stopOpacity="0.14" />
             <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.03" />
           </linearGradient>
-          <linearGradient id="SafetyBeam" x1="320" x2="214" y1="104" y2="138" gradientUnits="userSpaceOnUse">
-            <stop stopColor={SAFETY} stopOpacity="0.3" />
-            <stop offset="0.64" stopColor={SAFETY} stopOpacity="0.15" />
+          <linearGradient id="SafetyBeam" x1="324" x2="220" y1="190" y2="280" gradientUnits="userSpaceOnUse">
+            <stop stopColor={SAFETY} stopOpacity="0.28" />
+            <stop offset="0.68" stopColor={SAFETY} stopOpacity="0.14" />
             <stop offset="1" stopColor={SAFETY} stopOpacity="0.03" />
           </linearGradient>
-          <linearGradient id="PlayBeam" x1="360" x2="345" y1="112" y2="226" gradientUnits="userSpaceOnUse">
-            <stop stopColor={PLAY} stopOpacity="0.34" />
-            <stop offset="0.64" stopColor={PLAY} stopOpacity="0.17" />
+          <linearGradient id="PlayBeam" x1="345" x2="345" y1="218" y2="420" gradientUnits="userSpaceOnUse">
+            <stop stopColor={PLAY} stopOpacity="0.3" />
+            <stop offset="0.68" stopColor={PLAY} stopOpacity="0.15" />
             <stop offset="1" stopColor={PLAY} stopOpacity="0.04" />
           </linearGradient>
         </defs>
@@ -413,8 +407,10 @@ function GoDeeperPathField({
           <line x1={centre.x} y1={centre.y} x2={rim.Play.x} y2={rim.Play.y} stroke="#D6CABD" strokeWidth="1" opacity="0.45" />
           <motion.polygon
             points={profilePoints}
-            fill="url(#radarFillGradient)"
-            stroke="url(#radarStrokeGradient)"
+            fill={CHALLENGE}
+            fillOpacity="0.16"
+            stroke={CHALLENGE}
+            strokeOpacity="0.58"
             strokeWidth="2.2"
             strokeLinejoin="round"
             filter="url(#goDeeperSoftGlow)"
