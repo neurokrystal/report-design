@@ -121,26 +121,12 @@ export function YourShape({
       <section className="relative overflow-visible py-2 md:py-4">
         {activeState === 3 ? (
           <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeState}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <ShapeStateCopy state={activeState} />
-              </motion.div>
-            </AnimatePresence>
-            <div className="mx-auto -mt-2 max-w-[920px]">
-              <EvolvingShape state={activeState} highlightedDomain={activePathway} />
-            </div>
-            <PathwayActions highlightedDomain={activePathway} onHighlight={setActivePathway} />
+            <GoDeeperFinale highlightedDomain={activePathway} onHighlight={setActivePathway} />
             <StateArrowControls
               activeState={activeState}
               onPrevious={() => goToState(-1)}
               onNext={() => goToState(1)}
-              className="mx-auto mt-8 max-w-[920px]"
+              className="mx-auto mt-7 max-w-[1040px]"
             />
           </div>
         ) : (
@@ -175,6 +161,74 @@ export function YourShape({
         )}
       </section>
     </div>
+  );
+}
+
+function GoDeeperFinale({
+  highlightedDomain,
+  onHighlight,
+}: {
+  highlightedDomain: DomainKey | null;
+  onHighlight: (domain: DomainKey | null) => void;
+}) {
+  return (
+    <motion.div
+      key="go-deeper-finale"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+      className="relative mx-auto max-w-[1080px] overflow-visible pt-1"
+    >
+      <div className="pointer-events-none absolute left-1/2 top-16 h-[430px] w-[72%] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(255,171,0,0.13),rgba(242,85,26,0.08)_44%,transparent_72%)] blur-3xl" />
+      <div className="pointer-events-none absolute left-[9%] top-48 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(66,166,142,0.16),transparent_68%)] blur-2xl" />
+      <div className="pointer-events-none absolute right-[8%] top-44 h-36 w-36 rounded-full bg-[radial-gradient(circle,rgba(255,171,0,0.16),transparent_68%)] blur-2xl" />
+
+      <article className="relative mx-auto max-w-[900px] text-center">
+        <p className="mb-5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#A09A91]">
+          The shape opens from here
+        </p>
+        <h2 className="mb-6" style={stateTitleStyle}>
+          Go deeper.
+        </h2>
+        <p className="mx-auto max-w-[790px] text-[18px] leading-[1.62] text-[#332E29]" style={{ fontFamily: SERIF }}>
+          Most people who lead with drive aren't looking to slow down - and this isn't about doing less. It's more that there's a steadier, more settled sense of yourself available, one that doesn't depend on the next thing going right. Safety and Play are where that comes from. Start with the domain you'd like to understand first.
+        </p>
+      </article>
+
+      <div className="relative mt-5 grid items-end gap-4 lg:grid-cols-[minmax(0,0.78fr)_minmax(310px,0.9fr)_minmax(0,0.78fr)] lg:gap-5">
+        <PathwayActionCard
+          door={doorways[0]}
+          highlightedDomain={highlightedDomain}
+          onHighlight={onHighlight}
+          className="lg:mb-20"
+          index={0}
+        />
+        <div className="relative order-first mx-auto w-full max-w-[460px] lg:order-none">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[86%] w-[86%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#E8DED0]/70" />
+          <motion.div
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[#D8CEC1]/80"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 46, repeat: Infinity, ease: 'linear' }}
+          />
+          <EvolvingShape state={3} highlightedDomain={highlightedDomain} compact />
+        </div>
+        <div className="grid gap-4 lg:mb-4">
+          <PathwayActionCard
+            door={doorways[1]}
+            highlightedDomain={highlightedDomain}
+            onHighlight={onHighlight}
+            index={1}
+          />
+          <PathwayActionCard
+            door={doorways[2]}
+            highlightedDomain={highlightedDomain}
+            onHighlight={onHighlight}
+            index={2}
+          />
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -270,64 +324,74 @@ function ShapeStateCopy({ state }: { state: number }) {
   );
 }
 
-function PathwayActions({
+function PathwayActionCard({
+  door,
   highlightedDomain,
   onHighlight,
+  className = '',
+  index,
 }: {
+  door: (typeof doorways)[number];
   highlightedDomain: DomainKey | null;
   onHighlight: (domain: DomainKey | null) => void;
+  className?: string;
+  index: number;
 }) {
+  const active = highlightedDomain === door.domain;
+  const dimmed = highlightedDomain !== null && !active;
+
   return (
-    <div className="mx-auto -mt-4 grid max-w-[1010px] gap-4 md:grid-cols-3">
-      {doorways.map((door, index) => (
-        <motion.button
-          key={door.domain}
-          type="button"
-          onClick={() => document.getElementById(door.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-          onMouseEnter={() => onHighlight(door.domain)}
-          onMouseLeave={() => onHighlight(null)}
-          onFocus={() => onHighlight(door.domain)}
-          onBlur={() => onHighlight(null)}
-          className="group relative min-h-[228px] overflow-hidden rounded-[28px] border bg-[#FFFCF7]/86 p-5 text-left shadow-[0_24px_62px_-54px_rgba(26,22,20,0.52)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22"
-          style={{
-            borderColor: highlightedDomain === door.domain ? door.color : '#E5DACE',
-          }}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.36, delay: index * 0.05 }}
-        >
-          <div
-            className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-45"
-            style={{ background: `radial-gradient(circle, ${door.color}88, transparent 68%)` }}
-          />
-          <div
-            className="absolute inset-x-5 top-0 h-[3px] rounded-full opacity-80"
-            style={{ backgroundColor: door.color }}
-          />
-          <div className="relative flex h-full flex-col">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-[13px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
-                  {door.domain}
-                </p>
-                <p className="mt-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8E857B]">
-                  {door.result}
-                </p>
-              </div>
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/82 transition-transform group-hover:translate-x-1" style={{ color: door.color }}>
-                <ArrowRight size={16} strokeWidth={2.1} />
-              </span>
-            </div>
-            <p className="mt-7 text-[20px] leading-[1.18] text-[#1D1815]" style={{ fontFamily: SERIF }}>
-              {door.copy}
+    <motion.button
+      type="button"
+      onClick={() => document.getElementById(door.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+      onMouseEnter={() => onHighlight(door.domain)}
+      onMouseLeave={() => onHighlight(null)}
+      onFocus={() => onHighlight(door.domain)}
+      onBlur={() => onHighlight(null)}
+      className={`group relative min-h-[174px] overflow-hidden rounded-[24px] border p-5 text-left shadow-[0_24px_62px_-54px_rgba(26,22,20,0.52)] transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22 ${className}`}
+      style={{
+        borderColor: active ? door.color : '#E6DCCF',
+        background: active
+          ? `linear-gradient(140deg, #FFFCF7 0%, ${door.color}14 100%)`
+          : 'rgba(255, 252, 247, 0.82)',
+        opacity: dimmed ? 0.66 : 1,
+      }}
+      initial={{ opacity: 0, y: 14, scale: 0.985 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.38, delay: index * 0.06 }}
+    >
+      <div
+        className="pointer-events-none absolute -right-10 -top-12 h-32 w-32 rounded-full opacity-18 blur-2xl transition-opacity group-hover:opacity-45"
+        style={{ background: `radial-gradient(circle, ${door.color}8F, transparent 70%)` }}
+      />
+      <motion.div
+        className="absolute inset-x-5 top-0 h-[3px] rounded-full"
+        style={{ backgroundColor: door.color }}
+        animate={{ opacity: active ? [0.78, 1, 0.78] : 0.72 }}
+        transition={{ duration: 2.3, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
+      />
+      <div className="relative flex h-full flex-col">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[13px] font-extrabold uppercase tracking-[0.16em]" style={{ color: door.color }}>
+              {door.domain}
             </p>
-            <p className="mt-auto pt-5 text-[13.5px] leading-relaxed text-[#70675E]" style={{ fontWeight: 300 }}>
-              {door.hook}
+            <p className="mt-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#8E857B]">
+              {door.result}
             </p>
           </div>
-        </motion.button>
-      ))}
-    </div>
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/82 transition-transform group-hover:translate-x-1" style={{ color: door.color }}>
+            <ArrowRight size={16} strokeWidth={2.1} />
+          </span>
+        </div>
+        <p className="mt-5 text-[18px] leading-[1.18] text-[#1D1815]" style={{ fontFamily: SERIF }}>
+          {door.copy}
+        </p>
+        <p className="mt-auto pt-4 text-[13px] leading-relaxed text-[#70675E]" style={{ fontWeight: 300 }}>
+          {door.hook}
+        </p>
+      </div>
+    </motion.button>
   );
 }
 
@@ -422,9 +486,11 @@ function StateArrowControls({
 function EvolvingShape({
   state,
   highlightedDomain = null,
+  compact = false,
 }: {
   state: number;
   highlightedDomain?: DomainKey | null;
+  compact?: boolean;
 }) {
   const centre = 150;
   const maxRadius = 116;
@@ -475,7 +541,7 @@ function EvolvingShape({
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[860px] pb-14 pt-4 lg:w-[108%]">
+    <div className={`relative mx-auto w-full ${compact ? 'max-w-[430px] pb-1 pt-0' : 'max-w-[860px] pb-14 pt-4 lg:w-[108%]'}`}>
       <motion.div
         className="absolute left-1/2 top-[5%] aspect-square w-[58%] -translate-x-1/2 rounded-full blur-3xl"
         style={{ background: 'radial-gradient(circle, rgba(242,85,26,0.32), rgba(255,171,0,0.14) 36%, rgba(242,85,26,0) 73%)' }}
@@ -499,7 +565,7 @@ function EvolvingShape({
       />
       <div className="absolute inset-x-16 bottom-[11%] h-20 rounded-full bg-[radial-gradient(ellipse,rgba(26,22,20,0.13),transparent_70%)] blur-xl" />
 
-      <svg viewBox={svgViewBox} className={`relative z-10 mx-auto w-full overflow-visible ${state === 2 ? 'max-w-[760px]' : 'max-w-[740px]'}`} aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
+      <svg viewBox={svgViewBox} className={`relative z-10 mx-auto w-full overflow-visible ${compact ? 'max-w-[430px]' : state === 2 ? 'max-w-[760px]' : 'max-w-[740px]'}`} aria-labelledby="evolvingShapeTitle evolvingShapeDesc" role="img">
         <title id="evolvingShapeTitle">Sharp Peak radar shape evolving through states</title>
         <desc id="evolvingShapeDesc">A three-axis radar shape shows Challenge reaching farther than Safety and Play, then animates movement and blind spot states.</desc>
         <defs>
