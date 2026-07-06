@@ -254,10 +254,10 @@ function PathwayCardBloom({ active, color }: { active: boolean; color: string })
       className="pointer-events-none absolute -inset-12 z-0 rounded-[42px] blur-3xl"
       style={{ background: `radial-gradient(ellipse, ${color}C4, ${color}52 36%, transparent 72%)` }}
       animate={{
-        opacity: active ? [0.22, 0.72, 0.22] : 0.12,
-        scale: active ? [0.9, 1.12, 0.9] : 0.94,
+        opacity: active ? [0.26, 0.62, 0.34] : 0.14,
+        scale: active ? [0.96, 1.08, 1] : 0.96,
       }}
-      transition={{ duration: 2.7, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
+      transition={{ duration: 3.4, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
     />
   );
 }
@@ -290,7 +290,8 @@ function GoDeeperPathField({
     {
       key: 'Challenge' as DomainKey,
       color: CHALLENGE,
-      beam: 'M516 226 L750 104 L750 380 L514 280 Z',
+      beam: 'M496 132 L750 92 L750 392 L504 154 Z',
+      ray: `M${radar.Challenge.x} ${radar.Challenge.y} L835 242`,
       dots: [
         { x: 468, y: 106, r: 2.2, delay: 0.1, duration: 2.3 },
         { x: 496, y: 116, r: 1.8, delay: 0.64, duration: 1.9 },
@@ -301,7 +302,8 @@ function GoDeeperPathField({
     {
       key: 'Safety' as DomainKey,
       color: SAFETY,
-      beam: 'M444 236 L210 104 L210 380 L452 282 Z',
+      beam: 'M450 252 L210 92 L210 392 L444 270 Z',
+      ray: `M${radar.Safety.x} ${radar.Safety.y} L125 242`,
       dots: [
         { x: 420, y: 260, r: 2.7, delay: 0, duration: 2.1 },
         { x: 436, y: 286, r: 1.9, delay: 0.38, duration: 2.8 },
@@ -313,7 +315,8 @@ function GoDeeperPathField({
     {
       key: 'Play' as DomainKey,
       color: PLAY,
-      beam: 'M444 300 L318 642 L642 642 L520 300 Z',
+      beam: 'M520 278 L318 620 L642 620 L528 294 Z',
+      ray: `M${radar.Play.x} ${radar.Play.y} L480 620`,
       dots: [
         { x: 558, y: 264, r: 2.5, delay: 0.18, duration: 2.55 },
         { x: 542, y: 290, r: 1.9, delay: 0.74, duration: 2.15 },
@@ -362,20 +365,20 @@ function GoDeeperPathField({
           <filter id="goDeeperBeamBlur" x="-18%" y="-28%" width="136%" height="156%">
             <feGaussianBlur stdDeviation="24" />
           </filter>
-          <linearGradient id="ChallengeBeam" x1="520" x2="750" y1="242" y2="242" gradientUnits="userSpaceOnUse">
-            <stop stopColor={CHALLENGE} stopOpacity="0.1" />
-            <stop offset="0.48" stopColor={CHALLENGE} stopOpacity="0.24" />
-            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.48" />
+          <linearGradient id="ChallengeBeam" x1="496" x2="750" y1="142" y2="242" gradientUnits="userSpaceOnUse">
+            <stop stopColor={CHALLENGE} stopOpacity="0.16" />
+            <stop offset="0.48" stopColor={CHALLENGE} stopOpacity="0.32" />
+            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.56" />
           </linearGradient>
-          <linearGradient id="SafetyBeam" x1="444" x2="210" y1="242" y2="242" gradientUnits="userSpaceOnUse">
-            <stop stopColor={SAFETY} stopOpacity="0.1" />
-            <stop offset="0.48" stopColor={SAFETY} stopOpacity="0.24" />
-            <stop offset="1" stopColor={SAFETY} stopOpacity="0.48" />
+          <linearGradient id="SafetyBeam" x1="450" x2="210" y1="262" y2="242" gradientUnits="userSpaceOnUse">
+            <stop stopColor={SAFETY} stopOpacity="0.16" />
+            <stop offset="0.48" stopColor={SAFETY} stopOpacity="0.32" />
+            <stop offset="1" stopColor={SAFETY} stopOpacity="0.56" />
           </linearGradient>
-          <linearGradient id="PlayBeam" x1="480" x2="480" y1="300" y2="642" gradientUnits="userSpaceOnUse">
-            <stop stopColor={PLAY} stopOpacity="0.1" />
-            <stop offset="0.5" stopColor={PLAY} stopOpacity="0.24" />
-            <stop offset="1" stopColor={PLAY} stopOpacity="0.5" />
+          <linearGradient id="PlayBeam" x1="524" x2="480" y1="286" y2="620" gradientUnits="userSpaceOnUse">
+            <stop stopColor={PLAY} stopOpacity="0.16" />
+            <stop offset="0.5" stopColor={PLAY} stopOpacity="0.32" />
+            <stop offset="1" stopColor={PLAY} stopOpacity="0.58" />
           </linearGradient>
         </defs>
 
@@ -389,26 +392,26 @@ function GoDeeperPathField({
                 fill={`url(#${route.key}Beam)`}
                 filter="url(#goDeeperBeamBlur)"
                 animate={{
-                  opacity: dimmed ? 0.08 : selected ? [0.72, 1, 0.72] : [0.3, 0.54, 0.3],
-                  scale: selected ? [0.99, 1.018, 0.99] : [1, 1.004, 1],
+                  opacity: dimmed ? 0.1 : selected ? [0.68, 0.92, 0.74] : [0.42, 0.6, 0.46],
+                  scale: selected ? [0.995, 1.012, 1] : [1, 1.004, 1],
                 }}
-                transition={{ duration: selected ? 2.8 : 5.4, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: selected ? 3.6 : 5.8, repeat: Infinity, ease: 'easeInOut' }}
                 style={{ transformOrigin: `${centre.x}px ${centre.y}px` }}
               />
               <motion.path
-                d={route.beam}
+                d={route.ray}
                 fill="none"
                 stroke={route.color}
-                strokeWidth="5.2"
+                strokeWidth="4.8"
                 strokeLinecap="round"
-                strokeDasharray="0.5 26"
+                strokeDasharray="1 22"
                 filter="url(#goDeeperSoftGlow)"
                 animate={{
-                  pathLength: [0, 0.46, 0.72],
-                  pathOffset: [0.28, 0.02, -0.24],
-                  opacity: dimmed ? 0 : selected ? [0.04, 0.34, 0.04] : [0, 0.12, 0],
+                  pathLength: [0, 0.58, 0.84],
+                  pathOffset: [0.24, 0.02, -0.18],
+                  opacity: dimmed ? 0 : selected ? [0.08, 0.48, 0.08] : [0.02, 0.2, 0.02],
                 }}
-                transition={{ duration: selected ? 2.4 : 4.8, repeat: Infinity, ease: 'easeInOut', delay: selected ? 0 : route.key === 'Safety' ? 0 : route.key === 'Play' ? 1.35 : 2.15 }}
+                transition={{ duration: selected ? 2.8 : 5.1, repeat: Infinity, ease: 'easeInOut', delay: selected ? 0 : route.key === 'Safety' ? 0 : route.key === 'Play' ? 1.35 : 2.15 }}
               />
               {route.dots.map(dot => (
                 <motion.circle
