@@ -199,6 +199,7 @@ function GoDeeperFinale({
       <div className="relative mt-3 hidden min-h-[790px] w-full lg:block">
         <GoDeeperPathField highlightedDomain={highlightedDomain} onHighlight={onHighlight} />
         <div className="absolute left-0 top-[72px] z-20 h-[340px] w-[250px]">
+          <PathwayCardBloom active={highlightedDomain === 'Safety'} color={SAFETY} />
           <PathwayActionCard
             door={doorways[0]}
             highlightedDomain={highlightedDomain}
@@ -208,6 +209,7 @@ function GoDeeperFinale({
           />
         </div>
         <div className="absolute right-0 top-[72px] z-20 h-[340px] w-[250px]">
+          <PathwayCardBloom active={highlightedDomain === 'Challenge'} color={CHALLENGE} />
           <PathwayActionCard
             door={doorways[2]}
             highlightedDomain={highlightedDomain}
@@ -217,6 +219,7 @@ function GoDeeperFinale({
           />
         </div>
         <div className="absolute left-1/2 top-[450px] z-20 h-[340px] w-[250px] -translate-x-1/2">
+          <PathwayCardBloom active={highlightedDomain === 'Play'} color={PLAY} />
           <PathwayActionCard
             door={doorways[1]}
             highlightedDomain={highlightedDomain}
@@ -242,6 +245,20 @@ function GoDeeperFinale({
         ))}
       </div>
     </motion.div>
+  );
+}
+
+function PathwayCardBloom({ active, color }: { active: boolean; color: string }) {
+  return (
+    <motion.div
+      className="pointer-events-none absolute -inset-12 z-0 rounded-[42px] blur-3xl"
+      style={{ background: `radial-gradient(ellipse, ${color}C4, ${color}52 36%, transparent 72%)` }}
+      animate={{
+        opacity: active ? [0.22, 0.72, 0.22] : 0.12,
+        scale: active ? [0.9, 1.12, 0.9] : 0.94,
+      }}
+      transition={{ duration: 2.7, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
+    />
   );
 }
 
@@ -273,8 +290,7 @@ function GoDeeperPathField({
     {
       key: 'Challenge' as DomainKey,
       color: CHALLENGE,
-      beam: 'M520 224 L680 150 L680 470 L512 278 Z',
-      glow: { x: 820, y: 306, rx: 180, ry: 150 },
+      beam: 'M516 226 L750 104 L750 380 L514 280 Z',
       dots: [
         { x: 468, y: 106, r: 2.2, delay: 0.1, duration: 2.3 },
         { x: 496, y: 116, r: 1.8, delay: 0.64, duration: 1.9 },
@@ -285,8 +301,7 @@ function GoDeeperPathField({
     {
       key: 'Safety' as DomainKey,
       color: SAFETY,
-      beam: 'M438 238 L280 150 L280 470 L452 278 Z',
-      glow: { x: 140, y: 306, rx: 180, ry: 150 },
+      beam: 'M444 236 L210 104 L210 380 L452 282 Z',
       dots: [
         { x: 420, y: 260, r: 2.7, delay: 0, duration: 2.1 },
         { x: 436, y: 286, r: 1.9, delay: 0.38, duration: 2.8 },
@@ -298,8 +313,7 @@ function GoDeeperPathField({
     {
       key: 'Play' as DomainKey,
       color: PLAY,
-      beam: 'M444 302 L340 492 L620 492 L520 302 Z',
-      glow: { x: 480, y: 628, rx: 190, ry: 150 },
+      beam: 'M444 300 L318 642 L642 642 L520 300 Z',
       dots: [
         { x: 558, y: 264, r: 2.5, delay: 0.18, duration: 2.55 },
         { x: 542, y: 290, r: 1.9, delay: 0.74, duration: 2.15 },
@@ -346,22 +360,22 @@ function GoDeeperPathField({
             <feGaussianBlur stdDeviation="18" />
           </filter>
           <filter id="goDeeperBeamBlur" x="-18%" y="-28%" width="136%" height="156%">
-            <feGaussianBlur stdDeviation="18" />
+            <feGaussianBlur stdDeviation="24" />
           </filter>
-          <linearGradient id="ChallengeBeam" x1="520" x2="680" y1="246" y2="310" gradientUnits="userSpaceOnUse">
-            <stop stopColor={CHALLENGE} stopOpacity="0.18" />
-            <stop offset="0.58" stopColor={CHALLENGE} stopOpacity="0.28" />
-            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.42" />
+          <linearGradient id="ChallengeBeam" x1="520" x2="750" y1="242" y2="242" gradientUnits="userSpaceOnUse">
+            <stop stopColor={CHALLENGE} stopOpacity="0.1" />
+            <stop offset="0.48" stopColor={CHALLENGE} stopOpacity="0.24" />
+            <stop offset="1" stopColor={CHALLENGE} stopOpacity="0.48" />
           </linearGradient>
-          <linearGradient id="SafetyBeam" x1="438" x2="280" y1="246" y2="310" gradientUnits="userSpaceOnUse">
-            <stop stopColor={SAFETY} stopOpacity="0.18" />
-            <stop offset="0.58" stopColor={SAFETY} stopOpacity="0.28" />
-            <stop offset="1" stopColor={SAFETY} stopOpacity="0.42" />
+          <linearGradient id="SafetyBeam" x1="444" x2="210" y1="242" y2="242" gradientUnits="userSpaceOnUse">
+            <stop stopColor={SAFETY} stopOpacity="0.1" />
+            <stop offset="0.48" stopColor={SAFETY} stopOpacity="0.24" />
+            <stop offset="1" stopColor={SAFETY} stopOpacity="0.48" />
           </linearGradient>
-          <linearGradient id="PlayBeam" x1="480" x2="480" y1="302" y2="492" gradientUnits="userSpaceOnUse">
-            <stop stopColor={PLAY} stopOpacity="0.18" />
-            <stop offset="0.58" stopColor={PLAY} stopOpacity="0.28" />
-            <stop offset="1" stopColor={PLAY} stopOpacity="0.42" />
+          <linearGradient id="PlayBeam" x1="480" x2="480" y1="300" y2="642" gradientUnits="userSpaceOnUse">
+            <stop stopColor={PLAY} stopOpacity="0.1" />
+            <stop offset="0.5" stopColor={PLAY} stopOpacity="0.24" />
+            <stop offset="1" stopColor={PLAY} stopOpacity="0.5" />
           </linearGradient>
         </defs>
 
@@ -370,25 +384,31 @@ function GoDeeperPathField({
           const dimmed = highlightedDomain !== null && !selected;
           return (
             <g key={route.key} opacity={routeOpacity(route.key)}>
-              <ellipse
-                cx={route.glow.x}
-                cy={route.glow.y}
-                rx={route.glow.rx}
-                ry={route.glow.ry}
-                fill={route.color}
-                opacity={dimmed ? 0.04 : selected ? 0.16 : 0.08}
-                filter="url(#goDeeperCardGlow)"
-              />
               <motion.path
                 d={route.beam}
                 fill={`url(#${route.key}Beam)`}
                 filter="url(#goDeeperBeamBlur)"
                 animate={{
-                  opacity: dimmed ? 0.1 : selected ? [0.68, 0.94, 0.68] : [0.36, 0.58, 0.36],
-                  scale: selected ? [0.995, 1.012, 0.995] : [1, 1.004, 1],
+                  opacity: dimmed ? 0.08 : selected ? [0.72, 1, 0.72] : [0.3, 0.54, 0.3],
+                  scale: selected ? [0.99, 1.018, 0.99] : [1, 1.004, 1],
                 }}
                 transition={{ duration: selected ? 2.8 : 5.4, repeat: Infinity, ease: 'easeInOut' }}
                 style={{ transformOrigin: `${centre.x}px ${centre.y}px` }}
+              />
+              <motion.path
+                d={route.beam}
+                fill="none"
+                stroke={route.color}
+                strokeWidth="5.2"
+                strokeLinecap="round"
+                strokeDasharray="0.5 26"
+                filter="url(#goDeeperSoftGlow)"
+                animate={{
+                  pathLength: [0, 0.46, 0.72],
+                  pathOffset: [0.28, 0.02, -0.24],
+                  opacity: dimmed ? 0 : selected ? [0.04, 0.34, 0.04] : [0, 0.12, 0],
+                }}
+                transition={{ duration: selected ? 2.4 : 4.8, repeat: Infinity, ease: 'easeInOut', delay: selected ? 0 : route.key === 'Safety' ? 0 : route.key === 'Play' ? 1.35 : 2.15 }}
               />
               {route.dots.map(dot => (
                 <motion.circle
@@ -571,7 +591,7 @@ function PathwayActionCard({
       onMouseLeave={() => onHighlight(null)}
       onFocus={() => onHighlight(door.domain)}
       onBlur={() => onHighlight(null)}
-      className={`group relative h-full min-h-0 overflow-visible rounded-[22px] border p-6 text-left shadow-[0_26px_68px_-54px_rgba(26,22,20,0.52)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22 ${className}`}
+      className={`group relative z-10 h-full min-h-0 overflow-visible rounded-[22px] border p-6 text-left shadow-[0_26px_68px_-54px_rgba(26,22,20,0.52)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/22 ${className}`}
       style={{
         borderColor: '#E6DCCF',
         background: 'rgba(255, 252, 247, 0.92)',
@@ -581,12 +601,6 @@ function PathwayActionCard({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.38, delay: index * 0.06 }}
     >
-      <motion.div
-        className="pointer-events-none absolute inset-x-2 -bottom-7 -z-10 h-28 rounded-full blur-2xl"
-        style={{ background: `radial-gradient(ellipse, ${door.color}94, ${door.color}2B 42%, transparent 74%)` }}
-        animate={{ opacity: active ? [0.36, 0.72, 0.36] : 0.22, scale: active ? [0.94, 1.08, 0.94] : 1 }}
-        transition={{ duration: 2.6, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
-      />
       <motion.div
         className="absolute inset-x-6 top-0 h-[3px] rounded-full"
         style={{ backgroundColor: door.color }}
