@@ -291,6 +291,8 @@ function GoDeeperPathField({
       key: 'Challenge' as DomainKey,
       color: CHALLENGE,
       beam: 'M496 132 L750 92 L750 392 L504 154 Z',
+      origin: radar.Challenge,
+      target: { x: 835, y: 242 },
       ray: `M${radar.Challenge.x} ${radar.Challenge.y} L835 242`,
       dots: [
         { x: 468, y: 106, r: 2.2, delay: 0.1, duration: 2.3 },
@@ -303,6 +305,8 @@ function GoDeeperPathField({
       key: 'Safety' as DomainKey,
       color: SAFETY,
       beam: 'M450 252 L210 92 L210 392 L444 270 Z',
+      origin: radar.Safety,
+      target: { x: 125, y: 242 },
       ray: `M${radar.Safety.x} ${radar.Safety.y} L125 242`,
       dots: [
         { x: 420, y: 260, r: 2.7, delay: 0, duration: 2.1 },
@@ -316,6 +320,8 @@ function GoDeeperPathField({
       key: 'Play' as DomainKey,
       color: PLAY,
       beam: 'M520 278 L318 620 L642 620 L528 294 Z',
+      origin: radar.Play,
+      target: { x: 480, y: 620 },
       ray: `M${radar.Play.x} ${radar.Play.y} L480 620`,
       dots: [
         { x: 558, y: 264, r: 2.5, delay: 0.18, duration: 2.55 },
@@ -380,6 +386,21 @@ function GoDeeperPathField({
             <stop offset="0.5" stopColor={PLAY} stopOpacity="0.32" />
             <stop offset="1" stopColor={PLAY} stopOpacity="0.58" />
           </linearGradient>
+          {routes.map(route => (
+            <linearGradient
+              key={`${route.key}Ray`}
+              id={`${route.key}Ray`}
+              x1={route.origin.x}
+              y1={route.origin.y}
+              x2={route.target.x}
+              y2={route.target.y}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor={route.color} stopOpacity="0.92" />
+              <stop offset="0.58" stopColor={route.color} stopOpacity="0.46" />
+              <stop offset="1" stopColor={route.color} stopOpacity="0" />
+            </linearGradient>
+          ))}
         </defs>
 
         {routes.map(route => {
@@ -401,17 +422,15 @@ function GoDeeperPathField({
               <motion.path
                 d={route.ray}
                 fill="none"
-                stroke={route.color}
+                stroke={`url(#${route.key}Ray)`}
                 strokeWidth="4.8"
                 strokeLinecap="round"
-                strokeDasharray="1 22"
                 filter="url(#goDeeperSoftGlow)"
                 animate={{
-                  pathLength: [0, 0.58, 0.84],
-                  pathOffset: [0.24, 0.02, -0.18],
-                  opacity: dimmed ? 0 : selected ? [0.08, 0.48, 0.08] : [0.02, 0.2, 0.02],
+                  pathLength: [0, 0.72, 1, 1],
+                  opacity: dimmed ? 0 : selected ? [0, 0.5, 0.36, 0] : [0, 0.23, 0.16, 0],
                 }}
-                transition={{ duration: selected ? 2.8 : 5.1, repeat: Infinity, ease: 'easeInOut', delay: selected ? 0 : route.key === 'Safety' ? 0 : route.key === 'Play' ? 1.35 : 2.15 }}
+                transition={{ duration: selected ? 2.9 : 5.1, repeat: Infinity, ease: [0.16, 1, 0.3, 1], delay: selected ? 0 : route.key === 'Safety' ? 0 : route.key === 'Play' ? 1.35 : 2.15 }}
               />
               {route.dots.map(dot => (
                 <motion.circle
