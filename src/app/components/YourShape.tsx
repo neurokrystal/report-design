@@ -419,19 +419,6 @@ function GoDeeperPathField({
                 transition={{ duration: selected ? 3.6 : 5.8, repeat: Infinity, ease: 'easeInOut' }}
                 style={{ transformOrigin: `${centre.x}px ${centre.y}px` }}
               />
-              <motion.path
-                d={route.ray}
-                fill="none"
-                stroke={`url(#${route.key}Ray)`}
-                strokeWidth="4.8"
-                strokeLinecap="round"
-                filter="url(#goDeeperSoftGlow)"
-                animate={{
-                  pathLength: [0, 0.72, 1, 1],
-                  opacity: dimmed ? 0 : selected ? [0, 0.5, 0.36, 0] : [0, 0.23, 0.16, 0],
-                }}
-                transition={{ duration: selected ? 2.9 : 5.1, repeat: Infinity, ease: [0.16, 1, 0.3, 1], delay: selected ? 0 : route.key === 'Safety' ? 0 : route.key === 'Play' ? 1.35 : 2.15 }}
-              />
               {route.dots.map(dot => (
                 <motion.circle
                   key={`${route.key}-${dot.x}-${dot.y}`}
@@ -439,7 +426,7 @@ function GoDeeperPathField({
                   cy={dot.y}
                   r={dot.r}
                   fill={route.color}
-                  animate={{ opacity: dimmed ? 0.06 : [0.08, 0.86, 0.18, 0.58, 0.08], scale: [0.72, 1.28, 0.9, 1.12, 0.72] }}
+                  animate={{ opacity: dimmed ? 0.05 : [0.08, 0.58, 0.16, 0.42, 0.08], scale: [0.86, 1.08, 0.94, 1.02, 0.86] }}
                   transition={{ duration: dot.duration, repeat: Infinity, ease: 'easeInOut', delay: dot.delay }}
                 />
               ))}
@@ -469,6 +456,45 @@ function GoDeeperPathField({
             animate={{ opacity: [0.82, 1, 0.82] }}
             transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
           />
+          {routes.map(route => {
+            const selected = highlightedDomain === route.key;
+            const dimmed = highlightedDomain !== null && !selected;
+            return (
+              <g key={`${route.key}-ray`}>
+                <motion.path
+                  d={route.ray}
+                  fill="none"
+                  stroke={`url(#${route.key}Ray)`}
+                  strokeWidth="4.8"
+                  strokeLinecap="round"
+                  filter="url(#goDeeperSoftGlow)"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={selected
+                    ? { pathLength: 1, opacity: 0.46 }
+                    : {
+                        pathLength: dimmed ? 0 : [0, 1, 1],
+                        opacity: dimmed ? 0 : [0, 0.26, 0],
+                      }}
+                  transition={{
+                    duration: selected ? 0.38 : 4.6,
+                    repeat: selected || dimmed ? 0 : Infinity,
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: selected || dimmed ? 0 : route.key === 'Safety' ? 0 : route.key === 'Play' ? 1.35 : 2.15,
+                  }}
+                />
+                <path
+                  d={route.ray}
+                  fill="none"
+                  stroke="transparent"
+                  strokeWidth="26"
+                  strokeLinecap="round"
+                  className="pointer-events-auto cursor-pointer"
+                  onMouseEnter={() => onHighlight(route.key)}
+                  onMouseLeave={() => onHighlight(null)}
+                />
+              </g>
+            );
+          })}
           <circle cx={centre.x} cy={centre.y} r="7.2" fill="#FFF8F0" stroke="#D8CEC1" strokeWidth="1.6" />
           {[
             { key: 'Challenge', point: radar.Challenge, color: CHALLENGE },
