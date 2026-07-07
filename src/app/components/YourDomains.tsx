@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Flag, ArrowRight, Sparkles, Sprout, X, Layers3 } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
 import { getScoreFillPath, DOMAIN_HEX_OUTLINES, DOMAIN_SPOKE_LINES, DOMAIN_SPOKE_TRANSFORM, DOMAIN_VERTEX_DOTS } from '../data/symbolFillPaths';
 import { FloatingReturnButton } from './FloatingReturnButton';
 
@@ -777,9 +776,9 @@ function DimensionCard({ dimension: dim, domainKey, domainColor, index, onNaviga
         </div>
       
       <div className="h-[150px] flex justify-center items-center py-6 relative z-10">
-        <ImageWithFallback 
+        <img
           src={getDimensionSymbol(dim.name, dim.score)}
-          alt={dim.name} 
+          alt={dim.name}
           className="h-36 object-contain drop-shadow-md"
         />
       </div>

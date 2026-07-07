@@ -1,11 +1,14 @@
+# Psychological Report Dashboard
 
-  # Psychological Report Dashboard
+An interactive, single-page psychological report for the Dimensional System —
+a scroll-through reading of a person's psychological foundations across domains,
+dimensions, alignment, and shape.
 
-  This is a code bundle for Psychological Report Dashboard. The original project is available at https://www.figma.com/design/dE6gNjWC3eP8cRIOB04WsL/Psychological-Report-Dashboard.
+Built with React, Vite, Tailwind CSS, and Framer Motion.
 
-  ## Running the code
+## Running the code
 
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
-  
+- `npm install` — install dependencies
+- `npm run dev` — start the dev server
+- `npm run build` — production build to `dist/`
+- `npm run test:e2e` — run the Playwright visual tests
