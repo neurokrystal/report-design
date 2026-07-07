@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowRight, Compass, GitBranch, RefreshCcw, ShieldAlert, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
@@ -9,87 +9,36 @@ const PLAY = '#FFAB00';
 const CHALLENGE = '#DC4C0C';
 const INK = '#15110F';
 
-const sequence = [
+const synthesisBeats = [
   {
-    label: 'Challenge provides',
-    copy: 'Direction, momentum and meaning',
-    color: CHALLENGE,
-    Icon: Sparkles,
+    label: 'The pattern',
+    title: 'Your strongest part is being asked to hold the most.',
+    copy:
+      "Your drive is not only moving you forward. It is also being asked to create steadiness and keep energy alive, because Safety and Play are not yet carrying enough of that weight.",
+    accent: CHALLENGE,
   },
   {
-    label: 'Safety cannot yet hold enough',
-    copy: 'Internal steadiness remains limited',
-    color: SAFETY,
-    Icon: ShieldAlert,
+    label: 'Why it keeps running',
+    title: 'It works often enough to feel necessary.',
+    copy:
+      'Pushing forward genuinely produces results, and those results can make you feel steadier for a while. So when the ground feels shaky, doing more becomes the fastest way to feel right again.',
+    accent: PLAY,
   },
   {
-    label: 'Challenge takes on more',
-    copy: 'Progress and planning also become ways to create stability',
-    color: CHALLENGE,
-    Icon: GitBranch,
+    label: 'What it costs',
+    title: 'Arrival never fully gets to arrive.',
+    copy:
+      "When steadiness depends mostly on progress, stopping can feel unsafe. Work that matters can still begin to take more than it gives, because the part that should refill you is not yet replenishing the system.",
+    accent: SAFETY,
   },
-  {
-    label: 'Play does not fully refill the system',
-    copy: 'Restoration and flexibility do not yet match expenditure',
-    color: PLAY,
-    Icon: RefreshCcw,
-  },
-];
-
-const synthesisCards = [
-  {
-    eyebrow: 'Available resource',
-    copy: 'Challenge supplies direction, momentum and significance.',
-    color: CHALLENGE,
-  },
-  {
-    eyebrow: 'Central interaction',
-    copy: 'Challenge is also carrying some of the stabilising work that Safety cannot yet hold.',
-    color: SAFETY,
-  },
-  {
-    eyebrow: 'System outcome',
-    copy: 'The profile can perform strongly while still feeling effortful, under-restored or unsettled underneath.',
-    color: PLAY,
-  },
-];
-
-const synthesisSlides = [
-  {
-    leftTitle: 'Where you feel most yourself',
-    leftCopy:
-      'You may recognise yourself most clearly in Challenge: in movement, development, meaning and forward direction. The apex is not merely where you perform well; it may be where you feel most coherent.',
-    rightTitle: 'Why arrival can feel elusive',
-    rightCopy:
-      'Progress can be real and important without producing a matching sense of rest or internal security. The system keeps moving because movement is doing more than moving you forward.',
-    color: CHALLENGE,
-  },
-  {
-    leftTitle: 'What is working',
-    leftCopy:
-      'Your peak is a genuine resource. It generates direction, persistence and a clear relationship with what matters. None of this needs to be dismissed or reduced.',
-    rightTitle: 'What is carrying too much',
-    rightCopy:
-      'Challenge may be asked to create movement, identity and stability at the same time. This does not make the strength false; it makes the strength heavily loaded.',
-    color: SAFETY,
-  },
-  {
-    leftTitle: 'What the system is asking for',
-    leftCopy:
-      'More internal steadiness and more reliable replenishment would allow responsibility to be distributed across the three foundations rather than concentrated at the apex.',
-    rightTitle: 'What should remain intact',
-    rightCopy:
-      'Challenge does not need to become smaller. It needs to become better supported, so that purpose and momentum remain available without carrying the whole architecture.',
-    color: PLAY,
-  },
-];
+] as const;
 
 export function HowFoundationsWork() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const slide = synthesisSlides[activeSlide];
+  const [activeBeat, setActiveBeat] = useState(0);
+  const beat = synthesisBeats[activeBeat];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-14">
       <header>
         <p className="mb-[30px] text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: NAV_ORANGE }}>
           07 Integration
@@ -109,193 +58,151 @@ export function HowFoundationsWork() {
         <div className="h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
       </header>
 
-      <section className="relative overflow-hidden rounded-[34px] border border-[#E8E1D6] bg-[#F7F4EE] shadow-[0_28px_80px_-64px_rgba(26,22,20,0.62)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(220,76,12,0.14),transparent_34%),radial-gradient(circle_at_16%_84%,rgba(66,166,142,0.12),transparent_38%),radial-gradient(circle_at_82%_78%,rgba(255,171,0,0.12),transparent_34%)]" />
-        <div className="relative grid gap-0 lg:grid-cols-[0.54fr_0.46fr]">
-          <div className="p-7 md:p-10">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: CHALLENGE }}>
-              System synthesis
-            </p>
-            <h2
-              className="mt-3 max-w-[680px]"
-              style={{
-                fontFamily: SERIF,
-                fontSize: 'clamp(2.2rem, 4vw, 3.55rem)',
-                lineHeight: 1.02,
-                letterSpacing: '-0.045em',
-                color: INK,
-              }}
-            >
-              Your strength is genuine. It is also carrying too much.
-            </h2>
-            <div className="mt-7 max-w-[690px] space-y-4 text-[16px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-              <p>
-                Challenge is the clearest available resource in this profile. It provides direction, momentum and a strong relationship with what matters to you.
+      <section className="relative -mx-4 overflow-hidden px-4 py-8 md:-mx-8 md:px-8 lg:py-12">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(220,76,12,0.14),transparent_31%),radial-gradient(circle_at_76%_18%,rgba(255,171,0,0.11),transparent_30%),radial-gradient(circle_at_45%_84%,rgba(66,166,142,0.12),transparent_36%)]" />
+        <div className="pointer-events-none absolute left-1/2 top-20 h-[520px] w-[520px] -translate-x-1/2 rounded-full border border-[#E7DED1]/55" />
+        <motion.div
+          className="pointer-events-none absolute left-1/2 top-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-[#EFE7DD]/70"
+          animate={{ scale: [0.98, 1.04, 0.98], opacity: [0.36, 0.74, 0.36] }}
+          transition={{ duration: 7.4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+
+        <div className="relative mx-auto max-w-[1050px]">
+          <div className="grid gap-10 lg:grid-cols-[0.76fr_1.24fr] lg:items-center">
+            <div className="space-y-8">
+              <div>
+                <p className="mb-5 text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: CHALLENGE }}>
+                  System synthesis
+                </p>
+                <h2
+                  style={{
+                    fontFamily: SERIF,
+                    fontSize: 'clamp(2.6rem, 5.2vw, 5.7rem)',
+                    lineHeight: 0.95,
+                    letterSpacing: '-0.06em',
+                    color: INK,
+                  }}
+                >
+                  The pattern finally becomes visible.
+                </h2>
+              </div>
+
+              <p className="max-w-[560px] text-[18px] leading-[1.75] text-[#332E29]" style={{ fontWeight: 300 }}>
+                You have now seen Safety, Play, and Challenge separately. This is where they stop reading as three results and begin to read as one living system.
               </p>
-              <p>
-                Safety is not currently providing the same degree of internal steadiness, while Play is not sufficiently resourced to restore what sustained forward movement spends. Challenge may therefore be doing more than its natural work of growth and pursuit: it may also be helping the system create stability through progress, planning and continued motion.
-              </p>
-              <p>
-                The result can be genuine outward capability alongside an internal sense that rest, arrival or ease never fully lands. The answer is not to make the peak smaller. It is to distribute more support beneath it.
-              </p>
+
+              <div className="grid gap-3">
+                {synthesisBeats.map((item, index) => {
+                  const active = activeBeat === index;
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      onMouseEnter={() => setActiveBeat(index)}
+                      onFocus={() => setActiveBeat(index)}
+                      onClick={() => setActiveBeat(index)}
+                      className="group relative w-full overflow-hidden rounded-[22px] border bg-white/74 p-5 text-left shadow-[0_20px_56px_-50px_rgba(26,22,20,0.58)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30"
+                      style={{
+                        borderColor: active ? `${item.accent}58` : '#E8E1D6',
+                        transform: active ? 'translateX(4px)' : 'translateX(0)',
+                      }}
+                    >
+                      <motion.div
+                        className="pointer-events-none absolute inset-y-0 left-0 w-1"
+                        style={{ backgroundColor: item.accent }}
+                        animate={{ opacity: active ? 1 : 0.34 }}
+                        transition={{ duration: 0.2 }}
+                      />
+                      <div className="flex items-start gap-4 pl-2">
+                        <span
+                          className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-full text-[11px] font-black"
+                          style={{ color: item.accent, backgroundColor: `${item.accent}12` }}
+                        >
+                          {index + 1}
+                        </span>
+                        <span>
+                          <span className="block text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: item.accent }}>
+                            {item.label}
+                          </span>
+                          <span className="mt-2 block text-[18px] leading-snug text-[#15110F]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
+                            {item.title}
+                          </span>
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="relative min-h-[640px]">
+              <SystemSynthesisVisual activeBeat={activeBeat} />
             </div>
           </div>
-
-          <div className="relative min-h-[560px] overflow-hidden border-l border-[#E8E1D6]/80 bg-white/50 p-7 md:p-9">
-            <SystemMap />
-          </div>
         </div>
       </section>
 
-      <section className="grid gap-5 lg:grid-cols-[0.42fr_0.58fr]">
-        <div className="rounded-[30px] bg-[#1A1614] p-7 text-white shadow-[0_28px_70px_-60px_rgba(26,22,20,0.85)] md:p-8">
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#FFBB30]">End state</p>
-          <h3
-            className="mt-4"
-            style={{
-              fontFamily: SERIF,
-              fontSize: 'clamp(1.7rem, 2.55vw, 2.32rem)',
-              lineHeight: 1.14,
-              letterSpacing: '-0.04em',
-            }}
-          >
-            High outward capability. Internal effort. Difficulty fully settling.
-          </h3>
-        </div>
-
-        <div className="grid gap-4">
-          {sequence.map((item, index) => {
-            const Icon = item.Icon;
-            return (
-              <motion.div
-                key={item.label}
-                className="group grid grid-cols-[auto_1fr] gap-4 rounded-[24px] border border-[#E8E1D6] bg-white p-5 shadow-[0_18px_52px_-48px_rgba(26,22,20,0.58)] transition-colors hover:bg-[#FCFAF6]"
-                initial={{ opacity: 0, x: 18 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.4, delay: index * 0.06 }}
-                whileHover={{ x: 4 }}
-              >
-                <div className="grid h-12 w-12 place-items-center rounded-full" style={{ color: item.color, backgroundColor: `${item.color}16` }}>
-                  <Icon size={20} strokeWidth={2.25} />
-                </div>
-                <div>
-                  <div className="mb-2 flex items-center gap-3">
-                    <span className="text-[12px] font-black" style={{ color: item.color }}>{String(index + 1).padStart(2, '0')}</span>
-                    <p className="text-[12px] font-extrabold uppercase tracking-[0.14em]" style={{ color: item.color }}>{item.label}</p>
-                  </div>
-                  <p className="text-[15px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>{item.copy}</p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="grid gap-4 md:grid-cols-3">
-        {synthesisCards.map((card, index) => (
-          <motion.div
-            key={card.eyebrow}
-            className="rounded-[28px] border border-[#E8E1D6] bg-white p-6 shadow-[0_18px_52px_-48px_rgba(26,22,20,0.58)]"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.42, delay: index * 0.06 }}
-            whileHover={{ y: -4 }}
-          >
-            <div className="mb-5 h-1 w-12 rounded-full" style={{ backgroundColor: card.color }} />
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: card.color }}>{card.eyebrow}</p>
-            <p className="mt-4 text-[18px] leading-relaxed text-[#15110F]" style={{ fontWeight: 300 }}>{card.copy}</p>
-          </motion.div>
-        ))}
-      </section>
-
-      <section className="overflow-hidden rounded-[32px] border border-[#E8E1D6] bg-[#F7F4EE] p-5 shadow-[0_24px_70px_-62px_rgba(26,22,20,0.58)] md:p-7">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: slide.color }}>
-            Reading the system
-          </p>
-          <div className="flex items-center gap-2">
-            {synthesisSlides.map((item, index) => (
-              <button
-                key={item.leftTitle}
-                type="button"
-                aria-label={`Show synthesis slide ${index + 1}`}
-                aria-current={activeSlide === index}
-                onClick={() => setActiveSlide(index)}
-                className="h-3 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30"
-                style={{
-                  width: activeSlide === index ? 32 : 12,
-                  backgroundColor: activeSlide === index ? item.color : '#D9D2C8',
-                }}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-5 grid gap-5 lg:grid-cols-2">
+      <section className="mx-auto grid max-w-[1050px] gap-9 lg:grid-cols-[0.6fr_0.4fr] lg:items-start">
+        <div className="relative overflow-hidden rounded-[34px] border border-[#E8E1D6] bg-[#FCFAF6] p-8 shadow-[0_28px_76px_-66px_rgba(26,22,20,0.7)] md:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(220,76,12,0.10),transparent_34%),radial-gradient(circle_at_82%_80%,rgba(66,166,142,0.10),transparent_36%)]" />
           <AnimatePresence mode="wait">
             <motion.article
-              key={activeSlide}
-              className="contents"
-              initial={{ opacity: 0, y: 10 }}
+              key={activeBeat}
+              className="relative"
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.28, ease: 'easeOut' }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="rounded-[26px] bg-white p-6 shadow-[0_18px_52px_-48px_rgba(26,22,20,0.58)] md:p-7">
-                <div className="mb-5 h-1 w-12 rounded-full" style={{ backgroundColor: slide.color }} />
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.15em]" style={{ color: slide.color }}>
-                  {slide.leftTitle}
-                </p>
-                <p className="mt-4 text-[15px] leading-relaxed text-[#4D4741]" style={{ fontWeight: 300 }}>
-                  {slide.leftCopy}
-                </p>
-              </div>
-              <div className="rounded-[26px] bg-white p-6 shadow-[0_18px_52px_-48px_rgba(26,22,20,0.58)] md:p-7">
-                <div className="mb-5 h-1 w-12 rounded-full" style={{ backgroundColor: slide.color }} />
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.15em]" style={{ color: slide.color }}>
-                  {slide.rightTitle}
-                </p>
-                <p className="mt-4 text-[15px] leading-relaxed text-[#4D4741]" style={{ fontWeight: 300 }}>
-                  {slide.rightCopy}
-                </p>
-              </div>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: beat.accent }}>
+                {beat.label}
+              </p>
+              <h3
+                className="mt-4"
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: 'clamp(2rem, 3.5vw, 3.2rem)',
+                  lineHeight: 1.03,
+                  letterSpacing: '-0.05em',
+                  color: INK,
+                }}
+              >
+                {beat.title}
+              </h3>
+              <p className="mt-7 max-w-[680px] text-[18px] leading-[1.78] text-[#332E29]" style={{ fontWeight: 300 }}>
+                {beat.copy}
+              </p>
             </motion.article>
           </AnimatePresence>
         </div>
 
-        <div className="mt-5 flex flex-wrap justify-between gap-3">
-          <button
-            type="button"
-            onClick={() => setActiveSlide((activeSlide + synthesisSlides.length - 1) % synthesisSlides.length)}
-            className="rounded-full border border-[#DED6CB] px-5 py-3 text-[12px] font-bold uppercase tracking-[0.12em] text-[#5F5952] transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30"
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveSlide((activeSlide + 1) % synthesisSlides.length)}
-            className="rounded-full px-5 py-3 text-[12px] font-bold uppercase tracking-[0.12em] text-white transition-transform hover:translate-x-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30"
-            style={{ backgroundColor: CHALLENGE }}
-          >
-            Next
-          </button>
+        <div className="space-y-5">
+          <div className="rounded-[30px] bg-[#1A1614] p-7 text-white shadow-[0_30px_80px_-62px_rgba(26,22,20,0.78)]">
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#FFBB30]">The mechanism</p>
+            <p className="mt-5 text-[27px] leading-tight" style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.04em' }}>
+              The peak is being asked to do the base's job.
+            </p>
+          </div>
+          <div className="rounded-[30px] border border-[#E8E1D6] bg-white p-7 shadow-[0_18px_52px_-48px_rgba(26,22,20,0.55)]">
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: CHALLENGE }}>
+              The bridge
+            </p>
+            <p className="mt-5 text-[17px] leading-relaxed text-[#332E29]" style={{ fontWeight: 300 }}>
+              None of this means your drive is the problem. The shift is about giving the other two foundations enough support that your drive can remain powerful without holding everything up on its own.
+            </p>
+          </div>
         </div>
       </section>
 
       <a
         href="#direction"
-        className="group block rounded-[28px] bg-[#1A1614] p-7 text-white shadow-[0_26px_70px_-58px_rgba(26,22,20,0.72)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30 md:p-8"
+        className="group mx-auto block max-w-[1050px] rounded-[32px] bg-[#15110F] p-7 text-white shadow-[0_28px_78px_-58px_rgba(26,22,20,0.78)] transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/30 md:p-8"
       >
-        <div className="grid gap-5 md:grid-cols-[auto_1fr_auto] md:items-center">
-          <div className="grid h-12 w-12 place-items-center rounded-full bg-white/10 text-[#FFBB30]">
-            <Compass size={21} strokeWidth={2.2} />
-          </div>
-          <p className="text-[18px] leading-relaxed text-white/88" style={{ fontWeight: 300 }}>
-            Your direction is not to lower the peak. It is to strengthen the foundations beneath it so that Challenge can remain powerful without carrying the whole system.
+        <div className="grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
+          <p className="text-[20px] leading-relaxed text-white/88" style={{ fontWeight: 300 }}>
+            The strength stays. The next section begins where this pattern can actually shift.
           </p>
-          <span className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.13em] text-[#FFBB30] transition-transform group-hover:translate-x-1">
+          <span className="inline-flex items-center gap-3 rounded-full bg-white px-5 py-3 text-[12px] font-extrabold uppercase tracking-[0.14em] text-[#15110F] transition-transform group-hover:translate-x-1">
             Your Direction
             <ArrowRight size={16} strokeWidth={2.4} />
           </span>
@@ -305,104 +212,227 @@ export function HowFoundationsWork() {
   );
 }
 
-function SystemMap() {
+function SystemSynthesisVisual({ activeBeat }: { activeBeat: number }) {
+  const patternActive = activeBeat === 0;
+  const loopActive = activeBeat === 1;
+  const costActive = activeBeat === 2;
+
   return (
-    <div className="relative z-10 flex h-full min-h-[500px] flex-col justify-between">
-      <div className="relative mx-auto h-[360px] w-full max-w-[430px]">
-        <motion.div
-          className="absolute left-1/2 top-4 h-52 w-52 -translate-x-1/2 rounded-full blur-2xl"
-          style={{ backgroundColor: 'rgba(220,76,12,0.2)' }}
-          animate={{ opacity: [0.45, 0.8, 0.45], scale: [0.95, 1.08, 0.95] }}
-          transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
+    <div className="relative h-full min-h-[640px] overflow-visible">
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[430px] w-[430px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        style={{ backgroundColor: loopActive ? 'rgba(255,171,0,0.22)' : patternActive ? 'rgba(220,76,12,0.18)' : 'rgba(66,166,142,0.16)' }}
+        animate={{ scale: [0.96, 1.08, 0.96], opacity: [0.42, 0.74, 0.42] }}
+        transition={{ duration: 6.6, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
+      <svg viewBox="0 0 680 640" className="absolute inset-0 h-full w-full overflow-visible" role="img" aria-labelledby="foundationSystemTitle foundationSystemDesc">
+        <title id="foundationSystemTitle">Foundations working as one system</title>
+        <desc id="foundationSystemDesc">Challenge forms the strongest peak while Safety and Play sit lower, showing how one foundation carries more of the system.</desc>
+        <defs>
+          <filter id="integrationSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="10" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="integrationShadow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="22" stdDeviation="18" floodColor="#1A1614" floodOpacity="0.14" />
+          </filter>
+          <linearGradient id="loadedPeakFill" x1="340" y1="88" x2="340" y2="474" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#F35A20" stopOpacity="0.9" />
+            <stop offset="0.68" stopColor="#F35A20" stopOpacity="0.42" />
+            <stop offset="1" stopColor="#F2A900" stopOpacity="0.16" />
+          </linearGradient>
+          <radialGradient id="arrivalGlow" cx="50%" cy="50%" r="50%">
+            <stop stopColor="#FFFFFF" stopOpacity="0.96" />
+            <stop offset="0.32" stopColor="#FFAB00" stopOpacity="0.62" />
+            <stop offset="1" stopColor="#FFAB00" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        <g opacity="0.78">
+          {[0.25, 0.5, 0.75, 1].map((ring, index) => (
+            <path
+              key={ring}
+              d={`M340 ${474 - 386 * ring} L${116 + 224 * (1 - ring)} ${474} L${564 - 224 * (1 - ring)} ${474} Z`}
+              fill="none"
+              stroke="#D8D0C4"
+              strokeWidth={index === 3 ? 1.4 : 1}
+              opacity={index === 3 ? 0.7 : 0.46}
+            />
+          ))}
+          <path d="M340 88 L340 474" stroke="#D8D0C4" strokeWidth="1.2" />
+          <path d="M340 474 L116 474" stroke="#D8D0C4" strokeWidth="1.2" />
+          <path d="M340 474 L564 474" stroke="#D8D0C4" strokeWidth="1.2" />
+        </g>
+
+        <motion.path
+          d="M340 172 L253 382 L412 398 Z"
+          fill="url(#loadedPeakFill)"
+          animate={{
+            opacity: costActive ? 0.46 : 0.72,
+            scale: patternActive ? [1, 1.018, 1] : 1,
+          }}
+          style={{ transformOrigin: '340px 474px' }}
+          transition={{ duration: 4.8, repeat: patternActive ? Infinity : 0, ease: 'easeInOut' }}
         />
-        <svg viewBox="0 0 430 360" className="relative z-10 h-full w-full overflow-visible" aria-labelledby="systemMapTitle systemMapDesc" role="img">
-          <title id="systemMapTitle">Dynamic foundation system</title>
-          <desc id="systemMapDesc">Challenge generates the strongest momentum while Safety and Play provide less support underneath.</desc>
-          <defs>
-            <filter id="nodeShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="16" stdDeviation="14" floodColor="#1A1614" floodOpacity="0.13" />
-            </filter>
-            <linearGradient id="apexGradient" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#F15A1A" />
-              <stop offset="100%" stopColor="#C84A2D" />
-            </linearGradient>
-          </defs>
 
-          <motion.path
-            d="M112 258 C165 210 212 170 215 104"
-            fill="none"
-            stroke={SAFETY}
-            strokeWidth="12"
-            strokeLinecap="round"
-            opacity="0.38"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.9, ease: 'easeOut' }}
-          />
-          <motion.path
-            d="M318 258 C268 214 219 170 215 104"
-            fill="none"
-            stroke={PLAY}
-            strokeWidth="10"
-            strokeLinecap="round"
-            opacity="0.35"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.9, delay: 0.12, ease: 'easeOut' }}
-          />
-          <motion.path
-            d="M215 104 C215 158 223 206 250 252"
-            fill="none"
-            stroke={CHALLENGE}
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeDasharray="2 18"
-            opacity="0.72"
-            animate={{ strokeDashoffset: [0, -60] }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: 'linear' }}
-          />
+        <motion.path
+          d="M340 172 L253 382 L412 398"
+          fill="none"
+          stroke={patternActive ? CHALLENGE : '#B9B0A6'}
+          strokeWidth={patternActive ? 4 : 2.4}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          filter={patternActive ? 'url(#integrationSoftGlow)' : undefined}
+          animate={{ opacity: patternActive ? [0.76, 1, 0.76] : 0.44 }}
+          transition={{ duration: 3.8, repeat: patternActive ? Infinity : 0, ease: 'easeInOut' }}
+        />
 
-          <motion.g filter="url(#nodeShadow)" animate={{ y: [0, -5, 0] }} transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}>
-            <path d="M215 18 L282 104 L215 190 L148 104 Z" fill="url(#apexGradient)" />
-            <text x="215" y="97" textAnchor="middle" fill="#FFFFFF" fontSize="15" fontWeight="900" letterSpacing="2.2">CHALLENGE</text>
-            <text x="215" y="122" textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="700">GENERATES MOMENTUM</text>
-          </motion.g>
+        <motion.path
+          d="M340 474 C342 404 341 298 340 172"
+          fill="none"
+          stroke={CHALLENGE}
+          strokeWidth="9"
+          strokeLinecap="round"
+          opacity={patternActive ? 0.78 : 0.34}
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        />
 
-          <g filter="url(#nodeShadow)">
-            <path d="M70 222 L188 222 L136 308 L30 308 Z" fill={SAFETY} opacity="0.82" />
-            <text x="108" y="266" textAnchor="middle" fill="#FFFFFF" fontSize="13" fontWeight="900" letterSpacing="2">SAFETY</text>
-            <text x="108" y="288" textAnchor="middle" fill="#FFFFFF" fontSize="11">NEEDS SUPPORT</text>
+        <motion.path
+          d="M253 382 C280 334 314 282 340 172"
+          fill="none"
+          stroke={SAFETY}
+          strokeWidth="4"
+          strokeLinecap="round"
+          opacity={patternActive ? 0.56 : 0.22}
+          strokeDasharray="4 14"
+          animate={{ strokeDashoffset: patternActive ? [0, -54] : 0 }}
+          transition={{ duration: 5.8, repeat: patternActive ? Infinity : 0, ease: 'linear' }}
+        />
+        <motion.path
+          d="M412 398 C388 346 358 280 340 172"
+          fill="none"
+          stroke={PLAY}
+          strokeWidth="4"
+          strokeLinecap="round"
+          opacity={patternActive ? 0.56 : 0.22}
+          strokeDasharray="4 14"
+          animate={{ strokeDashoffset: patternActive ? [0, -54] : 0 }}
+          transition={{ duration: 5.8, repeat: patternActive ? Infinity : 0, ease: 'linear', delay: 0.3 }}
+        />
+
+        {loopActive && (
+          <g>
+            <path d="M340 474 C474 456 520 346 442 260 C392 204 342 196 340 172" fill="none" stroke="#E9A821" strokeWidth="2" strokeDasharray="8 11" opacity="0.58" />
+            <motion.circle
+              r="7"
+              fill={PLAY}
+              filter="url(#integrationSoftGlow)"
+              animate={{
+                cx: [340, 442, 514, 442, 340],
+                cy: [474, 260, 354, 466, 474],
+                opacity: [0.18, 0.78, 0.62, 0.42, 0.18],
+              }}
+              transition={{ duration: 4.6, repeat: Infinity, ease: [0.43, 0, 0.2, 1] }}
+            />
+            <motion.path
+              d="M340 474 C340 384 340 284 340 172"
+              fill="none"
+              stroke={CHALLENGE}
+              strokeWidth="5"
+              strokeLinecap="round"
+              animate={{ pathLength: [0, 1, 1], opacity: [0.2, 0.86, 0.18] }}
+              transition={{ duration: 2.8, repeat: Infinity, ease: [0.16, 1, 0.3, 1] }}
+            />
           </g>
-          <g filter="url(#nodeShadow)">
-            <path d="M242 222 L360 222 L400 308 L294 308 Z" fill={PLAY} opacity="0.82" />
-            <text x="322" y="266" textAnchor="middle" fill="#FFFFFF" fontSize="13" fontWeight="900" letterSpacing="2">PLAY</text>
-            <text x="322" y="288" textAnchor="middle" fill="#FFFFFF" fontSize="11">PARTIAL REFILL</text>
-          </g>
+        )}
 
+        {costActive && (
+          <g>
+            <motion.path
+              d="M116 506 C218 540 308 540 340 506 C374 470 448 470 564 506"
+              fill="none"
+              stroke="#7B756E"
+              strokeWidth="5"
+              strokeLinecap="round"
+              opacity="0.34"
+              animate={{ pathLength: [0, 1, 1], opacity: [0.12, 0.42, 0.24] }}
+              transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.path
+              d="M228 512 C276 552 320 562 340 528 C360 494 406 504 452 544"
+              fill="none"
+              stroke={SAFETY}
+              strokeWidth="3"
+              strokeLinecap="round"
+              opacity="0.52"
+              strokeDasharray="5 12"
+              animate={{ strokeDashoffset: [0, -68] }}
+              transition={{ duration: 5.4, repeat: Infinity, ease: 'linear' }}
+            />
+            <motion.circle
+              cx="340"
+              cy="172"
+              r="108"
+              fill="none"
+              stroke={CHALLENGE}
+              strokeWidth="2"
+              strokeDasharray="3 13"
+              opacity="0.32"
+              animate={{ scale: [0.94, 1.18, 0.94], opacity: [0.18, 0.38, 0.18] }}
+              style={{ transformOrigin: '340px 172px' }}
+              transition={{ duration: 3.9, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </g>
+        )}
+
+        <g filter="url(#integrationShadow)">
           <motion.circle
-            cx="215"
-            cy="104"
-            r="122"
-            fill="none"
-            stroke={CHALLENGE}
-            strokeWidth="2"
-            strokeDasharray="7 12"
-            opacity="0.28"
-            animate={{ rotate: 360 }}
-            style={{ transformOrigin: '215px 104px' }}
-            transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+            cx="340"
+            cy="172"
+            r="17"
+            fill={CHALLENGE}
+            stroke="#FFF9F0"
+            strokeWidth="6"
+            animate={{ scale: patternActive ? [1, 1.18, 1] : 1 }}
+            style={{ transformOrigin: '340px 172px' }}
+            transition={{ duration: 3.2, repeat: patternActive ? Infinity : 0, ease: 'easeInOut' }}
           />
-        </svg>
-      </div>
+          <circle cx="253" cy="382" r="13" fill={SAFETY} stroke="#FFF9F0" strokeWidth="5" opacity="0.9" />
+          <circle cx="412" cy="398" r="13" fill={PLAY} stroke="#FFF9F0" strokeWidth="5" opacity="0.9" />
+          <circle cx="340" cy="334" r="14" fill="#FFFDF9" stroke="#D9D1C5" strokeWidth="4" />
+        </g>
 
-      <div className="rounded-[24px] bg-white/76 p-5 shadow-[0_18px_44px_-38px_rgba(26,22,20,0.5)]">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: CHALLENGE }}>
-          The synthesis in one line
+        <motion.circle
+          cx="340"
+          cy="172"
+          r="86"
+          fill="url(#arrivalGlow)"
+          opacity={loopActive ? 0.5 : 0.22}
+          animate={{ scale: [0.82, 1.24, 0.82], opacity: loopActive ? [0.18, 0.58, 0.18] : [0.12, 0.3, 0.12] }}
+          style={{ transformOrigin: '340px 172px' }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+
+        <g style={{ fontFamily: SERIF, fontWeight: 600 }}>
+          <text x="340" y="78" textAnchor="middle" fill={CHALLENGE} fontSize="34">Challenge</text>
+          <text x="168" y="556" textAnchor="middle" fill={SAFETY} fontSize="28">Safety</text>
+          <text x="512" y="556" textAnchor="middle" fill={PLAY} fontSize="28">Play</text>
+        </g>
+      </svg>
+
+      <div className="absolute bottom-10 left-1/2 w-[72%] -translate-x-1/2 rounded-[30px] border border-[#E8E1D6] bg-white/82 p-6 text-center shadow-[0_24px_70px_-58px_rgba(26,22,20,0.55)] backdrop-blur-md">
+        <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: CHALLENGE }}>
+          The system view
         </p>
-        <p className="mt-3 text-[18px] leading-snug text-[#15110F]" style={{ fontFamily: SERIF, fontWeight: 600 }}>
-          The strongest part of the system is also the part being asked to hold the most.
+        <p className="mt-3 text-[23px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.035em' }}>
+          One shape. Three foundations. One load.
         </p>
       </div>
     </div>
