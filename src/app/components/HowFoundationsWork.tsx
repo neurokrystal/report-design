@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { useState } from 'react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
@@ -7,7 +7,6 @@ const SAFETY = '#42A68E';
 const PLAY = '#FFAB00';
 const CHALLENGE = '#DC4C0C';
 const INK = '#15110F';
-const PAPER = '#FDFCFA';
 
 const PROFILE = {
   Safety: 27,
@@ -15,62 +14,55 @@ const PROFILE = {
   Play: 41,
 } as const;
 
-const diagnosisBeats = [
+const movements = [
   {
-    label: 'The pattern',
-    title: "Your three domains don't sit side by side.",
+    id: 'gives',
+    kicker: 'What it gives',
+    title: 'A real engine.',
     copy:
-      "They work on each other, and together they produce one pattern you've been living inside without quite seeing its shape. Challenge leads. Safety and Play sit well below it. That gap is not just three scores - it is a system with one part doing most of the work.",
+      "Your drive makes you capable in a way most people aren't. You set a direction and move on it. You deliver when it matters, and people rely on you because you've earned it.",
+    note:
+      "This isn't a flaw dressed up as a strength. It is a genuine engine, and you'd be right not to want to lose it.",
     accent: CHALLENGE,
   },
   {
-    label: 'What it gives',
-    title: 'Your drive makes you capable in a way most people are not.',
+    id: 'costs',
+    kicker: 'What it costs',
+    title: 'A larger trade than it first appears.',
     copy:
-      "You set a direction and move on it. You deliver when it matters, and you hold under pressure that makes other people fold. People rely on you because you've earned it: you are the one who gets the difficult thing done and done well.",
-    note: "This is not a flaw dressed up as a strength. It is a genuine engine, and you'd be right not to want to lose it.",
-    accent: CHALLENGE,
-  },
-  {
-    label: 'What it costs',
-    title: "The price is larger than the trade you think you're making.",
-    copy:
-      "Day to day, the system spends more than it takes back. Over time, what you know about yourself can narrow to what you do.",
+      "Rest does not fully restore you. Stopping can feel unsafe, so you do not stop for long. Over time, what you know about yourself can narrow to what you do.",
+    note:
+      "At your level, this has likely moved past the daily cost toward the deeper one: there is less underneath to stand on when output is not available.",
     accent: SAFETY,
   },
   {
-    label: 'The loop',
-    title: 'The effort is real. It is aimed at a target it cannot reach.',
+    id: 'loop',
+    kicker: 'The loop',
+    title: 'A real strength, aimed at a target it cannot reach.',
     copy:
-      "You reach for drive to feel steady, and to feel that you're enough. But steadiness and worth were never drive's to give. Achievement delivers the hit and not the thing. You feel it for a moment, then it fades, and the need underneath is still there. So you set the next goal, and the next.",
+      "You reach for drive to feel steady. Achievement delivers the hit and not the thing. It fades, the need underneath is still there, and the system reaches for the next goal.",
+    note:
+      "The effort is real. The problem is not the effort. It is where the effort is pointed.",
     accent: PLAY,
-  },
-  {
-    label: 'The belief',
-    title: 'The pattern completes itself around one quiet assumption.',
-    copy:
-      'You keep reaching for drive, it keeps not delivering the thing you are actually after, and you keep reaching again.',
-    belief: 'that steadiness would cost you your drive.',
-    accent: CHALLENGE,
   },
 ] as const;
 
-const dayCosts = [
-  "Rest doesn't fully restore you.",
-  "Stopping can feel unsafe, so you don't stop for long.",
-  'You spend more than you take back.',
-  "Relationships and interests that don't produce a visible result can get less of you.",
+const dailyCosts = [
+  "Rest does not fully restore you.",
+  "Stopping can feel unsafe.",
+  "The system spends more than it takes back.",
+  "Some relationships and interests get less of you.",
 ];
 
-const persistenceBeliefs = [
+const sustainingBeliefs = [
   "If you ease off, you'll lose your edge.",
-  "If you let yourself feel content, the drive that gets you what others can't will go quiet.",
+  "If you let yourself feel content, the drive will go quiet.",
   "Comfort is for people who've settled for less.",
 ];
 
 export function HowFoundationsWork() {
-  const [activeBeat, setActiveBeat] = useState(0);
-  const beat = diagnosisBeats[activeBeat];
+  const [activeMovement, setActiveMovement] = useState<(typeof movements)[number]['id']>('gives');
+  const active = movements.find(movement => movement.id === activeMovement) ?? movements[0];
 
   return (
     <div className="space-y-14">
@@ -93,288 +85,252 @@ export function HowFoundationsWork() {
         <div className="h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
       </header>
 
-      <section className="relative -mx-4 overflow-hidden px-4 py-6 md:-mx-8 md:px-8 lg:py-10">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(220,76,12,0.12),transparent_30%),radial-gradient(circle_at_78%_24%,rgba(255,171,0,0.10),transparent_34%),radial-gradient(circle_at_48%_86%,rgba(66,166,142,0.12),transparent_38%)]" />
-        <div className="pointer-events-none absolute left-1/2 top-[15%] h-[620px] w-[620px] -translate-x-1/2 rounded-full border border-[#E8DED1]/50" />
+      <section className="relative -mx-4 overflow-hidden px-4 pb-4 pt-2 md:-mx-8 md:px-8 lg:pb-10 lg:pt-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_26%_20%,rgba(220,76,12,0.10),transparent_31%),radial-gradient(circle_at_74%_34%,rgba(255,171,0,0.12),transparent_35%),radial-gradient(circle_at_48%_92%,rgba(66,166,142,0.13),transparent_38%)]" />
         <motion.div
-          className="pointer-events-none absolute right-[-10%] top-20 h-[520px] w-[520px] rounded-full border border-[#F0E7D9]/60"
-          animate={{ scale: [0.96, 1.04, 0.96], opacity: [0.28, 0.62, 0.28] }}
-          transition={{ duration: 8.2, repeat: Infinity, ease: 'easeInOut' }}
+          className="pointer-events-none absolute left-[43%] top-[22%] h-[620px] w-[620px] rounded-full border border-[#E5DCCF]/55"
+          animate={{ scale: [0.98, 1.04, 0.98], opacity: [0.34, 0.72, 0.34] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
 
         <div className="relative mx-auto max-w-[1080px]">
-          <div className="mb-12 grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center">
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: CHALLENGE }}>
-                System diagnosis
-              </p>
               <h2
-                className="mt-4 max-w-[680px]"
+                className="max-w-[620px]"
                 style={{
                   fontFamily: SERIF,
-                  fontSize: 'clamp(2.8rem, 5.8vw, 6rem)',
-                  lineHeight: 0.94,
-                  letterSpacing: '-0.06em',
+                  fontSize: 'clamp(3rem, 6vw, 6.35rem)',
+                  lineHeight: 0.91,
+                  letterSpacing: '-0.065em',
                   color: INK,
                 }}
               >
-                The machinery becomes visible.
+                Not three scores. One repeating system.
               </h2>
+              <p className="mt-9 max-w-[600px] text-[19px] leading-[1.8] text-[#332E29]" style={{ fontWeight: 300 }}>
+                Your three domains do not sit side by side. They work on each other, and together they produce one pattern you have been living inside without quite seeing its shape.
+              </p>
+              <p className="mt-5 max-w-[570px] text-[17px] leading-[1.75] text-[#5A534C]" style={{ fontWeight: 300 }}>
+                Challenge leads. Safety and Play sit well below it. That gap is not just three scores - it is a system with one part doing most of the work.
+              </p>
             </div>
-            <p className="max-w-[620px] text-[18px] leading-[1.75] text-[#332E29]" style={{ fontWeight: 300 }}>
-              This is where Safety, Play, and Challenge stop reading as separate findings. The question is no longer which score is high or low. It is what one repeating system they create together.
-            </p>
+
+            <SystemPatternVisual activeMovement={activeMovement} />
           </div>
 
-          <BeatNavigator activeBeat={activeBeat} onSelect={setActiveBeat} />
-
-          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-center">
-            <div className="min-h-[560px]">
-              <AnimatePresence mode="wait">
-                <motion.article
-                  key={activeBeat}
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-                  className="py-3"
+          <div className="mt-14 grid gap-4 lg:grid-cols-3">
+            {movements.map(movement => {
+              const isActive = movement.id === activeMovement;
+              return (
+                <button
+                  key={movement.id}
+                  type="button"
+                  onMouseEnter={() => setActiveMovement(movement.id)}
+                  onClick={() => setActiveMovement(movement.id)}
+                  className="group relative min-h-[310px] overflow-hidden border bg-[#FFFDF9]/78 p-7 text-left shadow-[0_22px_70px_-58px_rgba(27,22,18,0.55)] transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
+                  style={{
+                    borderColor: isActive ? `${movement.accent}88` : '#E4DACE',
+                    borderTopWidth: 3,
+                  }}
                 >
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: beat.accent }}>
-                    {beat.label}
-                  </p>
-                  <h3
-                    className="mt-5"
+                  <motion.div
+                    className="pointer-events-none absolute inset-x-0 top-0 h-[62%]"
                     style={{
-                      fontFamily: SERIF,
-                      fontSize: 'clamp(2.45rem, 4.8vw, 4.75rem)',
-                      lineHeight: 0.98,
-                      letterSpacing: '-0.055em',
-                      color: INK,
+                      background: `radial-gradient(circle at 50% 8%, ${movement.accent}24, transparent 64%)`,
                     }}
-                  >
-                    {beat.title}
-                  </h3>
-                  <p className="mt-8 max-w-[610px] text-[18px] leading-[1.78] text-[#332E29]" style={{ fontWeight: 300 }}>
-                    {beat.copy}
-                  </p>
-
-                  {'note' in beat && (
-                    <p
-                      className="mt-7 max-w-[570px] border-l pl-5 text-[20px] leading-[1.55] text-[#1D1815]"
-                      style={{ borderColor: `${beat.accent}66`, fontFamily: SERIF }}
-                    >
-                      {beat.note}
+                    animate={{ opacity: isActive ? 1 : 0.34 }}
+                    transition={{ duration: 0.28 }}
+                  />
+                  <div className="relative">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.17em]" style={{ color: movement.accent }}>
+                      {movement.kicker}
                     </p>
-                  )}
+                    <h3
+                      className="mt-5 max-w-[310px]"
+                      style={{
+                        fontFamily: SERIF,
+                        fontSize: 'clamp(2rem, 2.7vw, 2.65rem)',
+                        lineHeight: 1.02,
+                        letterSpacing: '-0.045em',
+                        color: INK,
+                      }}
+                    >
+                      {movement.title}
+                    </h3>
+                    <p className="mt-6 text-[16px] leading-[1.72] text-[#3E3832]" style={{ fontWeight: 300 }}>
+                      {movement.copy}
+                    </p>
+                    <p
+                      className="mt-6 border-l pl-4 text-[17px] leading-[1.5] text-[#1E1915]"
+                      style={{ borderColor: `${movement.accent}70`, fontFamily: SERIF }}
+                    >
+                      {movement.note}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-                  {activeBeat === 2 && <CostReadout />}
-                  {activeBeat === 4 && <BeliefReadout belief={beat.belief} />}
-                </motion.article>
-              </AnimatePresence>
+          <div className="mt-12 grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+            <div className="bg-[#17120F] p-8 text-white shadow-[0_32px_90px_-70px_rgba(20,15,12,0.95)]">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#FFBB30]">What the cost is made of</p>
+              <div className="mt-7 grid gap-8 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                <div>
+                  <p className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-[#BFB7AD]">Day to day</p>
+                  <ul className="mt-4 space-y-3">
+                    {dailyCosts.map(item => (
+                      <li key={item} className="text-[15.5px] leading-relaxed text-[#F2E9DD]" style={{ fontWeight: 300 }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-[#BFB7AD]">Why it persists</p>
+                  <ul className="mt-4 space-y-3">
+                    {sustainingBeliefs.map(item => (
+                      <li key={item} className="text-[15.5px] leading-relaxed text-[#F2E9DD]" style={{ fontWeight: 300 }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
 
-            <div className="relative min-h-[620px]">
-              <DiagnosisVisual activeBeat={activeBeat} />
+            <div className="relative overflow-hidden border border-[#E5DACE] bg-[#FFFDF9]/86 p-8">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_88%_10%,rgba(220,76,12,0.14),transparent_35%),radial-gradient(circle_at_12%_95%,rgba(66,166,142,0.14),transparent_42%)]" />
+              <div className="relative">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: PLAY }}>
+                  The connection
+                </p>
+                <h3
+                  className="mt-5 max-w-[680px]"
+                  style={{
+                    fontFamily: SERIF,
+                    fontSize: 'clamp(2.25rem, 3.6vw, 3.85rem)',
+                    lineHeight: 1,
+                    letterSpacing: '-0.055em',
+                    color: INK,
+                  }}
+                >
+                  The benefit and the cost are the same transaction, repeating.
+                </h3>
+                <p className="mt-7 max-w-[680px] text-[17px] leading-[1.78] text-[#332E29]" style={{ fontWeight: 300 }}>
+                  You reach for drive to feel steady, and to feel that you are enough. But steadiness and worth were never drive's to give. Achievement delivers the hit and not the thing. It fades, and the need underneath is still there. So you set the next goal, and the next.
+                </p>
+              </div>
             </div>
           </div>
+
+          <BeliefHinge />
         </div>
       </section>
     </div>
   );
 }
 
-function BeatNavigator({
-  activeBeat,
-  onSelect,
-}: {
-  activeBeat: number;
-  onSelect: (index: number) => void;
-}) {
-  return (
-    <nav aria-label="Section 7 diagnostic beats" className="relative">
-      <div className="absolute left-0 right-0 top-[17px] h-px bg-[#E4DDD4]" />
-      <div className="relative grid gap-2 sm:grid-cols-5">
-        {diagnosisBeats.map((beat, index) => {
-          const active = activeBeat === index;
-          const completed = index < activeBeat;
-          return (
-            <button
-              key={beat.label}
-              type="button"
-              onClick={() => onSelect(index)}
-              onMouseEnter={() => onSelect(index)}
-              className="group flex items-center gap-3 rounded-full bg-transparent py-2 pr-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
-            >
-              <span
-                className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full border bg-[#FDFCFA] text-[11px] font-extrabold transition-all"
-                style={{
-                  borderColor: active || completed ? beat.accent : '#D8D0C4',
-                  color: active ? '#FFFFFF' : active || completed ? beat.accent : '#8C857C',
-                  backgroundColor: active ? beat.accent : PAPER,
-                  boxShadow: active ? `0 16px 34px -24px ${beat.accent}` : undefined,
-                }}
-              >
-                {index + 1}
-              </span>
-              <span
-                className="text-[10px] font-extrabold uppercase tracking-[0.14em] transition-colors"
-                style={{ color: active ? beat.accent : '#8C857C' }}
-              >
-                {beat.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
-  );
-}
-
-function CostReadout() {
-  return (
-    <div className="mt-8 grid gap-5 md:grid-cols-2">
-      <div className="border-l border-[#42A68E]/45 pl-5">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#42A68E]">Day to day</p>
-        <ul className="mt-4 space-y-3">
-          {dayCosts.map(item => (
-            <li key={item} className="text-[15.5px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="border-l border-[#DC4C0C]/42 pl-5">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#DC4C0C]">Why it persists</p>
-        <ul className="mt-4 space-y-3">
-          {persistenceBeliefs.map(item => (
-            <li key={item} className="text-[15.5px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-function BeliefReadout({ belief }: { belief: string }) {
-  return (
-    <div className="mt-9 max-w-[590px] bg-[#15110F] px-7 py-6 text-white shadow-[0_30px_82px_-62px_rgba(26,22,20,0.85)]">
-      <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#FFBB30]">The hinge</p>
-      <p className="mt-4 text-[27px] leading-tight" style={{ fontFamily: SERIF, letterSpacing: '-0.035em' }}>
-        {belief}
-      </p>
-    </div>
-  );
-}
-
-function DiagnosisVisual({ activeBeat }: { activeBeat: number }) {
-  const isPattern = activeBeat === 0;
-  const isGift = activeBeat === 1;
-  const isCost = activeBeat === 2;
-  const isLoop = activeBeat === 3;
-  const isBelief = activeBeat === 4;
+function SystemPatternVisual({ activeMovement }: { activeMovement: (typeof movements)[number]['id'] }) {
+  const isGift = activeMovement === 'gives';
+  const isCost = activeMovement === 'costs';
+  const isLoop = activeMovement === 'loop';
   const points = radarPoints(PROFILE);
   const profile = `${points.challenge.x},${points.challenge.y} ${points.play.x},${points.play.y} ${points.safety.x},${points.safety.y}`;
 
   return (
-    <div className="relative h-full min-h-[620px] overflow-visible">
+    <div className="relative min-h-[610px] overflow-visible">
       <motion.div
-        className="absolute left-1/2 top-1/2 h-[470px] w-[470px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-        style={{ backgroundColor: isCost ? 'rgba(66,166,142,0.18)' : isBelief ? 'rgba(26,17,15,0.12)' : 'rgba(220,76,12,0.18)' }}
-        animate={{ scale: [0.96, 1.08, 0.96], opacity: [0.34, 0.66, 0.34] }}
-        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        style={{
+          backgroundColor: isCost ? 'rgba(22,18,15,0.13)' : isLoop ? 'rgba(255,171,0,0.16)' : 'rgba(220,76,12,0.16)',
+        }}
+        animate={{ scale: [0.96, 1.08, 0.96], opacity: [0.36, 0.66, 0.36] }}
+        transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <svg viewBox="0 0 720 660" className="absolute inset-0 h-full w-full overflow-visible" role="img" aria-labelledby="diagnosisTitle diagnosisDesc">
-        <title id="diagnosisTitle">Foundation system diagnosis</title>
-        <desc id="diagnosisDesc">A three-axis shape shows Challenge leading while Safety and Play sit lower, then reveals the loop that keeps the pattern running.</desc>
+
+      <svg viewBox="0 0 760 690" className="absolute inset-0 h-full w-full overflow-visible" role="img" aria-labelledby="systemPatternTitle systemPatternDesc">
+        <title id="systemPatternTitle">Integrated foundation pattern</title>
+        <desc id="systemPatternDesc">A three-axis profile shows Challenge leading, with Safety and Play lower, and reveals the benefit, cost, and repeated loop of the pattern.</desc>
         <defs>
-          <filter id="diagnosisGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <filter id="systemGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="10" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <linearGradient id="diagnosisFill" x1="360" x2="360" y1="94" y2="520" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#F2551A" stopOpacity="0.42" />
-            <stop offset="0.62" stopColor="#F2551A" stopOpacity="0.17" />
+          <linearGradient id="systemProfileFill" x1="380" x2="380" y1="76" y2="545" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#F2551A" stopOpacity="0.44" />
+            <stop offset="0.5" stopColor="#F2551A" stopOpacity="0.18" />
             <stop offset="1" stopColor="#42A68E" stopOpacity="0.08" />
           </linearGradient>
-          <radialGradient id="diagnosisArrival" cx="50%" cy="50%" r="50%">
-            <stop stopColor="#FFFFFF" stopOpacity="0.94" />
-            <stop offset="0.34" stopColor="#FFBB30" stopOpacity="0.52" />
+          <linearGradient id="costSink" x1="380" x2="380" y1="260" y2="612" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#15110F" stopOpacity="0" />
+            <stop offset="1" stopColor="#15110F" stopOpacity="0.42" />
+          </linearGradient>
+          <radialGradient id="earnedGlow" cx="50%" cy="50%" r="50%">
+            <stop stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="0.28" stopColor="#FFBB30" stopOpacity="0.56" />
             <stop offset="1" stopColor="#F2551A" stopOpacity="0" />
           </radialGradient>
         </defs>
 
-        <g opacity="0.82">
+        <g opacity="0.8">
           {[0.25, 0.5, 0.75, 1].map(scale => (
             <polygon
               key={scale}
               points={ringPoints(scale)}
               fill="none"
               stroke="#D8D0C4"
-              strokeWidth={scale === 1 ? 1.35 : 0.9}
-              opacity={scale === 1 ? 0.64 : 0.36}
+              strokeWidth={scale === 1 ? 1.35 : 0.85}
+              opacity={scale === 1 ? 0.64 : 0.33}
             />
           ))}
-          <line x1="360" y1="330" x2="360" y2="100" stroke="#D8D0C4" strokeWidth="1.1" />
-          <line x1="360" y1="330" x2="161" y2="445" stroke="#D8D0C4" strokeWidth="1.1" />
-          <line x1="360" y1="330" x2="559" y2="445" stroke="#D8D0C4" strokeWidth="1.1" />
+          <line x1="380" y1="342" x2="380" y2="94" stroke="#D8D0C4" strokeWidth="1" />
+          <line x1="380" y1="342" x2="165" y2="466" stroke="#D8D0C4" strokeWidth="1" />
+          <line x1="380" y1="342" x2="595" y2="466" stroke="#D8D0C4" strokeWidth="1" />
         </g>
 
         <motion.polygon
           points={profile}
-          fill="url(#diagnosisFill)"
-          stroke={isPattern ? CHALLENGE : '#B8AEA2'}
-          strokeWidth={isPattern ? 2.6 : 1.35}
-          strokeOpacity={isBelief ? 0.28 : isPattern ? 0.55 : 0.34}
-          animate={{ opacity: isBelief ? 0.32 : isCost ? 0.42 : 0.72, scale: isPattern ? [0.99, 1.015, 0.99] : 1 }}
-          style={{ transformOrigin: '360px 330px' }}
-          transition={{ duration: 4.8, repeat: isPattern ? Infinity : 0, ease: 'easeInOut' }}
+          fill="url(#systemProfileFill)"
+          stroke={isGift ? CHALLENGE : '#B8AEA2'}
+          strokeOpacity={isCost ? 0.22 : 0.45}
+          strokeWidth={isGift ? 2.4 : 1.3}
+          animate={{
+            opacity: isCost ? 0.34 : 0.74,
+            scale: isGift ? [0.99, 1.018, 0.99] : 1,
+          }}
+          style={{ transformOrigin: '380px 342px' }}
+          transition={{ duration: 4.8, repeat: isGift ? Infinity : 0, ease: 'easeInOut' }}
         />
-
-        {(isGift || isLoop || isBelief) && (
-          <g>
-            <motion.path
-              d={`M360 330 L${points.challenge.x} ${points.challenge.y}`}
-              fill="none"
-              stroke={CHALLENGE}
-              strokeWidth={isLoop ? 5.8 : 7}
-              strokeLinecap="round"
-              opacity={isBelief ? 0.34 : 0.82}
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
-            />
-            <motion.circle
-              cx={points.challenge.x}
-              cy={points.challenge.y}
-              r={isGift ? 82 : 64}
-              fill="url(#diagnosisArrival)"
-              animate={{ scale: [0.82, 1.2, 0.82], opacity: [0.16, 0.52, 0.16] }}
-              style={{ transformOrigin: `${points.challenge.x}px ${points.challenge.y}px` }}
-              transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </g>
-        )}
 
         {isGift && (
           <g>
+            <motion.circle
+              cx={points.challenge.x}
+              cy={points.challenge.y}
+              r="112"
+              fill="url(#earnedGlow)"
+              animate={{ scale: [0.86, 1.16, 0.86], opacity: [0.28, 0.72, 0.28] }}
+              style={{ transformOrigin: `${points.challenge.x}px ${points.challenge.y}px` }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+            />
             {[
-              { x: 474, y: 136, text: 'delivers' },
-              { x: 496, y: 188, text: 'holds pressure' },
-              { x: 476, y: 242, text: 'gets it done' },
+              { x: 506, y: 116, text: 'capable' },
+              { x: 542, y: 184, text: 'reliable' },
+              { x: 512, y: 250, text: 'under pressure' },
             ].map((item, index) => (
               <motion.g
                 key={item.text}
-                initial={{ opacity: 0, x: -16 }}
+                initial={{ opacity: 0, x: -14 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.38, delay: index * 0.1 }}
+                transition={{ duration: 0.38, delay: index * 0.08 }}
               >
-                <circle cx={item.x - 22} cy={item.y - 5} r="4.5" fill={CHALLENGE} opacity="0.72" />
-                <text x={item.x} y={item.y} fill="#5B3324" fontSize="13" fontWeight="800" letterSpacing="1.4">
+                <circle cx={item.x - 22} cy={item.y - 5} r="5" fill={CHALLENGE} opacity="0.72" />
+                <text x={item.x} y={item.y} fill="#5A3122" fontSize="14" fontWeight="800" letterSpacing="1.45">
                   {item.text.toUpperCase()}
                 </text>
               </motion.g>
@@ -385,117 +341,124 @@ function DiagnosisVisual({ activeBeat }: { activeBeat: number }) {
         {isCost && (
           <g>
             <motion.path
-              d="M166 488 C242 532 471 532 554 488"
+              d="M154 530 C250 592 507 592 606 530"
               fill="none"
-              stroke="#8B8278"
-              strokeWidth="3.8"
+              stroke="#15110F"
+              strokeWidth="7"
               strokeLinecap="round"
-              opacity="0.34"
-              animate={{ pathLength: [0, 1, 1], opacity: [0.12, 0.42, 0.2] }}
-              transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+              opacity="0.18"
+              animate={{ pathLength: [0, 1, 1], opacity: [0.08, 0.24, 0.12] }}
+              transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
             />
+            <motion.rect x="112" y="338" width="536" height="238" rx="118" fill="url(#costSink)" opacity="0.72" />
             <motion.path
-              d={`M${points.safety.x} ${points.safety.y} C266 486 310 494 360 330`}
+              d={`M${points.safety.x} ${points.safety.y} C276 520 318 540 380 342`}
               fill="none"
               stroke={SAFETY}
-              strokeWidth="3"
+              strokeWidth="3.4"
               strokeLinecap="round"
-              strokeDasharray="5 12"
-              opacity="0.56"
-              animate={{ strokeDashoffset: [0, -68] }}
-              transition={{ duration: 5.8, repeat: Infinity, ease: 'linear' }}
+              strokeDasharray="6 14"
+              opacity="0.58"
+              animate={{ strokeDashoffset: [0, -80] }}
+              transition={{ duration: 6.4, repeat: Infinity, ease: 'linear' }}
             />
             <motion.path
-              d={`M${points.play.x} ${points.play.y} C454 486 410 494 360 330`}
+              d={`M${points.play.x} ${points.play.y} C488 520 442 540 380 342`}
               fill="none"
               stroke={PLAY}
-              strokeWidth="3"
+              strokeWidth="3.4"
               strokeLinecap="round"
-              strokeDasharray="5 12"
-              opacity="0.5"
-              animate={{ strokeDashoffset: [0, -68] }}
-              transition={{ duration: 5.8, repeat: Infinity, ease: 'linear', delay: 0.2 }}
+              strokeDasharray="6 14"
+              opacity="0.52"
+              animate={{ strokeDashoffset: [0, -80] }}
+              transition={{ duration: 6.4, repeat: Infinity, ease: 'linear', delay: 0.18 }}
             />
           </g>
         )}
 
         {isLoop && (
           <g>
+            <motion.path
+              d={`M380 342 C348 284 358 215 ${points.challenge.x} ${points.challenge.y} C416 220 421 286 380 342`}
+              fill="none"
+              stroke={CHALLENGE}
+              strokeWidth="5"
+              strokeLinecap="round"
+              opacity="0.56"
+              strokeDasharray="12 16"
+              animate={{ strokeDashoffset: [0, -120] }}
+              transition={{ duration: 2.9, repeat: Infinity, ease: 'linear' }}
+            />
             <motion.circle
               r="10"
               fill="#FFF9F0"
               stroke={CHALLENGE}
               strokeWidth="4"
-              filter="url(#diagnosisGlow)"
+              filter="url(#systemGlow)"
               animate={{
-                cx: [360, points.challenge.x, points.challenge.x, 360, 360],
-                cy: [330, points.challenge.y, points.challenge.y, 330, 330],
-                opacity: [1, 1, 1, 0.86, 1],
+                cx: [380, points.challenge.x, points.challenge.x, 380, 380],
+                cy: [342, points.challenge.y, points.challenge.y, 342, 342],
               }}
-              transition={{ duration: 4.7, repeat: Infinity, ease: [0.58, 0, 0.2, 1], times: [0, 0.28, 0.42, 0.82, 1] }}
+              transition={{ duration: 4.8, repeat: Infinity, ease: [0.6, 0, 0.2, 1], times: [0, 0.26, 0.44, 0.84, 1] }}
             />
-            <motion.path
-              d={`M360 330 L${points.challenge.x} ${points.challenge.y}`}
-              fill="none"
-              stroke={CHALLENGE}
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray="9 13"
-              opacity="0.48"
-              animate={{ strokeDashoffset: [0, -70] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'linear' }}
-            />
-            <text x="404" y="274" fill="#7A4A34" fontSize="13" fontWeight="800" letterSpacing="1.5">
-              SAME ROUTE
-            </text>
-          </g>
-        )}
-
-        {isBelief && (
-          <g>
-            <motion.rect
-              x="202"
-              y="226"
-              width="316"
-              height="162"
-              rx="28"
-              fill="#15110F"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 0.94, y: 0 }}
-              transition={{ duration: 0.42 }}
-            />
-            <text x="360" y="276" textAnchor="middle" fill="#FFBB30" fontSize="12" fontWeight="800" letterSpacing="2.2">
-              THE BELIEF
-            </text>
-            <text x="360" y="326" textAnchor="middle" fill="#FFF7EC" fontSize="26" fontFamily={SERIF}>
-              steadiness would
-            </text>
-            <text x="360" y="358" textAnchor="middle" fill="#FFF7EC" fontSize="26" fontFamily={SERIF}>
-              cost the drive
+            <text x="430" y="300" fill="#7A4A34" fontSize="13" fontWeight="800" letterSpacing="1.4">
+              SAME TARGET
             </text>
           </g>
         )}
 
         <g>
-          <circle cx={points.challenge.x} cy={points.challenge.y} r="15" fill={CHALLENGE} stroke="#FFF9F0" strokeWidth="6" filter="url(#diagnosisGlow)" />
-          <circle cx={points.safety.x} cy={points.safety.y} r="12" fill={SAFETY} stroke="#FFF9F0" strokeWidth="5" opacity={isBelief ? 0.46 : 0.86} />
-          <circle cx={points.play.x} cy={points.play.y} r="12" fill={PLAY} stroke="#FFF9F0" strokeWidth="5" opacity={isBelief ? 0.46 : 0.86} />
-          <circle cx="360" cy="330" r="13" fill="#FFFDF9" stroke="#D9D1C5" strokeWidth="4" />
+          <circle cx={points.challenge.x} cy={points.challenge.y} r="16" fill={CHALLENGE} stroke="#FFF9F0" strokeWidth="6" filter="url(#systemGlow)" />
+          <circle cx={points.safety.x} cy={points.safety.y} r="12" fill={SAFETY} stroke="#FFF9F0" strokeWidth="5" opacity={isCost ? 0.62 : 0.86} />
+          <circle cx={points.play.x} cy={points.play.y} r="12" fill={PLAY} stroke="#FFF9F0" strokeWidth="5" opacity={isCost ? 0.62 : 0.86} />
+          <circle cx="380" cy="342" r="13" fill="#FFFDF9" stroke="#D9D1C5" strokeWidth="4" />
         </g>
 
         <g style={{ fontFamily: SERIF, fontWeight: 600 }}>
-          <text x="360" y="62" textAnchor="middle" fill={CHALLENGE} fontSize="31">Challenge</text>
-          <text x="184" y="545" textAnchor="middle" fill={SAFETY} fontSize="25">Safety</text>
-          <text x="536" y="545" textAnchor="middle" fill={PLAY} fontSize="25">Play</text>
+          <text x="380" y="58" textAnchor="middle" fill={CHALLENGE} fontSize="30">Challenge</text>
+          <text x="196" y="572" textAnchor="middle" fill={SAFETY} fontSize="24">Safety</text>
+          <text x="564" y="572" textAnchor="middle" fill={PLAY} fontSize="24">Play</text>
         </g>
       </svg>
     </div>
   );
 }
 
+function BeliefHinge() {
+  return (
+    <div className="relative mt-14 overflow-hidden bg-[#15110F] px-8 py-10 text-white shadow-[0_34px_94px_-70px_rgba(19,14,12,0.95)] md:px-11 md:py-12">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(255,90,31,0.22),transparent_35%),radial-gradient(circle_at_82%_100%,rgba(255,171,0,0.16),transparent_36%)]" />
+      <div className="relative grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
+        <div>
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#FFBB30]">The hinge into direction</p>
+          <h3
+            className="mt-5"
+            style={{
+              fontFamily: SERIF,
+              fontSize: 'clamp(2.25rem, 4.2vw, 4.4rem)',
+              lineHeight: 0.96,
+              letterSpacing: '-0.055em',
+            }}
+          >
+            The pattern completes itself around one quiet assumption.
+          </h3>
+        </div>
+        <div>
+          <p className="max-w-[660px] text-[18px] leading-[1.75] text-[#EFE5D9]" style={{ fontWeight: 300 }}>
+            You keep reaching for drive, it keeps not delivering the thing you are actually after, and you keep reaching again - held in place by the belief:
+          </p>
+          <p className="mt-6 max-w-[640px] text-[32px] leading-tight text-[#FFF7EC]" style={{ fontFamily: SERIF, letterSpacing: '-0.04em' }}>
+            that steadiness would cost you your drive.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function radarPoints(scores: typeof PROFILE) {
-  const centre = { x: 360, y: 330 };
-  const max = 230;
+  const centre = { x: 380, y: 342 };
+  const max = 248;
   const point = (angle: number, score: number) => {
     const radians = (angle * Math.PI) / 180;
     return {
@@ -511,8 +474,8 @@ function radarPoints(scores: typeof PROFILE) {
 }
 
 function ringPoints(scale: number) {
-  const centre = { x: 360, y: 330 };
-  const max = 230 * scale;
+  const centre = { x: 380, y: 342 };
+  const max = 248 * scale;
   return [-90, 30, 150]
     .map(angle => {
       const radians = (angle * Math.PI) / 180;
