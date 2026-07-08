@@ -156,6 +156,43 @@ const ARCHIVED_DOORWAYS = [
   },
 ] as const;
 
+const ARCHIVED_DIRECTION_STATES = [
+  {
+    label: 'Small',
+    title: 'A little more steadiness',
+    copy: 'The inner voice softens slightly. Rest produces a little more recovery than it currently does. Challenge still leads, but it begins to push from a less urgent edge.',
+  },
+  {
+    label: 'Medium',
+    title: 'A foundation that can hold',
+    copy: 'Safety becomes less conditional. The whole architecture becomes more harmonious because Challenge no longer has to carry the weight of three domains.',
+  },
+  {
+    label: 'Large',
+    title: 'The shape begins to round out',
+    copy: 'Challenge becomes pursuit instead of compensation. Play returns as a daily presence, and the gap between what is felt and what is shown starts to close.',
+  },
+] as const;
+
+const ARCHIVED_DIRECTION_TRAPS = [
+  {
+    title: 'Pushing harder at Challenge',
+    text: 'Achievement can hide the absence of Safety by giving the system enough momentum to keep going.',
+  },
+  {
+    title: 'Performing wellness',
+    text: 'Wellness can become another performance when it has to be done correctly.',
+  },
+  {
+    title: 'Being needed instead of held',
+    text: 'Connection can look strong when everyone leans on you. The trap is mistaking being useful for being held.',
+  },
+  {
+    title: 'Planning faster',
+    text: 'Planning can organise the next move while still avoiding the slower work of feeling steady where you are.',
+  },
+] as const;
+
 export function DesignNotes() {
   return (
     <section className="space-y-10">
@@ -332,6 +369,22 @@ export function DesignNotes() {
         </div>
       </div>
 
+      <div className="overflow-hidden rounded-[34px] border border-[#DDE8E2] bg-[#F7FBF8] p-7 shadow-[0_34px_95px_-78px_rgba(26,22,20,0.48)] md:p-9">
+        <div className="grid gap-6 md:grid-cols-[0.38fr_0.62fr] md:items-end">
+          <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#42A68E]">Section 8 archive</p>
+            <h2 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.85rem, 3.2vw, 2.7rem)', lineHeight: 1.02, color: '#15110F' }}>
+              Previous direction prototype.
+            </h2>
+          </div>
+          <p className="max-w-2xl text-[15.5px] leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>
+            Preserved from the earlier Direction section: the base-building path, small-to-large change states, and progress traps remain available here for comparison.
+          </p>
+        </div>
+
+        <ArchivedDirectionPanel />
+      </div>
+
       <div className="grid gap-8 rounded-[28px] bg-[#F8F6F1] p-7 md:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="text-[11px] uppercase tracking-[0.16em] font-bold text-[#8B8682]">Level indicator handoff</p>
@@ -365,6 +418,102 @@ export function DesignNotes() {
         </div>
       </div>
     </section>
+  );
+}
+
+function ArchivedDirectionPanel() {
+  return (
+    <div className="mt-8 overflow-hidden rounded-[30px] border border-[#D8E6DF] bg-white/78 p-6 md:p-7">
+      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div className="relative min-h-[330px] overflow-hidden rounded-[26px] bg-[#F2F7F3] p-5">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_26%_70%,rgba(66,166,142,0.20),transparent_42%),radial-gradient(circle_at_78%_26%,rgba(220,76,12,0.10),transparent_38%)]" />
+          <svg viewBox="0 0 420 340" className="relative z-10 h-[330px] w-full" aria-hidden="true">
+            <text x="48" y="44" style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.12em', fill: SAFETY }}>BUILD THE BASE FIRST</text>
+            <text x="48" y="66" style={{ fontSize: 12, fill: '#6F6A64' }}>The path begins where the foundation is thinnest.</text>
+            <path
+              d="M54 254 C128 208 176 216 218 170 C264 120 314 98 366 84"
+              fill="none"
+              stroke="#DCD5CA"
+              strokeWidth="20"
+              strokeLinecap="round"
+            />
+            <motion.path
+              d="M54 254 C128 208 176 216 218 170 C264 120 314 98 366 84"
+              fill="none"
+              stroke={SAFETY}
+              strokeWidth="20"
+              strokeLinecap="round"
+              pathLength="1"
+              strokeDasharray="1"
+              initial={{ strokeDashoffset: 1 }}
+              whileInView={{ strokeDashoffset: 0.28 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            />
+            <ArchivedDirectionNode x={54} y={254} color={SAFETY} label="Build Safety" />
+            <ArchivedDirectionNode x={218} y={170} color={PLAY} label="Play has room" />
+            <ArchivedDirectionNode x={366} y={84} color={CHALLENGE} label="Challenge can rest" />
+          </svg>
+        </div>
+
+        <div>
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: SAFETY }}>Archived interaction</p>
+          <h3 className="mt-3" style={{ fontFamily: SERIF, fontSize: 'clamp(1.8rem, 3vw, 2.55rem)', lineHeight: 1.04, letterSpacing: '-0.035em', color: '#15110F' }}>
+            Strengthening the base changes more than the base.
+          </h3>
+          <div className="mt-6 grid gap-3">
+            {ARCHIVED_DIRECTION_STATES.map((state, index) => (
+              <motion.div
+                key={state.label}
+                className="rounded-[22px] border border-[#DDE8E2] bg-[#FDFCF9] p-4"
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.28 }}
+                transition={{ duration: 0.36, delay: index * 0.05 }}
+              >
+                <p className="text-[10.5px] font-extrabold uppercase tracking-[0.16em]" style={{ color: SAFETY }}>{state.label} change</p>
+                <h4 className="mt-2 text-[18px] leading-tight text-[#15110F]" style={{ fontFamily: SERIF }}>{state.title}</h4>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-[#5C574F]" style={{ fontWeight: 300 }}>{state.copy}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-7 grid gap-3 md:grid-cols-2 lg:col-span-2">
+          {ARCHIVED_DIRECTION_TRAPS.map((trap, index) => (
+            <motion.div
+              key={trap.title}
+              className="rounded-[20px] border border-[#E8D9D0] bg-[#FFF8F4] p-4"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.28 }}
+              transition={{ duration: 0.34, delay: index * 0.04 }}
+            >
+              <h4 className="text-[15px] font-semibold text-[#1A1614]">{trap.title}</h4>
+              <p className="mt-2 text-[13px] leading-relaxed text-[#5C574F]" style={{ fontWeight: 300 }}>{trap.text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ArchivedDirectionNode({ x, y, color, label }: { x: number; y: number; color: string; label: string }) {
+  return (
+    <g>
+      <motion.circle
+        cx={x}
+        cy={y}
+        r="20"
+        fill="#FFFFFF"
+        stroke={color}
+        strokeWidth="6"
+        animate={{ r: [19, 22, 19] }}
+        transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <text x={x} y={y + 44} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', fill: '#5F5952' }}>{label}</text>
+    </g>
   );
 }
 

@@ -1,233 +1,440 @@
+import { AnimatePresence, motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
-import { motion } from 'motion/react';
-import { AlertTriangle, ArrowRight, Compass, ShieldCheck, Sparkles, Sprout, type LucideIcon } from 'lucide-react';
 
 const SERIF = '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif';
 const NAV_ORANGE = '#FF5A1F';
 const SAFETY = '#42A68E';
 const CHALLENGE = '#DC4C0C';
 const PLAY = '#FFAB00';
+const INK = '#15110F';
 
-const changeStates = [
+const directionBeats = [
   {
-    label: 'Small',
-    title: 'A little more steadiness',
-    copy: 'The inner voice softens slightly. Rest produces a little more recovery than it currently does. Your Challenge still leads, but it begins to push from a less urgent edge.',
+    label: 'The belief',
+    title: "This is the thing to look at first, because it isn't true.",
+    copy:
+      'You ended the last section holding one assumption: that easing off, or building steadiness, would cost you the drive you rely on.',
+    accent: CHALLENGE,
   },
   {
-    label: 'Medium',
-    title: 'A foundation that can hold',
-    copy: 'Safety becomes less conditional. You let people lean on you and let yourself lean back. The whole architecture becomes more harmonious because Challenge no longer has to carry the weight of three domains.',
+    label: "Why it's wrong",
+    title: "Your drive is not fuel you'll run out of if you rest.",
+    copy:
+      "It is part of who you are. A strong swimmer doesn't lose the skill by getting out of the pool; the skill is theirs whether they are swimming or not. Your drive is the same. It does not drain when you stop, and it does not shrink when you put attention elsewhere.",
+    accent: PLAY,
   },
   {
-    label: 'Large',
-    title: 'The shape begins to round out',
-    copy: 'Challenge becomes pursuit instead of compensation. Play returns as a daily presence, and the gap between what you feel and what you show starts to close. The peak softens because it no longer has to hold everything up.',
+    label: 'What opens',
+    title: 'You get what you were chasing, with less waste.',
+    copy:
+      "Once steadiness comes from where it is actually made, the thing you have been chasing through achievement starts arriving more directly. You are not trading achievement for calm. You are getting what you wanted from the achievement, and keeping the achievement too.",
+    accent: SAFETY,
   },
-];
+  {
+    label: 'Where to move',
+    title: 'You do not lower the peak. You build the base beneath it.',
+    copy:
+      "The highest-leverage change in your profile is Safety. It is the lowest, and it is the one your drive has been standing in for. The same drive that has carried everything gets to be a strength again, rather than the only thing holding the structure up.",
+    accent: SAFETY,
+  },
+  {
+    label: 'The catch',
+    title: 'The price is not your edge.',
+    copy:
+      "It is the discomfort of investing in something you have quietly believed was beneath you or risky, and letting yourself feel steady before you have earned it. That will feel unfamiliar, and at first it may feel wrong. That is the whole price: not your edge, just the discomfort of building a floor you have never fully trusted.",
+    accent: CHALLENGE,
+  },
+] as const;
 
-const traps = [
-  {
-    title: 'Pushing harder at Challenge',
-    text: 'Achievement can hide the absence of Safety by giving the system enough momentum to keep going. The trap is that more pressure may make you look effective while making rest even harder to receive.',
-    Icon: Compass,
-  },
-  {
-    title: 'Performing wellness',
-    text: 'Wellness can become another performance when it has to be done correctly. A practice only reaches Safety when it can be imperfect, ordinary, and still received without judgement.',
-    Icon: Sparkles,
-  },
-  {
-    title: 'Being needed instead of held',
-    text: 'Connection can look strong when everyone leans on you. The trap is mistaking being useful for being held. Safety grows when support can move toward you, not only through you.',
-    Icon: Sprout,
-  },
-  {
-    title: 'Planning faster',
-    text: 'Your Future is strong, but direction is not the same thing as a foundation. Planning can organise the next move while still avoiding the slower work of feeling steady where you are.',
-    Icon: ArrowRight,
-  },
+const openedList = [
+  'Rest starts to restore, because settling no longer depends on having produced.',
+  "A setback stops taking the ground out from under you, because your footing is not only in output.",
+  "Relationships and interests get fed, and they turn out to feed you back.",
 ];
 
 export function FoundationDirection() {
-  const [active, setActive] = useState(1);
-  const state = changeStates[active];
+  const [activeBeat, setActiveBeat] = useState(0);
+  const beat = directionBeats[activeBeat];
 
   return (
-    <div className="space-y-9">
-      <div>
-        <p className="mb-[30px] text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: NAV_ORANGE }}>08 Direction</p>
-        <h1 style={{ fontFamily: SERIF, fontWeight: 600, letterSpacing: '-0.03em', fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)', color: '#0F0F0F', marginBottom: '30px' }}>
-          Your Foundation Direction
+    <div className="space-y-14">
+      <header>
+        <p className="mb-[30px] text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: NAV_ORANGE }}>
+          08 Direction
+        </p>
+        <h1
+          style={{
+            fontFamily: SERIF,
+            fontWeight: 600,
+            letterSpacing: '-0.03em',
+            fontSize: 'clamp(2.2rem, 3.8vw, 3.2rem)',
+            color: '#0F0F0F',
+            marginBottom: '30px',
+          }}
+        >
+          Your Direction
         </h1>
-        <div style={{ width: '40px', height: '3px', backgroundColor: NAV_ORANGE, marginTop: '30px', marginBottom: '16px' }} />
-      </div>
+        <div className="h-[3px] w-10" style={{ backgroundColor: NAV_ORANGE }} />
+      </header>
 
-      <div className="overflow-hidden rounded-[32px] border border-[#E8E1D6] bg-white p-7 shadow-[0_26px_70px_-58px_rgba(26,22,20,0.55)] md:p-10">
-        <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <PathwayGraphic />
-          <div>
-            <div className="mb-5 inline-flex items-center gap-3 rounded-full bg-[#EAF7F3] px-4 py-2 text-[#0F473D]">
-              <ShieldCheck size={18} strokeWidth={2.3} />
-              <span className="text-[11px] font-bold uppercase tracking-[0.15em]">Safety is the path</span>
-            </div>
-            <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 3.2vw, 3rem)', lineHeight: 1.05, letterSpacing: '-0.04em', color: '#15110F' }}>
-              Strengthening the base changes more than the base.
-            </h2>
-            <div className="mt-6 space-y-4 text-[15.5px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>
-              <p>
-                Your reading points to Safety because it is the depleted leg of the Sharp Peak. Challenge has been compensating for it, which keeps you moving but makes rest harder to receive.
+      <section className="relative -mx-4 overflow-hidden px-4 py-6 md:-mx-8 md:px-8 lg:py-10">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_26%,rgba(66,166,142,0.14),transparent_32%),radial-gradient(circle_at_80%_18%,rgba(220,76,12,0.12),transparent_34%),radial-gradient(circle_at_56%_86%,rgba(255,171,0,0.10),transparent_38%)]" />
+        <div className="relative mx-auto max-w-[1080px]">
+          <div className="mb-12 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: SAFETY }}>
+                Direction
               </p>
-              <p>
-                Building Safety is not another surface intervention. It changes the foundation the interventions were trying to reach: how you hold yourself, how you receive support, and how much effort it takes to feel steady.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-10 rounded-[28px] bg-[#F8F6F1] p-6 md:p-7">
-          <div className="mb-6 flex flex-wrap gap-3">
-            {changeStates.map((item, index) => (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => setActive(index)}
-                className="rounded-full px-5 py-2 text-sm font-semibold transition-colors"
+              <h2
+                className="mt-4 max-w-[720px]"
                 style={{
-                  backgroundColor: active === index ? SAFETY : '#FFFFFF',
-                  color: active === index ? '#FFFFFF' : '#5F5952',
-                  boxShadow: active === index ? '0 14px 26px -20px rgba(66,166,142,0.8)' : 'inset 0 0 0 1px #E4DED5',
+                  fontFamily: SERIF,
+                  fontSize: 'clamp(2.8rem, 5.8vw, 6rem)',
+                  lineHeight: 0.94,
+                  letterSpacing: '-0.06em',
+                  color: INK,
                 }}
               >
-                {item.label}
-              </button>
-            ))}
+                The drive stays. The floor changes.
+              </h2>
+            </div>
+            <p className="max-w-[650px] text-[18px] leading-[1.75] text-[#332E29]" style={{ fontWeight: 300 }}>
+              The barrier was never that you did not know how to do more. It was the belief that building steadiness would take something essential from you. This section answers that belief directly.
+            </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-[0.7fr_1.3fr] md:items-center">
-            <GrowthGauge active={active} />
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: SAFETY }}>{state.label} change</p>
-              <h3 className="mt-2" style={{ fontFamily: SERIF, fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', lineHeight: 1.05, letterSpacing: '-0.035em', color: '#15110F' }}>
-                {state.title}
-              </h3>
-              <p className="mt-4 text-[15.5px] leading-relaxed text-[#1A1614]" style={{ fontWeight: 300 }}>{state.copy}</p>
+          <DirectionNavigator activeBeat={activeBeat} onSelect={setActiveBeat} />
+
+          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center">
+            <div className="relative min-h-[610px] lg:order-2">
+              <DirectionVisual activeBeat={activeBeat} />
+            </div>
+
+            <div className="min-h-[560px] lg:order-1">
+              <AnimatePresence mode="wait">
+                <motion.article
+                  key={activeBeat}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+                  className="py-3"
+                >
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: beat.accent }}>
+                    {beat.label}
+                  </p>
+                  <h3
+                    className="mt-5"
+                    style={{
+                      fontFamily: SERIF,
+                      fontSize: 'clamp(2.45rem, 4.8vw, 4.75rem)',
+                      lineHeight: 0.98,
+                      letterSpacing: '-0.055em',
+                      color: INK,
+                    }}
+                  >
+                    {beat.title}
+                  </h3>
+                  <p className="mt-8 max-w-[620px] text-[18px] leading-[1.78] text-[#332E29]" style={{ fontWeight: 300 }}>
+                    {beat.copy}
+                  </p>
+
+                  {activeBeat === 2 && (
+                    <ul className="mt-8 max-w-[620px] space-y-4">
+                      {openedList.map(item => (
+                        <li key={item} className="border-l border-[#42A68E]/45 pl-5 text-[16px] leading-relaxed text-[#3F3A35]" style={{ fontWeight: 300 }}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {activeBeat === 3 && (
+                    <div className="mt-9 max-w-[610px] bg-[#15110F] px-7 py-6 text-white shadow-[0_30px_82px_-62px_rgba(26,22,20,0.85)]">
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#42E0C4]">Structural move</p>
+                      <p className="mt-4 text-[27px] leading-tight" style={{ fontFamily: SERIF, letterSpacing: '-0.035em' }}>
+                        Same fuel. Better trajectory.
+                      </p>
+                    </div>
+                  )}
+                </motion.article>
+              </AnimatePresence>
+
+              <div className="mt-10 flex flex-wrap gap-3">
+                <a
+                  href="#safety"
+                  className="inline-flex items-center gap-3 rounded-full bg-[#42A68E] px-6 py-3 text-[12px] font-extrabold uppercase tracking-[0.13em] text-white shadow-[0_20px_38px_-30px_rgba(66,166,142,0.85)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42A68E]/30"
+                >
+                  Read Safety
+                  <ArrowRight size={16} strokeWidth={2.4} />
+                </a>
+                <a
+                  href="#when-ready"
+                  className="inline-flex items-center gap-3 rounded-full border border-[#DED6CA] bg-white px-6 py-3 text-[12px] font-extrabold uppercase tracking-[0.13em] text-[#4D4945] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DC4C0C]/20"
+                >
+                  Continue
+                  <ArrowRight size={16} strokeWidth={2.4} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div>
-        <h3 className="mb-5" style={{ fontFamily: SERIF, fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', lineHeight: 1.05, letterSpacing: '-0.035em', color: '#15110F' }}>
-          Patterns that can look like progress
-        </h3>
-        <div className="grid gap-4 md:grid-cols-2">
-          {traps.map((trap, index) => (
-            <TrapCard key={trap.title} {...trap} index={index} />
-          ))}
-        </div>
-      </div>
+      </section>
     </div>
   );
 }
 
-function PathwayGraphic() {
+function DirectionNavigator({
+  activeBeat,
+  onSelect,
+}: {
+  activeBeat: number;
+  onSelect: (index: number) => void;
+}) {
   return (
-    <div className="relative min-h-[380px] overflow-hidden rounded-[28px] bg-[#F6F3ED] p-6">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_70%,rgba(66,166,142,0.18),transparent_40%),radial-gradient(circle_at_78%_28%,rgba(220,76,12,0.10),transparent_38%)]" />
-      <svg viewBox="0 0 420 340" className="relative z-10 h-[330px] w-full" aria-hidden="true">
-        <text x="48" y="44" style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.12em', fill: SAFETY }}>BUILD THE BASE FIRST</text>
-        <text x="48" y="66" style={{ fontSize: 12, fill: '#6F6A64' }}>The path begins where the foundation is thinnest.</text>
-        <motion.path
-          d="M54 254 C128 208 176 216 218 170 C264 120 314 98 366 84"
-          fill="none"
-          stroke="#DCD5CA"
-          strokeWidth="20"
-          strokeLinecap="round"
+    <nav aria-label="Section 8 direction beats" className="relative">
+      <div className="absolute left-0 right-0 top-[17px] h-px bg-[#E4DDD4]" />
+      <div className="relative grid gap-2 sm:grid-cols-5">
+        {directionBeats.map((beat, index) => {
+          const active = activeBeat === index;
+          const completed = index < activeBeat;
+          return (
+            <button
+              key={beat.label}
+              type="button"
+              onClick={() => onSelect(index)}
+              onMouseEnter={() => onSelect(index)}
+              className="group flex items-center gap-3 rounded-full bg-transparent py-2 pr-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42A68E]/20"
+            >
+              <span
+                className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full border bg-[#FDFCFA] text-[11px] font-extrabold transition-all"
+                style={{
+                  borderColor: active || completed ? beat.accent : '#D8D0C4',
+                  color: active ? '#FFFFFF' : active || completed ? beat.accent : '#8C857C',
+                  backgroundColor: active ? beat.accent : '#FDFCFA',
+                }}
+              >
+                {index + 1}
+              </span>
+              <span
+                className="text-[10px] font-extrabold uppercase tracking-[0.14em] transition-colors"
+                style={{ color: active ? beat.accent : '#8C857C' }}
+              >
+                {beat.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
+function DirectionVisual({ activeBeat }: { activeBeat: number }) {
+  const belief = activeBeat === 0;
+  const wrong = activeBeat === 1;
+  const opens = activeBeat === 2;
+  const leverage = activeBeat === 3;
+  const catchBeat = activeBeat === 4;
+  const baseLift = activeBeat >= 2;
+  const safetyReach = leverage ? 68 : baseLift ? 56 : 27;
+  const points = directionPoints({ Safety: safetyReach, Challenge: 78, Play: baseLift ? 50 : 41 });
+  const original = directionPoints({ Safety: 27, Challenge: 78, Play: 41 });
+  const profile = `${points.challenge.x},${points.challenge.y} ${points.play.x},${points.play.y} ${points.safety.x},${points.safety.y}`;
+  const originalProfile = `${original.challenge.x},${original.challenge.y} ${original.play.x},${original.play.y} ${original.safety.x},${original.safety.y}`;
+
+  return (
+    <div className="relative h-full min-h-[610px] overflow-visible">
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[470px] w-[470px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        style={{ backgroundColor: leverage || opens ? 'rgba(66,166,142,0.2)' : 'rgba(220,76,12,0.14)' }}
+        animate={{ scale: [0.96, 1.08, 0.96], opacity: [0.34, 0.68, 0.34] }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <svg viewBox="0 0 720 660" className="absolute inset-0 h-full w-full overflow-visible" role="img" aria-labelledby="directionTitle directionDesc">
+        <title id="directionTitle">Foundation direction</title>
+        <desc id="directionDesc">The same Challenge peak remains while Safety grows into a stronger base beneath it.</desc>
+        <defs>
+          <filter id="directionGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="10" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <linearGradient id="directionFill" x1="360" x2="360" y1="94" y2="520" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#F2551A" stopOpacity="0.34" />
+            <stop offset="0.62" stopColor="#42A68E" stopOpacity="0.18" />
+            <stop offset="1" stopColor="#42A68E" stopOpacity="0.10" />
+          </linearGradient>
+        </defs>
+
+        <g opacity="0.82">
+          {[0.25, 0.5, 0.75, 1].map(scale => (
+            <polygon
+              key={scale}
+              points={directionRingPoints(scale)}
+              fill="none"
+              stroke="#D8D0C4"
+              strokeWidth={scale === 1 ? 1.35 : 0.9}
+              opacity={scale === 1 ? 0.64 : 0.36}
+            />
+          ))}
+          <line x1="360" y1="330" x2="360" y2="100" stroke="#D8D0C4" strokeWidth="1.1" />
+          <line x1="360" y1="330" x2="161" y2="445" stroke="#D8D0C4" strokeWidth="1.1" />
+          <line x1="360" y1="330" x2="559" y2="445" stroke="#D8D0C4" strokeWidth="1.1" />
+        </g>
+
+        <polygon points={originalProfile} fill="#1A1614" opacity="0.045" />
+        <motion.polygon
+          key={`${activeBeat}-profile`}
+          points={profile}
+          fill="url(#directionFill)"
+          stroke={baseLift ? SAFETY : CHALLENGE}
+          strokeWidth={2.4}
+          strokeOpacity={baseLift ? 0.48 : 0.36}
+          initial={{ opacity: 0.48, scale: 0.98 }}
+          animate={{ opacity: catchBeat ? 0.52 : 0.76, scale: [0.99, 1.012, 0.99] }}
+          style={{ transformOrigin: '360px 330px' }}
+          transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.path
-          d="M54 254 C128 208 176 216 218 170 C264 120 314 98 366 84"
-          fill="none"
-          stroke={SAFETY}
-          strokeWidth="20"
-          strokeLinecap="round"
-          pathLength="1"
-          strokeDasharray="1"
-          initial={{ strokeDashoffset: 1 }}
-          whileInView={{ strokeDashoffset: 0.28 }}
-          viewport={{ once: true, amount: 0.45 }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <Node x={54} y={254} color={SAFETY} label="Build Safety" />
-        <Node x={218} y={170} color={PLAY} label="Play has room" />
-        <Node x={366} y={84} color={CHALLENGE} label="Challenge can rest" />
+
+        {(opens || leverage || catchBeat) && (
+          <g>
+            <motion.path
+              d={`M360 330 L${points.safety.x} ${points.safety.y}`}
+              fill="none"
+              stroke={SAFETY}
+              strokeWidth={leverage ? 8 : 5}
+              strokeLinecap="round"
+              opacity={leverage ? 0.82 : 0.55}
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
+              filter={leverage ? 'url(#directionGlow)' : undefined}
+            />
+            <motion.circle
+              cx={points.safety.x}
+              cy={points.safety.y}
+              r={leverage ? 82 : 56}
+              fill={SAFETY}
+              opacity="0.12"
+              animate={{ scale: [0.82, 1.18, 0.82], opacity: [0.08, 0.2, 0.08] }}
+              style={{ transformOrigin: `${points.safety.x}px ${points.safety.y}px` }}
+              transition={{ duration: 4.1, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </g>
+        )}
+
+        {wrong && (
+          <g>
+            <motion.path
+              d={`M${original.challenge.x} ${original.challenge.y} C432 210 468 260 450 330 C432 398 390 426 360 330`}
+              fill="none"
+              stroke="#FFBB30"
+              strokeWidth="3.4"
+              strokeLinecap="round"
+              strokeDasharray="7 12"
+              opacity="0.58"
+              animate={{ strokeDashoffset: [0, -76] }}
+              transition={{ duration: 4.8, repeat: Infinity, ease: 'linear' }}
+            />
+            <text x="478" y="312" fill="#8A5B20" fontSize="13" fontWeight="800" letterSpacing="1.4">
+              IT STAYS
+            </text>
+          </g>
+        )}
+
+        {belief && (
+          <g>
+            <motion.path
+              d={`M360 330 L${original.challenge.x} ${original.challenge.y}`}
+              fill="none"
+              stroke="#8B8278"
+              strokeWidth="5"
+              strokeLinecap="round"
+              opacity="0.54"
+              strokeDasharray="8 12"
+              animate={{ strokeDashoffset: [0, -72] }}
+              transition={{ duration: 5.2, repeat: Infinity, ease: 'linear' }}
+            />
+            <text x="414" y="236" fill="#7A6F66" fontSize="13" fontWeight="800" letterSpacing="1.4">
+              FEAR OF LOSING IT
+            </text>
+          </g>
+        )}
+
+        {catchBeat && (
+          <g>
+            <motion.path
+              d="M194 496 C266 536 448 536 526 496"
+              fill="none"
+              stroke="#BBAF9F"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              opacity="0.42"
+              animate={{ pathLength: [0, 1, 1], opacity: [0.1, 0.42, 0.22] }}
+              transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <text x="360" y="546" textAnchor="middle" fill="#6F665C" fontSize="13" fontWeight="800" letterSpacing="1.5">
+              A FLOOR YOU CAN TRUST
+            </text>
+          </g>
+        )}
+
+        <g>
+          <circle cx={points.challenge.x} cy={points.challenge.y} r="14" fill={CHALLENGE} stroke="#FFF9F0" strokeWidth="6" opacity="0.9" />
+          <motion.circle
+            cx={points.safety.x}
+            cy={points.safety.y}
+            r={baseLift ? 15 : 11}
+            fill={SAFETY}
+            stroke="#FFF9F0"
+            strokeWidth="6"
+            filter={baseLift ? 'url(#directionGlow)' : undefined}
+            animate={baseLift ? { scale: [1, 1.14, 1] } : undefined}
+            style={{ transformOrigin: `${points.safety.x}px ${points.safety.y}px` }}
+            transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <circle cx={points.play.x} cy={points.play.y} r="12" fill={PLAY} stroke="#FFF9F0" strokeWidth="5" opacity="0.78" />
+          <circle cx="360" cy="330" r="13" fill="#FFFDF9" stroke="#D9D1C5" strokeWidth="4" />
+        </g>
+
+        <g style={{ fontFamily: SERIF, fontWeight: 600 }}>
+          <text x="360" y="62" textAnchor="middle" fill={CHALLENGE} fontSize="31">Challenge</text>
+          <text x="184" y="545" textAnchor="middle" fill={SAFETY} fontSize="25">Safety</text>
+          <text x="536" y="545" textAnchor="middle" fill={PLAY} fontSize="25">Play</text>
+        </g>
       </svg>
     </div>
   );
 }
 
-function Node({ x, y, color, label }: { x: number; y: number; color: string; label: string }) {
-  return (
-    <g>
-      <motion.circle
-        cx={x}
-        cy={y}
-        r="20"
-        fill="#FFFFFF"
-        stroke={color}
-        strokeWidth="6"
-        animate={{ r: [19, 22, 19] }}
-        transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <text x={x} y={y + 44} textAnchor="middle" style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', fill: '#5F5952' }}>{label}</text>
-    </g>
-  );
+function directionPoints(scores: { Safety: number; Challenge: number; Play: number }) {
+  const centre = { x: 360, y: 330 };
+  const max = 230;
+  const point = (angle: number, score: number) => {
+    const radians = (angle * Math.PI) / 180;
+    return {
+      x: centre.x + Math.cos(radians) * max * (score / 100),
+      y: centre.y + Math.sin(radians) * max * (score / 100),
+    };
+  };
+  return {
+    challenge: point(-90, scores.Challenge),
+    play: point(30, scores.Play),
+    safety: point(150, scores.Safety),
+  };
 }
 
-function GrowthGauge({ active }: { active: number }) {
-  return (
-    <div className="grid h-40 place-items-center">
-      <div className="relative h-32 w-32">
-        {[0, 1, 2].map((index) => (
-          <motion.span
-            key={index}
-            className="absolute inset-0 rounded-full border-[10px]"
-            style={{
-              borderColor: index <= active ? SAFETY : '#E4DED5',
-              opacity: index <= active ? 0.24 + index * 0.18 : 0.55,
-              transform: `scale(${0.62 + index * 0.2})`,
-            }}
-            animate={index === active ? { scale: [0.62 + index * 0.2, 0.68 + index * 0.2, 0.62 + index * 0.2] } : {}}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        ))}
-        <div className="absolute inset-0 grid place-items-center">
-          <ShieldCheck size={34} color={SAFETY} strokeWidth={2.2} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TrapCard({ title, text, Icon, index }: { title: string; text: string; Icon: LucideIcon; index: number }) {
-  return (
-    <motion.div
-      className="rounded-[24px] border border-[#E8D9D0] bg-[#FFF8F4] p-5"
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.35 }}
-      transition={{ duration: 0.38, delay: index * 0.05 }}
-      whileHover={{ y: -4 }}
-    >
-      <div className="flex items-start gap-4">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#DC4C0C]">
-          <Icon size={20} strokeWidth={2.1} />
-        </div>
-        <div>
-          <h4 className="font-semibold text-[#1A1614]">{title}</h4>
-          <p className="mt-2 text-sm leading-relaxed text-[#4D4945]" style={{ fontWeight: 300 }}>{text}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
+function directionRingPoints(scale: number) {
+  const centre = { x: 360, y: 330 };
+  const max = 230 * scale;
+  return [-90, 30, 150]
+    .map(angle => {
+      const radians = (angle * Math.PI) / 180;
+      return `${centre.x + Math.cos(radians) * max},${centre.y + Math.sin(radians) * max}`;
+    })
+    .join(' ');
 }
